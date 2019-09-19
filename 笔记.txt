@@ -1,0 +1,15 @@
+NAVJ-W56S-3YUU-MVHV
+
+192.168.238.129 本机linxu系统ip
+
+linvx下连接可视化工具
+
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY '123456' WITH GRANT OPTION;
+
+FLUSH PRIVILEGES;
+
+C:\redis
+redis-server.exe redis.windows.conf 
+
+
+mysql redis mongo 
