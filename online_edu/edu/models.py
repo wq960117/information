@@ -70,3 +70,64 @@ class UserSiteMessage(models.Model):
     status=models.IntegerField(verbose_name='状态，0未读，1已读')
     class Meta():
         db_table = 'usersitemessage'
+
+"""路径表"""
+class Path(models.Model):
+    pic = models.CharField(max_length=50,verbose_name='路径图片')
+    path = models.CharField(max_length=255,verbose_name='路径名称')
+    info = models.CharField(max_length=255,verbose_name='路径简介')
+    studynum = models.IntegerField(default=0,verbose_name='学习人数')
+    class Meta:
+        db_table = 'path'
+
+"""标签表"""
+class Tag(models.Model):
+    name = models.CharField(max_length=50,verbose_name='标签名称')
+    class Meta:
+        db_table = 'tag'
+
+
+"""阶段表"""
+class Path_stage(models.Model):
+    stage_name = models.CharField(max_length=50,verbose_name='阶段名称')
+    path = models.ForeignKey(Path ,on_delete=models.CASCADE,verbose_name='关联路径')
+    sort = models.IntegerField(default=0,verbose_name='排序')
+    class Meta:
+        db_table = 'path_stage'
+
+"""课程表"""
+class Course(models.Model):
+    title = models.CharField(max_length=50,verbose_name='课程标题')
+    pic = models.CharField(max_length=255,verbose_name='课程图片')
+    info = models.CharField(max_length=255,verbose_name='课程简介')
+    online = models.IntegerField(default=0,verbose_name='是否上线0没上线,1上线')
+    member = models.IntegerField(default=0,verbose_name='是否会员0非会员,1会员,2训练营')
+    attention = models.IntegerField(default=0,verbose_name='关注量')
+    learn = models.IntegerField(default=0,verbose_name='学过人数')
+    teacher = models.ForeignKey(Teacher,on_delete=models.CASCADE,verbose_name='关联老师')
+    comment_num = models.IntegerField(default=0,verbose_name='评论数量')
+    path = models.ForeignKey(Path_stage,on_delete=models.CASCADE,verbose_name='关联阶段')
+    tag = models.ForeignKey(Tag,on_delete=models.CASCADE,verbose_name='关联标签')
+    recommand = models.CharField(max_length=50,verbose_name='推荐课程')
+    detail = models.CharField(max_length=200,verbose_name='课程详情')
+    section_num = models.IntegerField(default=0,verbose_name='章节数')
+    class Meta:
+        db_table = 'course'
+
+"""价格表"""
+class Price(models.Model):
+    type = models.IntegerField(default=0,verbose_name='类型0普通,1会员,2高级会员')
+    course = models.ForeignKey(Course,on_delete=models.CASCADE,verbose_name='关联课程')
+    discount = models.FloatField(max_length=50,verbose_name='折扣')
+    discount_price = models.DecimalField(verbose_name='折扣后价格')
+    class Meta:
+        db_table = 'price'
+
+"""章节表"""
+class Section(models.Model):
+    section = models.CharField(max_length=50,verbose_name='课程章节名称')
+    course = models.ForeignKey(Course,on_delete=models.CASCADE,verbose_name='关联课程')
+    video = models.CharField(max_length=50,verbose_name='视频链接')
+    sort = models.IntegerField(default=0,verbose_name='排序')
+    class Meta:
+        db_table = 'section'
