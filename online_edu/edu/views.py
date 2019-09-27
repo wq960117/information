@@ -1,12 +1,13 @@
 from django.shortcuts import render
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from edu.models import *
-from serializers.serializer import *
 from django.http import HttpResponse
 from django.views import View
-from .models import *
-from django.contrib.auth.hashers import make_password,check_password
+from rest_framework.views import APIView                                    # 类方法序列化继承APIView
+from rest_framework.response import Response                                # 返回json格式
+from edu.models import *                                                    # 导入models对象
+from serializers.serializer import *                                        # 序列化文件类
+from django.contrib.auth.hashers import make_password,check_password        # 生成哈希 校验哈希
+
+
 
 
 
@@ -127,8 +128,6 @@ class Show_UserLevel(APIView):
 
 
 # 注册管理员
-
-# 注册管理员
 class RegAdmin(View):
     def get(self,request):
         password='123456'
@@ -162,3 +161,19 @@ class LoginAdmin(APIView):
                 mes['code']=10030
                 mes['message']='用户不存在'
         return Response(mes)
+
+
+class UserLevelCondition_add(APIView):
+    def post(self,request):                                                         # todo 添加
+        ulc = UserLevelConditionModelSerializer(data=request.data)
+        print(ulc)
+        mes={}
+        if ulc.is_valid():
+            ulc.save()
+            mes["code"] = 200
+            mes["data"] = ulc.data
+        else:
+            mes["code"] = 400
+        print(ulc.errors)
+        return Response(mes)
+

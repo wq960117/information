@@ -9,9 +9,10 @@ urlpatterns = [
     path('delete_user/',views.DeleteUser.as_view()),
     path('show_userLevel/',views.Show_UserLevel.as_view()),
     # 注册管理员
-    path('reg_admin/',RegAdmin.as_view()),
+    path('reg_admin/',views.RegAdmin.as_view()),
     # 登录管理员
-    path('login_admin/',LoginAdmin.as_view())
+    path('login_admin/',views.LoginAdmin.as_view()),
+    path('ulc_add/', views.UserLevelCondition_add.as_view()),   # 添加
 ]
 
 

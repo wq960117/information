@@ -1,4 +1,4 @@
-# coding=utf-8
+coding=utf-8
 from rest_framework import serializers
 from edu.models import *
 class UserLevelConditionModelSerializer(serializers.ModelSerializer):
@@ -10,7 +10,7 @@ class UserLevelConditionModelSerializer(serializers.ModelSerializer):
         model=UserLevelCondition
         fields='__all__'
         
-"""ÓÃ»§µÈ¼¶ĞòÁĞ»¯"""
+"""ï¿½Ã»ï¿½ï¿½È¼ï¿½ï¿½ï¿½ï¿½Ğ»ï¿½  æé˜¿è¨å¾·"""
 class UserLevelSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserLevel
@@ -31,3 +31,4 @@ class UserLevelConditionSerializer(serializers.Serializer):
         instance.price = validated_data.get('price', instance.price)
         instance.save()
         return instance
+
