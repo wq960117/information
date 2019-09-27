@@ -3,6 +3,14 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from edu.models import *
 from serializers.serializer import *
+from django.http import HttpResponse
+from django.views import View
+from .models import *
+from django.contrib.auth.hashers import make_password,check_password
+
+
+
+
 class DeleteRelation(APIView):
     """删除关系接口"""
     def post(self,request):
@@ -104,8 +112,9 @@ class DeleteUser(APIView):
         user_level = UserLevel.objects.filter(id=id).first()
         user_level.delete()
         return Response('删除完成')
+
         
-  """等级条件展示"""
+  # 等级条件展示
 class Show_UserLevel(APIView):
     def get(self,request):
         # 获取等级
@@ -115,4 +124,41 @@ class Show_UserLevel(APIView):
         mes['code'] = 200
 
         return Response(mes)      
-        
+
+
+# 注册管理员
+
+# 注册管理员
+class RegAdmin(View):
+    def get(self,request):
+        password='123456'
+        admin=Admin(username='李四',password=make_password(password),roles_id_id=1)
+        admin.save()
+        return HttpResponse('添加成功')
+
+# 登录管理员
+class LoginAdmin(APIView):
+    def post(self,request):
+        mes={}
+        data=request.data
+        # 用户信息
+        username=data['name']
+        password=data['passwd']
+
+        if not all([username,password]):
+            mes['code']=10010
+            mes['message']='账号或者密码'
+        else:
+            # 查询是否有该用户
+            admin=Admin.objects.filter(username=username).first()
+            if admin:
+                if check_password(password,admin.password):
+                    mes['code']=200
+                    mes['message']='登录成功'
+                else:
+                    mes['code']=10020
+                    mes['message']='密码错误'
+            else:
+                mes['code']=10030
+                mes['message']='用户不存在'
+        return Response(mes)
