@@ -2,8 +2,16 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="322418d9-c4f3-451f-a2d7-8140d1cb0631" name="Default" comment="">
+      <change afterPath="$PROJECT_DIR$/edu/migrations/0002_auto_20190926_2037.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/edu/migrations/0003_auto_20190927_0734.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/serializers/serializer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/online_edu.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/online_edu.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/edu/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/edu/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/edu/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/edu/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/edu/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/edu/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/online_edu/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/online_edu/urls.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -20,6 +28,9 @@
     <option name="SHOW_EMPTY_GROUPS" value="false" />
     <option name="AUTO_SCROLL_FROM_SOURCE" value="false" />
   </component>
+  <component name="DjangoConsoleOptions" custom-start-script="import sys; print('Python %s on %s' % (sys.version, sys.platform))&#10;import django; print('Django %s' % django.get_version())&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;if 'setup' in dir(django): django.setup()&#10;import django_manage_shell; django_manage_shell.run(PROJECT_ROOT)">
+    <option name="myCustomStartScript" value="import sys; print('Python %s on %s' % (sys.version, sys.platform))&#10;import django; print('Django %s' % django.get_version())&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;if 'setup' in dir(django): django.setup()&#10;import django_manage_shell; django_manage_shell.run(PROJECT_ROOT)" />
+  </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
@@ -35,7 +46,7 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path" value="node" />
-    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.templateLanguages.PyTemplateLanguageModulesConfigurable" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -61,6 +72,7 @@
       <option name="PARENT_ENVS" value="true" />
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
+        <env name="DJANGO_SETTINGS_MODULE" value="online_edu.settings" />
       </envs>
       <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="" />
@@ -116,6 +128,10 @@
       <workItem from="1569496490830" duration="31000" />
       <workItem from="1569499612111" duration="242000" />
       <workItem from="1569499903793" duration="56000" />
+      <workItem from="1569500117627" duration="1581000" />
+      <workItem from="1569501939713" duration="7764000" />
+      <workItem from="1569538862496" duration="3054000" />
+      <workItem from="1569547840208" duration="130000" />
     </task>
     <servers />
   </component>
