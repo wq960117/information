@@ -104,3 +104,15 @@ class DeleteUser(APIView):
         user_level = UserLevel.objects.filter(id=id).first()
         user_level.delete()
         return Response('删除完成')
+        
+  """等级条件展示"""
+class Show_UserLevel(APIView):
+    def get(self,request):
+        # 获取等级
+        show_userlrvelcondition = UserLevelCondition.objects.all()
+        mes = {}
+        mes['userlevelcondition'] = UserLevelConditionSerializer(show_userlrvelcondition,many=True).data
+        mes['code'] = 200
+
+        return Response(mes)      
+        

@@ -9,6 +9,12 @@ class UserLevelConditionModelSerializer(serializers.ModelSerializer):
     class Meta():
         model=UserLevelCondition
         fields='__all__'
+        
+"""用户等级序列化"""
+class UserLevelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserLevel
+        fields = '__all__'
 
 
 class UserLevelConditionSerializer(serializers.Serializer):

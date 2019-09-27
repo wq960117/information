@@ -7,4 +7,5 @@ urlpatterns = [
     path('get_relations/',views.GetRelations.as_view()),
     path('update_user/',views.UserLevelUpdate.as_view()),
     path('delete_user/',views.DeleteUser.as_view()),
+    path('show_userLevel/',views.Show_UserLevel.as_view()),
 ]
