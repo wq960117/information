@@ -72,3 +72,35 @@ class EditRelation(APIView):
             mes['message'] = '错误信息'
         return Response(mes)
 
+#等级列表的修改
+class UserLevelUpdate(APIView):
+    def post(self,request):
+        id = request.POST.get('id')
+        data = request.POST.copy()
+        data = request.data.copy()
+        print(data)
+        data['id'] = id
+        if data['id']:
+            c1 = UserLevel.objects.get(id=data['id'])
+            c = UserLevelConditionModelSerializer(c1,data=data)
+        else:
+            c= UserLevelConditionModelSerializer(data=data)
+
+        mes={}
+        if c.is_valid():
+            c.save()
+            mes['code'] = 200
+            mes['msg'] = '修改成功'
+        else:
+            print(c.errors)
+            mes['code'] = 400
+            mes['msg'] = '修改失败'
+        return Response(mes)
+#等级列表的删除
+class DeleteUser(APIView):
+    def delete(self,request):
+        id = request.GET.get('id')
+        print(id)
+        user_level = UserLevel.objects.filter(id=id).first()
+        user_level.delete()
+        return Response('删除完成')
