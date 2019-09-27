@@ -11,6 +11,28 @@ from django.contrib.auth.hashers import make_password,check_password        # �
 
 
 
+class UserLevel_Add(APIView):
+    def post(self,request):
+        ser = UserLevelConditionModelSerializer(data=request.data)
+        mes = {}
+        if ser.is_valid():
+            ser.save()
+            mes['code'] = '200'
+            mes['msg'] = '成功'
+            mes['data'] = ser.data
+        else:
+            print(ser.errors)
+            mes['code'] = 400
+            mes['msg'] = '失败'
+        return Response(mes)
+
+
+class UserLevel_List(APIView):
+    def get(self,request):
+        userlevel = UserLevel.objects.all()
+        ser = UserLevelSerializer(instance=userlevel,many=True)
+        return Response(ser.data)
+
 
 class DeleteRelation(APIView):
     """删除关系接口"""
