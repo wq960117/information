@@ -1,14 +1,18 @@
-coding=utf-8
+# coding=utf-8
 from rest_framework import serializers
 from edu.models import *
 class UserLevelConditionModelSerializer(serializers.ModelSerializer):
-    # one_level=serializers.SerializerMethodField()
-    # def get_one_level(self,row):
-    #     a_level=UserLevel.objects.filter(id=row.level_id).first()
-    #     return a_level
+    # level_name =serializers.CharField(source='level.level')
+    level_name1=serializers.SerializerMethodField()
+    def get_level_name1(self,row):
+        print(row.level_id)
+        one_level=UserLevel.objects.filter(id=row.level_id).first()
+        print(one_level)
+        # one_level=UserLevelSerializer(one_level).data
+        return one_level.level
     class Meta():
         model=UserLevelCondition
-        fields='__all__'
+        fields=('id','level_name1','time','price','level',)
         
 """�û��ȼ����л�  李阿萨德"""
 class UserLevelSerializer(serializers.ModelSerializer):
@@ -31,4 +35,18 @@ class UserLevelConditionSerializer(serializers.Serializer):
         instance.price = validated_data.get('price', instance.price)
         instance.save()
         return instance
+class UserLevelSerializers(serializers.Serializer):
+    level= serializers.CharField(max_length=20)
 
+
+    def create(self, data):
+        return UserLevel.objects.create(**data)
+
+    def update(self, instance, validated_data):
+        instance.level = validated_data.get('level', instance.level)
+        instance.save()
+        return instance
+class AdminModelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Admin
+        fields = '__all__'

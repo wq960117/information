@@ -331,13 +331,13 @@ class Resources(models.Model):
 
 # 角色资源表    roles_resources
 class Roles_Resources(models.Model):
-    roles_id = models.IntegerField  # 权限名称
-    resources_id = models.IntegerField  # 全线路有
+    roles= models.ForeignKey(Roles,on_delete=models.CASCADE)  # 权限名称
+    resources = models.ForeignKey(Resources,on_delete=models.CASCADE)  # 全线路有
 
 
 class Admin(models.Model):  # 管理员用户表
     username = models.CharField(max_length=50)  # 管理员用户名
-    password = models.CharField(max_length=50)  # 管理员密码
+    password = models.CharField(max_length=255)  # 管理员密码
     roles_id = models.ForeignKey(Roles, on_delete=models.CASCADE)  # 外键关联角色表
 #
 # # 活动表    act

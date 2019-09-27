@@ -13,7 +13,8 @@ from django.contrib.auth.hashers import make_password,check_password        # �
 
 class UserLevel_Add(APIView):
     def post(self,request):
-        ser = UserLevelConditionModelSerializer(data=request.data)
+        print(request.data)
+        ser = UserLevelSerializers(data=request.data)
         mes = {}
         if ser.is_valid():
             ser.save()
@@ -53,10 +54,16 @@ class DeleteRelation(APIView):
 
 class DeleteRelations(APIView):
     """批量删除关系接口"""
-    def get(self,request):
+    def post(self,request):
         mes={}
-        ids=request.GET.getlist('id')
-        for id in ids:
+        data=request.data
+        ids=data['ids']
+        print(ids)
+        id_list=[]
+        id_list=ids.split(',')
+        for id in id_list:
+            id=int(id)
+            print(id)
             one_relation=UserLevelCondition.objects.get(id=id)
             try:
                 one_relation.delete()
@@ -65,18 +72,6 @@ class DeleteRelations(APIView):
             except:
                 mes['code']=201
                 mes['message']='删除失败'
-            return Response(mes)
-
-class GetRelations(APIView):
-    """批量删除关系接口"""
-    def get(self,request):
-        mes={}
-        all_relations=UserLevelCondition.objects.all()
-        all_relations=UserLevelConditionModelSerializer(all_relations,many=True)
-        print(all_relations)
-        mes['code']=201
-        mes['all_relations']=all_relations.data
-        # print(mes)
         return Response(mes)
 
 class EditRelation(APIView):
@@ -85,14 +80,16 @@ class EditRelation(APIView):
         mes = {}
         data=request.data.copy()
         print(data)
-        if data['id']:
-            id=int(data['id'])
-            one_relation = UserLevelCondition.objects.get(id=id)
-            a_relation=UserLevelConditionSerializer(one_relation,data=data)
-        else:
-            a_relation=UserLevelConditionSerializer(data=data)
         try:
-            if a_relation.is_valid():
+            if data['id']:
+                id=int(data['id'])
+                one_relation = UserLevelCondition.objects.get(id=id)
+                # 根据修改的外键名字换取对应的外键ID
+                one_level = UserLevel.objects.filter(level=data['level_name1']).first()
+                one_relation.level_id = one_level.id
+                one_relation.time=data['time']
+                one_relation.price=data['price']
+                one_relation.save()
                 mes['code'] = 200
                 mes['message'] = '修改成功'
             else:
@@ -107,6 +104,7 @@ class EditRelation(APIView):
 class UserLevelUpdate(APIView):
     def post(self,request):
         id = request.POST.get('id')
+        # 什么意思？？？？？？？？
         data = request.POST.copy()
         data = request.data.copy()
         print(data)
@@ -129,13 +127,35 @@ class UserLevelUpdate(APIView):
         return Response(mes)
 #等级列表的删除
 class DeleteUser(APIView):
-    def delete(self,request):
-        id = request.GET.get('id')
-        print(id)
-        user_level = UserLevel.objects.filter(id=id).first()
+    def post(self,request):
+        mes={}
+        data = request.data
+        user_level = UserLevel.objects.filter(id=int(data['id'])).first()
         user_level.delete()
-        return Response('删除完成')
+        mes['code'] = 200
+        mes['msg'] = '删除成功'
+        return Response(mes)
+class DeleteUsers(APIView):
+    """批量删除用户接口"""
+    def post(self,request):
+        mes={}
+        data=request.data
+        ids=data['ids']
+        print(ids)
 
+        id_list=ids.split(',')
+        for id in id_list:
+            id=int(id)
+            print(id)
+            one_level=UserLevel.objects.get(id=id)
+            try:
+                one_level.delete()
+                mes['code']=200
+                mes['message']='删除成功'
+            except:
+                mes['code']=201
+                mes['message']='删除失败'
+        return Response(mes)
         
   # 等级条件展示
 class Show_UserLevel(APIView):
@@ -146,10 +166,22 @@ class Show_UserLevel(APIView):
         mes['userlevelcondition'] = UserLevelConditionSerializer(show_userlrvelcondition,many=True).data
         mes['code'] = 200
 
-        return Response(mes)      
+        return Response(mes)
 
+# 等级条件展示
 
-# 注册管理员
+class GetRelations(APIView):
+    """查询等级条件接口"""
+    def get(self,request):
+        mes={}
+        all_relations=UserLevelCondition.objects.all()
+        all_relations=UserLevelConditionModelSerializer(all_relations,many=True)
+        print(all_relations)
+        mes['code']=200
+        mes['all_relations']=all_relations.data
+        # print(mes)
+        return Response(mes)
+        # 注册管理员
 class RegAdmin(View):
     def get(self,request):
         password='123456'
@@ -163,8 +195,8 @@ class LoginAdmin(APIView):
         mes={}
         data=request.data
         # 用户信息
-        username=data['name']
-        password=data['passwd']
+        username=data['username']
+        password=data['password']
 
         if not all([username,password]):
             mes['code']=10010
@@ -174,8 +206,10 @@ class LoginAdmin(APIView):
             admin=Admin.objects.filter(username=username).first()
             if admin:
                 if check_password(password,admin.password):
+                    admin=AdminModelSerializer(admin)
                     mes['code']=200
                     mes['message']='登录成功'
+                    mes['user']=admin.data
                 else:
                     mes['code']=10020
                     mes['message']='密码错误'
