@@ -5,6 +5,7 @@ urlpatterns = [
     path('userleveladd/', views.UserLevel_Add.as_view()),
     # 用户等级展示
     path('userlevellist/', views.UserLevel_List.as_view()),
+    path('get_userLevels/', views.Get_UserLevels.as_view()),
     # 更新用户等级
     path('update_userlevel/', views.UserLevelUpdate.as_view()),
     # 删除用户等级

@@ -6,22 +6,22 @@ from rest_framework.response import Response                                # �
 from edu.models import *                                                    # 导入models对象
 from serializers.serializer import *                                        # 序列化文件类
 from django.contrib.auth.hashers import make_password,check_password        # 生成哈希 校验哈希
-
-
-
-
+from django.core.paginator import Paginator                                 # 分页
 
 class UserLevel_Add(APIView):
+    """用户的等级的添加"""
     def post(self,request):
-        print(request.data)
+        # 反序列化验证数据
         ser = UserLevelSerializers(data=request.data)
         mes = {}
         if ser.is_valid():
+            # 如果数据通过验证，则保存到数据库中
             ser.save()
             mes['code'] = '200'
             mes['msg'] = '成功'
             mes['data'] = ser.data
         else:
+            # 如果数据不符合验证，则返回提示信息
             print(ser.errors)
             mes['code'] = 400
             mes['msg'] = '失败'
@@ -29,12 +29,29 @@ class UserLevel_Add(APIView):
 
 
 class UserLevel_List(APIView):
+    """分页获取用户等级接口"""
     def get(self,request):
+        mes={}
+        userlevel = UserLevel.objects.all() #获取所有的用户等级数据
+        current_page = int(request.GET.get('page'))  # 获取当前页的页码
+        paginator = Paginator(userlevel,2)  # 将所有的数据放到分页容器中
+        current_data = paginator.get_page(current_page)  # 获取当前页的数据，前台显示当前页的数据就可以
+        total_page = paginator.num_pages  # 获取总页数
+        userlevels = UserLevelSerializer(current_data,many=True) # 序列化当前页的数据
+        mes['userlevels'] = userlevels.data  # 返回序列化后的当前页的数据
+        mes['code'] = 200
+        mes['total'] = total_page   #   返回总页数
+        return Response(mes)
+
+class Get_UserLevels(APIView):
+    """获取所有用户等级的数据，显示在添加用户等级条件的页面，因为如果直接调用分页获取用户等级的接口，如果用户等级多，第二页的用户等级在添加的时候显示不到，只能显示第一页的第一页的用户等级 """
+    def get(self,request):
+        mes={}
         userlevel = UserLevel.objects.all()
-        ser = UserLevelSerializer(instance=userlevel,many=True)
-        return Response(ser.data)
-
-
+        userlevels = UserLevelSerializer(userlevel,many=True)
+        mes['userlevels'] = userlevels.data  # 序列化当前页的数据
+        mes['code'] = 200
+        return Response(mes)
 class DeleteRelation(APIView):
     """删除关系接口"""
     def post(self,request):
@@ -157,15 +174,20 @@ class DeleteUsers(APIView):
                 mes['message']='删除失败'
         return Response(mes)
         
-  # 等级条件展示
+# 等级条件展示
 class Show_UserLevel(APIView):
     def get(self,request):
+        mes = {}
         # 获取等级
         show_userlrvelcondition = UserLevelCondition.objects.all()
-        mes = {}
-        mes['userlevelcondition'] = UserLevelConditionSerializer(show_userlrvelcondition,many=True).data
+        # current_page=request.GET.get('page') #  获取当前页的页码
+        # paginator=Paginator(show_userlrvelcondition,1)  #   将所有的数据放到分页容器中
+        # current_data=paginator.get_page(current_page)   #   获取当前页的数据，前台显示当前页的数据就可以
+        # total_page = paginator.num_pages  #   获取总页数
+        # print(total_page)
+        mes['userlevelcondition'] = UserLevelConditionSerializer(show_userlrvelcondition,many=True).data   #   序列化当前页的数据
         mes['code'] = 200
-
+        # mes['total'] = total_page
         return Response(mes)
 
 # 等级条件展示
@@ -173,13 +195,27 @@ class Show_UserLevel(APIView):
 class GetRelations(APIView):
     """查询等级条件接口"""
     def get(self,request):
-        mes={}
-        all_relations=UserLevelCondition.objects.all()
-        all_relations=UserLevelConditionModelSerializer(all_relations,many=True)
-        print(all_relations)
-        mes['code']=200
-        mes['all_relations']=all_relations.data
-        # print(mes)
+        mes = {}
+        # 获取等级
+        show_userlrvelcondition = UserLevelCondition.objects.all()
+        print(show_userlrvelcondition)
+        # 获取当前页的页码
+        current_page = request.GET.get('page')
+        print('&&&&&&&&&&&&&&&&&&&&&&&')
+        print(current_page)
+        # 将所有的数据放到分页容器中
+        paginator = Paginator(show_userlrvelcondition,1)
+        # 获取当前页的数据，前台显示当前页的数据就可以
+        current_data = paginator.get_page(current_page)
+        # 获取总页数
+        total_page =paginator.num_pages
+        print(total_page)
+        print('&&&&w&&&&&&&&&&&&&&&&&&&')
+        userlevelcondition = UserLevelConditionModelSerializer(current_data, many=True).data  # 序列化当前页的数据
+        # userlevelcondition=UserLevelConditionModelSerializer(show_userlrvelcondition,many=True).data
+        mes['all_relations'] = userlevelcondition  # 序列化当前页的数据
+        mes['code'] = 200
+        mes['total'] = total_page
         return Response(mes)
         # 注册管理员
 class RegAdmin(View):

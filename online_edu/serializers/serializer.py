@@ -2,14 +2,11 @@
 from rest_framework import serializers
 from edu.models import *
 class UserLevelConditionModelSerializer(serializers.ModelSerializer):
-    # level_name =serializers.CharField(source='level.level')
-    level_name1=serializers.SerializerMethodField()
-    def get_level_name1(self,row):
-        print(row.level_id)
-        one_level=UserLevel.objects.filter(id=row.level_id).first()
-        print(one_level)
-        # one_level=UserLevelSerializer(one_level).data
-        return one_level.level
+    level_name1 =serializers.CharField(source='level.level')
+    # level_name1=serializers.SerializerMethodField()
+    # def get_level_name1(self,row):
+    #     one_level=UserLevel.objects.filter(id=row.level_id).first()
+    #     return one_level.level
     class Meta():
         model=UserLevelCondition
         fields=('id','level_name1','time','price','level',)
@@ -37,8 +34,6 @@ class UserLevelConditionSerializer(serializers.Serializer):
         return instance
 class UserLevelSerializers(serializers.Serializer):
     level= serializers.CharField(max_length=20)
-
-
     def create(self, data):
         return UserLevel.objects.create(**data)
 
