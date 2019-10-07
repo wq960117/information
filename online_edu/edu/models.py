@@ -115,7 +115,7 @@ class Tag(models.Model):
 #
 # """阶段表"""
 #
-#
+#路径-阶段-课程-章节
 class Path_stage(models.Model):
     stage_name = models.CharField(max_length=50, verbose_name='阶段名称')
     path = models.ForeignKey(Path, on_delete=models.CASCADE, verbose_name='关联路径')
@@ -145,11 +145,12 @@ class Course(models.Model):
     learn = models.IntegerField(default=0, verbose_name='学过人数')
     teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE, verbose_name='关联老师')
     comment_num = models.IntegerField(default=0, verbose_name='评论数量')
-    path = models.ForeignKey(Path_stage, on_delete=models.CASCADE, verbose_name='关联阶段')
+    stage = models.ForeignKey(Path_stage, on_delete=models.CASCADE, verbose_name='关联阶段')
     tag = models.ForeignKey(Tag, on_delete=models.CASCADE, verbose_name='关联标签')
     recommand = models.CharField(max_length=50, verbose_name='推荐课程')
     detail = models.CharField(max_length=200, verbose_name='课程详情')
     section_num = models.IntegerField(default=0, verbose_name='章节数')
+    path_id = models.IntegerField(default=0, verbose_name='所属路径')
 
     class Meta:
         db_table = 'course'
