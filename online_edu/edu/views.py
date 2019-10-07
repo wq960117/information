@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.views import View
 from rest_framework.views import APIView                                    # 类方法序列化继承APIView
 from rest_framework.response import Response                                # 返回json格式
-from edu.models import *                                                    # 导入models对象
+from edu.models import *                                               # 导入models对象
 from serializers.serializer import *                                        # 序列化文件类
 from django.contrib.auth.hashers import make_password,check_password        # 生成哈希 校验哈希
 from django.core.paginator import Paginator                                 # 分页
@@ -34,7 +34,7 @@ class UserLevel_List(APIView):
         mes={}
         userlevel = UserLevel.objects.all() #获取所有的用户等级数据
         current_page = int(request.GET.get('page'))  # 获取当前页的页码
-        paginator = Paginator(userlevel,2)  # 将所有的数据放到分页容器中
+        paginator = Paginator(userlevel,4)  # 将所有的数据放到分页容器中
         current_data = paginator.get_page(current_page)  # 获取当前页的数据，前台显示当前页的数据就可以
         total_page = paginator.num_pages  # 获取总页数
         userlevels = UserLevelSerializer(current_data,many=True) # 序列化当前页的数据
@@ -121,8 +121,6 @@ class EditRelation(APIView):
 class UserLevelUpdate(APIView):
     def post(self,request):
         id = request.POST.get('id')
-        # 什么意思？？？？？？？？
-        data = request.POST.copy()
         data = request.data.copy()
         print(data)
         data['id'] = id
@@ -254,7 +252,6 @@ class LoginAdmin(APIView):
                 mes['message']='用户不存在'
         return Response(mes)
 
-
 class UserLevelCondition_add(APIView):
     def post(self,request):                                                         # todo 添加
         ulc = UserLevelConditionModelSerializer(data=request.data)
@@ -267,5 +264,65 @@ class UserLevelCondition_add(APIView):
         else:
             mes["code"] = 400
         print(ulc.errors)
+        return Response(mes)
+
+# 阶段的添加
+class AddPath_stageView(APIView):
+    def post(self,request):
+        ser = Path_stageSerializers(data=request.data)
+        mes = {}
+        print('aaaaaaaaaaaaaaaaaaaaaa')
+        if ser.is_valid():
+            print('sssssssssssssssssssssssss')
+            ser.save()
+            mes['code'] = 200
+            mes['msg'] = '添加成功'
+            mes['data'] = ser.data
+        else:
+            mes['code'] = 400
+            mes['msg'] = '添加失败'
+        return Response(mes)
+# 阶段的展示
+class Path_stagelistView(APIView):
+    def get(self,request):
+        mes={}
+        path = Path_stage.objects.all()
+        pathlist = Path_stageSerializers(path, many=True)
+        mes['pathlist'] = pathlist.data  # 序列化当前页的数据
+        mes['code'] = 200
+        return Response(mes)
+# 阶段的修改
+class UpdatePath_stageView(APIView):
+    def post(self,request):
+        id = request.POST.get('id')
+        data = request.data.copy()
+        print(data)
+        data['id'] = id
+        if data['id']:
+            c1 = Path_stage.objects.get(id=data['id'])
+            c = Path_stageSerializers(c1, data=data)
+        else:
+            c = Path_stageSerializers(data=data)
+        mes = {}
+        if c.is_valid():
+            c.save()
+            mes['code'] = 200
+            mes['msg'] = '修改成功'
+        else:
+            print(c.errors)
+            mes['code'] = 400
+            mes['msg'] = '修改失败'
+        return Response(mes)
+
+#阶段的删除
+class Delete_PathView(APIView):
+    def post(self,request):
+        mes = {}
+        data = request.data
+        Path = Path_stage.objects.filter(id=int(data['id'])).first()
+        Path.delete()
+        mes['code'] = 200
+        mes['msg'] = '删除成功'
+
         return Response(mes)
 

@@ -45,3 +45,15 @@ class AdminModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = Admin
         fields = '__all__'
+
+# 阶段的序列化
+class Path_stageSerializers(serializers.Serializer):
+    stage_name = serializers.CharField(max_length=50)
+    path_id = serializers.IntegerField()
+    sort = serializers.IntegerField()
+    def create(self, data):
+        return Path_stage.objects.create(**data)
+    def update(self, instance, validated_data):
+        instance.stage_name = validated_data.get('stage_name', instance.stage_name)
+        instance.save()
+        return instance

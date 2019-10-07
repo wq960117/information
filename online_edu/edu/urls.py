@@ -26,11 +26,20 @@ urlpatterns = [
     # 用户等级关系展示
     path('show_userLevel/',views.Show_UserLevel.as_view()),
 
-
     # 注册管理员
     path('reg_admin/',views.RegAdmin.as_view()),
     # 登录管理员
     path('login_admin/',views.LoginAdmin.as_view()),
+
+    #阶段的添加
+    path('AddPath/',views.AddPath_stageView.as_view()),
+    # 阶段的展示
+    path('Path_list/',views.Path_stagelistView.as_view()),
+    # 阶段的修改
+    path('update_Path/',views.UpdatePath_stageView.as_view()),
+    #阶段的删除
+    path('delete_path/',views.Delete_PathView.as_view()),
+
 
 ]
 
