@@ -2,19 +2,19 @@ from django.db import models
 import datetime
 
 
-# class User(models.Model):
-#     '''用户信息表'''
-#     username = models.CharField(max_length=20, verbose_name='用户名')
-#     password = models.CharField(max_length=255, verbose_name='密码')
-#     pic = models.CharField(max_length=255, verbose_name='用户头像')
-#     level = models.IntegerField(default=0, verbose_name='用户类型，0普通用户，1普通会员，2高级会员')
-#     is_active = models.IntegerField(default=0, verbose_name='激活状态，0未激活，1激活')
-#     integral = models.IntegerField(default=0, verbose_name='积分')
-#     invitation_code = models.CharField(max_length=50, default='', verbose_name='邀请码')
-#     token = models.CharField(max_length=255, verbose_name='用户登录生成的token')
-#
-#     class Meta():
-#         db_table = 'user'
+class User(models.Model):
+    '''用户信息表'''
+    username = models.CharField(max_length=20, verbose_name='用户名')
+    password = models.CharField(max_length=255, verbose_name='密码')
+    pic = models.CharField(max_length=255, verbose_name='用户头像')
+    level = models.IntegerField(default=0, verbose_name='用户类型，0普通用户，1普通会员，2高级会员')
+    is_active = models.IntegerField(default=0, verbose_name='激活状态，0未激活，1激活')
+    integral = models.IntegerField(default=0, verbose_name='积分')
+    invitation_code = models.CharField(max_length=50, default='', verbose_name='邀请码')
+    token = models.CharField(max_length=255, verbose_name='用户登录生成的token')
+
+    class Meta():
+        db_table = 'user'
 #
 #
 # class Member(models.Model):
@@ -93,67 +93,67 @@ class UserLevelCondition(models.Model):
 # """路径表"""
 #
 #
-# class Path(models.Model):
-#     pic = models.CharField(max_length=50, verbose_name='路径图片')
-#     path = models.CharField(max_length=255, verbose_name='路径名称')
-#     info = models.CharField(max_length=255, verbose_name='路径简介')
-#     studynum = models.IntegerField(default=0, verbose_name='学习人数')
-#
-#     class Meta:
-#         db_table = 'path'
-#
+class Path(models.Model):
+    pic = models.CharField(max_length=50, verbose_name='路径图片')
+    path = models.CharField(max_length=255, verbose_name='路径名称')
+    info = models.CharField(max_length=255, verbose_name='路径简介')
+    studynum = models.IntegerField(default=0, verbose_name='学习人数')
+
+    class Meta:
+        db_table = 'path'
+
 #
 # """标签表"""
 #
 #
-# class Tag(models.Model):
-#     name = models.CharField(max_length=50, verbose_name='标签名称')
-#
-#     class Meta:
-#         db_table = 'tag'
+class Tag(models.Model):
+    name = models.CharField(max_length=50, verbose_name='标签名称')
+
+    class Meta:
+        db_table = 'tag'
 #
 #
 # """阶段表"""
 #
 #
-# class Path_stage(models.Model):
-#     stage_name = models.CharField(max_length=50, verbose_name='阶段名称')
-#     path = models.ForeignKey(Path, on_delete=models.CASCADE, verbose_name='关联路径')
-#     sort = models.IntegerField(default=0, verbose_name='排序')
-#
-#     class Meta:
-#         db_table = 'path_stage'
+class Path_stage(models.Model):
+    stage_name = models.CharField(max_length=50, verbose_name='阶段名称')
+    path = models.ForeignKey(Path, on_delete=models.CASCADE, verbose_name='关联路径')
+    sort = models.IntegerField(default=0, verbose_name='排序')
+
+    class Meta:
+        db_table = 'path_stage'
 #
 #
 # # 老师表
-# class Teacher(models.Model):
-#     name = models.CharField(max_length=15, verbose_name='姓名')
-#     describe = models.CharField(max_length=255, verbose_name='讲师描述')
-#     pic = models.CharField(max_length=255, verbose_name='头像')
+class Teacher(models.Model):
+    name = models.CharField(max_length=15, verbose_name='姓名')
+    describe = models.CharField(max_length=255, verbose_name='讲师描述')
+    pic = models.CharField(max_length=255, verbose_name='头像')
 #
 #
 # """课程表"""
 #
-#
-# class Course(models.Model):
-#     title = models.CharField(max_length=50, verbose_name='课程标题')
-#     pic = models.CharField(max_length=255, verbose_name='课程图片')
-#     info = models.CharField(max_length=255, verbose_name='课程简介')
-#     online = models.IntegerField(default=0, verbose_name='是否上线0没上线,1上线')
-#     member = models.IntegerField(default=0, verbose_name='是否会员0非会员,1会员,2训练营')
-#     attention = models.IntegerField(default=0, verbose_name='关注量')
-#     learn = models.IntegerField(default=0, verbose_name='学过人数')
-#     teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE, verbose_name='关联老师')
-#     comment_num = models.IntegerField(default=0, verbose_name='评论数量')
-#     path = models.ForeignKey(Path_stage, on_delete=models.CASCADE, verbose_name='关联阶段')
-#     tag = models.ForeignKey(Tag, on_delete=models.CASCADE, verbose_name='关联标签')
-#     recommand = models.CharField(max_length=50, verbose_name='推荐课程')
-#     detail = models.CharField(max_length=200, verbose_name='课程详情')
-#     section_num = models.IntegerField(default=0, verbose_name='章节数')
-#
-#     class Meta:
-#         db_table = 'course'
-#
+
+class Course(models.Model):
+    title = models.CharField(max_length=50, verbose_name='课程标题')
+    pic = models.CharField(max_length=255, verbose_name='课程图片')
+    info = models.CharField(max_length=255, verbose_name='课程简介')
+    online = models.IntegerField(default=0, verbose_name='是否上线0没上线,1上线')
+    member = models.IntegerField(default=0, verbose_name='是否会员，0非会员,1会员,2训练营')
+    attention = models.IntegerField(default=0, verbose_name='关注量')
+    learn = models.IntegerField(default=0, verbose_name='学过人数')
+    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE, verbose_name='关联老师')
+    comment_num = models.IntegerField(default=0, verbose_name='评论数量')
+    path = models.ForeignKey(Path_stage, on_delete=models.CASCADE, verbose_name='关联阶段')
+    tag = models.ForeignKey(Tag, on_delete=models.CASCADE, verbose_name='关联标签')
+    recommand = models.CharField(max_length=50, verbose_name='推荐课程')
+    detail = models.CharField(max_length=200, verbose_name='课程详情')
+    section_num = models.IntegerField(default=0, verbose_name='章节数')
+
+    class Meta:
+        db_table = 'course'
+
 #
 # """价格表"""
 #
@@ -171,14 +171,14 @@ class UserLevelCondition(models.Model):
 # """章节表"""
 #
 #
-# class Section(models.Model):
-#     section = models.CharField(max_length=50, verbose_name='课程章节名称')
-#     course = models.ForeignKey(Course, on_delete=models.CASCADE, verbose_name='关联课程')
-#     video = models.CharField(max_length=50, verbose_name='视频链接')
-#     sort = models.IntegerField(default=0, verbose_name='排序')
-#
-#     class Meta:
-#         db_table = 'section'
+class Section(models.Model):
+    section = models.CharField(max_length=50, verbose_name='课程章节名称')
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, verbose_name='关联课程')
+    video = models.CharField(max_length=50, verbose_name='视频链接')
+    sort = models.IntegerField(default=0, verbose_name='排序')
+
+    class Meta:
+        db_table = 'section'
 #
 #
 # # 实验报告
@@ -319,26 +319,27 @@ class UserLevelCondition(models.Model):
 # 角色表    roles
 class Roles(models.Model):
     name = models.CharField(max_length=155)  # 角色名称
-    status = models.IntegerField  # 状态(0为停用，1为启用)
+    status = models.IntegerField(default=0)  # 状态(0为停用，1为启用)
+
 
 
 # 资源表    resources
 class Resources(models.Model):
     name = models.CharField(max_length=155)  # 权限名称
     url = models.CharField(max_length=155)  # 全线路有
-    status = models.IntegerField  # 状态(0为停用，1为启用)
-
+    status = models.IntegerField(default=1)  # 状态(0为停用，1为启用)
+    roles= models.ManyToManyField(Roles,related_name='resources')  # 使用多对多自动创建第三张表
 
 # 角色资源表    roles_resources
-class Roles_Resources(models.Model):
-    roles= models.ForeignKey(Roles,on_delete=models.CASCADE)  # 权限名称
-    resources = models.ForeignKey(Resources,on_delete=models.CASCADE)  # 全线路有
+# class Roles_Resources(models.Model):
+#     roles= models.ForeignKey(Roles,on_delete=models.CASCADE)  # 权限名称
+#     resources = models.ForeignKey(Resources,on_delete=models.CASCADE)  # 全线路有
 
 
 class Admin(models.Model):  # 管理员用户表
     username = models.CharField(max_length=50)  # 管理员用户名
     password = models.CharField(max_length=255)  # 管理员密码
-    roles_id = models.ForeignKey(Roles, on_delete=models.CASCADE)  # 外键关联角色表
+    roles = models.ForeignKey(Roles, on_delete=models.CASCADE)  # 外键关联角色表
 #
 # # 活动表    act
 # class Act(models.Model):
