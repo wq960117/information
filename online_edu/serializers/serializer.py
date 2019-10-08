@@ -46,7 +46,12 @@ class AdminModelSerializer(serializers.ModelSerializer):
         model = Admin
         fields = '__all__'
 
-# 阶段的序列化
+#阶段的序列化
+class Path_stageModelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Path_stage
+        fields = '__all__'
+# 阶段的反序列化
 class Path_stageSerializers(serializers.Serializer):
     stage_name = serializers.CharField(max_length=50)
     path_id = serializers.IntegerField()

@@ -271,7 +271,8 @@ class AddPath_stageView(APIView):
     def post(self,request):
         ser = Path_stageSerializers(data=request.data)
         mes = {}
-        print('aaaaaaaaaaaaaaaaaaaaaa')
+
+        print(request.data,'aaaaaaaaaaaaaaaaaaaaaa')
         if ser.is_valid():
             print('sssssssssssssssssssssssss')
             ser.save()
@@ -287,29 +288,31 @@ class Path_stagelistView(APIView):
     def get(self,request):
         mes={}
         path = Path_stage.objects.all()
-        pathlist = Path_stageSerializers(path, many=True)
+        pathlist = Path_stageModelSerializer(path, many=True)
         mes['pathlist'] = pathlist.data  # 序列化当前页的数据
         mes['code'] = 200
         return Response(mes)
 # 阶段的修改
 class UpdatePath_stageView(APIView):
     def post(self,request):
-        id = request.POST.get('id')
         data = request.data.copy()
-        print(data)
-        data['id'] = id
+        datas = {}
+        datas['stage_name']=data['stage_name']
+        datas['path_id']=data['path_id']
+        datas['sort']=data['sort']
+        print(datas)
         if data['id']:
             c1 = Path_stage.objects.get(id=data['id'])
-            c = Path_stageSerializers(c1, data=data)
+            c = Path_stageSerializers(c1, data=datas)
         else:
-            c = Path_stageSerializers(data=data)
+            c = Path_stageSerializers(data=datas)
         mes = {}
         if c.is_valid():
             c.save()
             mes['code'] = 200
             mes['msg'] = '修改成功'
         else:
-            print(c.errors)
+            # print(c.errors)
             mes['code'] = 400
             mes['msg'] = '修改失败'
         return Response(mes)
@@ -319,11 +322,11 @@ class Delete_PathView(APIView):
     def post(self,request):
         mes = {}
         data = request.data
+        print(data,'============================================')
         Path = Path_stage.objects.filter(id=int(data['id'])).first()
         Path.delete()
         mes['code'] = 200
         mes['msg'] = '删除成功'
-
         return Response(mes)
 
 
