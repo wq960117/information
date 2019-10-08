@@ -55,6 +55,16 @@ urlpatterns = [
     # todo 标签表
     path('tag_list/', views.TagList.as_view()),  # 增删改查
     path('tag_deletes/', views.TagDeletes.as_view()),  # 批量删除
+
+
+    # 老师添加
+    path('teacher_add/', views.Teacher_add.as_view()),
+    # 老师删除
+    path('teacher_delete/', views.TeacherDelete.as_view()),
+    # 老师展示
+    path('teacher_list/', views.Teacher_list.as_view()),
+    # 老师修改
+    path('teacher_update/', views.Teacher_update.as_view()),
 ]
 
 

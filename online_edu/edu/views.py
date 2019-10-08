@@ -509,3 +509,73 @@ class TagDeletes(APIView):                                                      
             mes['code']=200
             mes['message']='删除成功'
         return Response(mes)
+
+'''
+老师相关
+'''
+#老师添加
+class Teacher_add(APIView):
+    def post(self, request):
+        ts = TeacherSerializer(data=request.data)
+        print(ts)
+        mes = {}
+        if ts.is_valid():
+            ts.save()
+            mes["code"] = 200
+            mes["data"] = ts.data
+        else:
+            mes["code"] = 400
+        return Response(mes)
+
+#老师删除
+class TeacherDelete(APIView):
+    def get(self, request):
+        mes = {}
+        id = request.GET.get('id')
+        teacher_d = Teacher.objects.filter(id=id).first()
+        teacher_d.delete()
+        mes['code'] = 200
+        mes['msg'] = '删除成功'
+        return Response(mes)
+
+#老师展示
+class Teacher_list(APIView):
+    def get(self, request):
+        teachers = Teacher.objects.all().order_by('id')
+
+        p = int(request.GET.get('page', 1))
+        page = Paginator(teachers, 3)
+        teacher_list = page.get_page(p)
+        tpage = page = page.num_pages
+
+        tea = TeacherSerializer(teacher_list, many=True)
+        mes = {}
+        mes['code'] = 200
+        mes['teacher_list'] = tea.data
+        mes['tpage'] = tpage
+        return Response(mes)
+
+#老师修改
+class Teacher_update(APIView):
+    def post(self, request):
+        id = request.POST.get('id')
+        data = request.POST.copy()
+        data = request.data.copy()
+        print(data)
+        data['id'] = id
+        if data['id']:
+            c1 = Teacher.objects.get(id=data['id'])
+            c = TeacherSerializer(c1, data=data)
+        else:
+            c = TeacherSerializer(data=data)
+
+        mes = {}
+        if c.is_valid():
+            c.save()
+            mes['code'] = 200
+            mes['msg'] = '修改成功'
+        else:
+            print(c.errors)
+            mes['code'] = 400
+            mes['msg'] = '修改失败'
+        return Response(mes)
