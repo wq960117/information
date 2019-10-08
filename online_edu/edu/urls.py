@@ -65,6 +65,16 @@ urlpatterns = [
     path('teacher_list/', views.Teacher_list.as_view()),
     # 老师修改
     path('teacher_update/', views.Teacher_update.as_view()),
+
+    # 获取课程列表及相关信息
+    path('get_classes/', views.GetClasses.as_view()),
+    # 添加课程
+    path('add_course/', views.Addclasses.as_view()),
+    path('delete_classes/', views.DeleteClasses.as_view()),
+    path('delete_class/', views.DeleteClass.as_view()),
+
+    # 删除图片
+    path('delete_img/', views.delete_ssh)
 ]
 
 

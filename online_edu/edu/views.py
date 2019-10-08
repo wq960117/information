@@ -579,3 +579,176 @@ class Teacher_update(APIView):
             mes['code'] = 400
             mes['msg'] = '修改失败'
         return Response(mes)
+
+class GetClasses(APIView):
+    """获取课程相关信息"""
+    def get(self,request):
+        mes={}
+        all_classes=Course.objects.all()
+        page=request.GET.get('page')
+
+        if page:
+            page=int(page)
+        else:
+            page=1
+        paginator=Paginator(all_classes,2)
+        current_classes=paginator.get_page(page)
+        current_classes=ClassesModelSerializer(current_classes,many=True)
+        total=paginator.num_pages
+
+        all_teachers=Teacher.objects.all()
+        all_teachers=TeachersModelSerializer(all_teachers,many=True)
+        all_paths=Path.objects.all()
+        all_paths=PathsModelSerializer(all_paths,many=True)
+        all_stages=Path_stage.objects.all()
+        all_stages=StageModelSerializer(all_stages,many=True)
+        all_tags=Tag.objects.all()
+        all_tags=TagsModelSerializer(all_tags,many=True)
+        mes['code']=200
+        mes['total']=total
+        mes['all_classes']=current_classes.data
+        mes['all_teachers']=all_teachers.data
+        mes['all_paths']=all_paths.data
+        mes['all_stages']=all_stages.data
+        mes['all_tags']=all_tags.data
+        return Response(mes)
+class Addclasses(APIView):
+    """添加管理员"""
+    def post(self,request):
+        mes={}
+        data=request.data.copy()
+        print(data)
+        id=data['id']
+        # 因为data里传递了修改对应的ID，所以存储序列化的时候无法验证，所以重新定义数据，将除了ID以外的数据重新赋值
+        datas={}
+        datas['title']=data['title']
+        datas['pic']=data['pic']
+        datas['info']=data['info']
+        datas['member']=data['member']
+        datas['attention']=data['attention']
+        datas['learn']=data['learn']
+        datas['teacher_id']=data['teacher_id']
+        datas['comment_num']=data['comment_num']
+        datas['stage_id']=data['stage_id']
+        datas['tag_id']=data['tag_id']
+        datas['recommand']=data['recommand']
+        datas['detail']=data['detail']
+        datas['section_num']=data['section_num']
+        datas['path_id']=data['path_id']
+        datas['online']=data['online']
+        print(datas)
+        if id:
+            """如果ID存在则修改"""
+            a_course=Course.objects.get(id=id)
+            pic_name = a_course.pic
+            print(pic_name)
+            pic = pic_name.split('/')[-1]
+            print(pic)
+            # 跳转到指定目录
+            os.chdir(UPLOAD_ROOT[0])
+            print(os.getcwd())
+            try:
+                # 删除
+                os.remove(pic)
+                mes['code'] = 200
+                mes['msg'] = '删除成功'
+
+            except:
+                mes['code'] = 201
+                mes['msg'] = '删除失败'
+            one_course = ClassesSerializers(a_course, data=datas)
+        else:
+            """ID不存在为添加"""
+            one_course=ClassesSerializers(data=datas)
+        try:
+            if one_course.is_valid():
+                one_course.save()
+                mes['code'] = 200
+                mes['message'] = '成功'
+                # except:
+                #     mes['code'] = 200
+                #     mes['message'] = '修改失败'
+            else:
+                mes['code'] = 201
+                mes['message'] = '添加失败'
+        except:
+            mes['code'] = 400
+            mes['message'] = '信息错误'
+        return Response(mes)
+class DeleteClasses(APIView):
+    """批量删除课程"""
+    def post(self,request):
+        mes = {}
+        data = request.data
+        ids = data['ids']
+        id_list = ids.split(',')
+        for id in id_list:
+            id = int(id)
+            print(id)
+            one_course = Course.objects.get(id=id)
+            try:
+                one_course.delete()
+                mes['code'] = 200
+                mes['message'] = '删除成功'
+            except:
+                mes['code'] = 201
+                mes['message'] = '删除失败'
+        return Response(mes)
+class DeleteClass(APIView):
+    """删除课程接口"""
+    def post(self,request):
+        mes={}
+        data = request.data
+        one_course = Course.objects.filter(id=int(data['id'])).first()
+        pic_name=one_course.pic
+        pic=pic_name.split('/')[-1]
+        print(pic)
+        # 跳转到指定目录
+        os.chdir(UPLOAD_ROOT[0])
+        print(os.getcwd())
+        try:
+            # 删除
+            os.remove(pic)
+            one_course.delete()
+
+            mes['code'] = 200
+            mes['msg'] = '删除成功'
+        except:
+            print('adfsdfasdf')
+            mes['code'] = 201
+            mes['msg'] = '删除失败'
+        return Response(mes)
+import os
+from online_edu.settings import UPLOAD_ROOT
+import paramiko
+
+def delete_ssh(request):
+    '''页面加载图片后点击删除接口'''
+    mes={}
+    os.chdir(UPLOAD_ROOT[0])
+    print(os.getcwd())
+    url=request.POST.get('url')
+    print(url)
+    pic_name=url.split('/')[-1]
+    print(pic_name)
+    try:
+        os.remove(pic_name)
+        print('删除成功')
+        mes['code']=200
+    except:
+        print('删除失败')
+        mes['code']=201
+    return JsonResponse(mes)
+    # data=request.POST.get('id')
+    # print(data)
+    # sh = paramiko.SSHClient()
+    # sh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    # # sh.connect('127.0.0.1', username='', password='')
+    # sh.connect(hostname="127.0.0.1", port=8000, username="", password="")
+    # # one=Course.objects.get(id=id)
+    # # one.pic
+    # t = '11.jpg'
+    # stdin, stdout, stderr = sh.exec_command('cd /static/upload; rm -rf'+t)
+    # result = stdout.read()
+    # sh.close()
+    # return result
