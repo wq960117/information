@@ -11,7 +11,7 @@ class UserLevelConditionModelSerializer(serializers.ModelSerializer):
         model=UserLevelCondition
         fields=('id','level_name1','time','price','level',)
 
-"""�û��ȼ����л�  李阿萨德"""
+"""  李阿萨德"""
 class UserLevelSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserLevel
@@ -151,3 +151,27 @@ class TeacherSerializer(serializers.ModelSerializer):
     class Meta:
         model = Teacher
         fields = '__all__'
+
+
+# 路径序列化
+class PathModelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Path
+        fields = '__all__'
+
+# 路径反序列化
+class PathSerializers(serializers.Serializer):
+    pic = serializers.CharField(max_length=50)
+    path = serializers.CharField(max_length=255)
+    info = serializers.CharField(max_length=255)
+    studynum = serializers.IntegerField()
+    def create(self, data):
+        return Path.objects.create(**data)
+
+    def update(self, instance, validated_data):
+        instance.pic = validated_data.get('pic', instance.pic)
+        instance.path = validated_data.get('path', instance.path)
+        instance.info = validated_data.get('info', instance.info)
+        instance.studynum = validated_data.get('studynum', instance.studynum)
+        instance.save()
+        return instance

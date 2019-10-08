@@ -742,16 +742,69 @@ def delete_ssh(request):
         print('删除失败')
         mes['code']=201
     return JsonResponse(mes)
-    # data=request.POST.get('id')
-    # print(data)
-    # sh = paramiko.SSHClient()
-    # sh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    # # sh.connect('127.0.0.1', username='', password='')
-    # sh.connect(hostname="127.0.0.1", port=8000, username="", password="")
-    # # one=Course.objects.get(id=id)
-    # # one.pic
-    # t = '11.jpg'
-    # stdin, stdout, stderr = sh.exec_command('cd /static/upload; rm -rf'+t)
-    # result = stdout.read()
-    # sh.close()
-    # return result
+
+
+# 添加路径
+class Path_Add(APIView):
+    def post(self,requset):
+        content = requset.data
+        print(content)
+        file = requset.FILES.get('image')
+        print(file)
+        path = uploadImg(file)
+        print(path)
+        content['pic'] = path
+        pat = PathModelSerializer(data=content.data)
+        mes = {}
+        if pat.is_valid():
+            pat.save()
+            mes["code"] = 200
+            mes["message"] = '成功'
+        else:
+            mes["code"] = 400
+            mes["message"] = '成功'
+        return Resources(mes)
+# 路径删除
+class DeletePath(APIView):
+    def post(self,request):
+        mes={}
+        data = request.data
+        path = Path.objects.filter(id=int(data['id'])).first()
+        path.delete()
+        mes['code'] = 200
+        mes['message'] = '删除成功'
+        return Response(mes)
+
+# 路径修改
+class Updatepath(APIView):
+    def post(self,request):
+        data = request.data
+        file = request.FILES.get('pic')
+        path = uploadImg(file)
+        data['pic'] = path
+        if data['id']:
+            pp = Path.objects.get(id=data['id'])
+            p = PathSerializers(pp,data=data)
+        else:
+            p = PathSerializers(data=data)
+        if p.is_valid():
+            p.save()
+            data = {}
+            data['code'] = 200
+            data['message'] = '成功'
+        else:
+            data = {}
+            data['code'] = 400
+            data['message'] = '失败'
+        return Resources(data)
+
+'''路径展示'''
+class Show_Path(APIView):
+    def get(self,request):
+        mes = {}
+        # 获取等级
+        show_path = Path.objects.all()
+        mes['path'] = PathSerializers(show_path,many=True).data   #   序列化当前页的数据
+        mes['code'] = 200
+        return Response(mes)
+

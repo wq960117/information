@@ -73,8 +73,20 @@ urlpatterns = [
     path('delete_classes/', views.DeleteClasses.as_view()),
     path('delete_class/', views.DeleteClass.as_view()),
 
+    # 添加路径
+    path('path_add/', views.Path_Add.as_view()),
+    # 删除路径
+    path('deletepath/', views.DeletePath.as_view()),
+    # 修改路径
+    path('updatepath/', views.Updatepath.as_view()),
+    # 展示路径
+    path('show_path/', views.Show_Path.as_view()),
+
     # 删除图片
     path('delete_img/', views.delete_ssh)
+
+
+
 ]
 
 
