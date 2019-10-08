@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse,JsonResponse
 from django.views import View
 from rest_framework.views import APIView                                    # 类方法序列化继承APIView
 from rest_framework.response import Response                                # 返回json格式
@@ -171,7 +171,7 @@ class DeleteUsers(APIView):
                 mes['code']=201
                 mes['message']='删除失败'
         return Response(mes)
-        
+
 # 等级条件展示
 class Show_UserLevel(APIView):
     def get(self,request):

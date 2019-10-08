@@ -10,7 +10,7 @@ class UserLevelConditionModelSerializer(serializers.ModelSerializer):
     class Meta():
         model=UserLevelCondition
         fields=('id','level_name1','time','price','level',)
-        
+
 """�û��ȼ����л�  李阿萨德"""
 class UserLevelSerializer(serializers.ModelSerializer):
     class Meta:
@@ -96,4 +96,53 @@ class SectionModelSerializer(serializers.ModelSerializer):
 class TagModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tag
+        fields = '__all__'
+
+class ClassesModelSerializer(serializers.ModelSerializer):
+    path_name=serializers.CharField(source='path.path')
+    stage_name=serializers.CharField(source='stage.stage_name')
+    class Meta:
+        model=Course
+        fields = ['id','title','pic','info','online','member','attention','learn','teacher_id','comment_num','stage_id','tag_id','recommand','detail','section_num','path_id','path_name','stage_name',]
+class ClassesSerializers(serializers.Serializer):
+    """创建管理员序列化保存"""
+    title = serializers.CharField(max_length=50)
+    pic = serializers.CharField(max_length=255)
+    info = serializers.CharField(max_length=255)
+    online = serializers.IntegerField(default=0)
+    member = serializers.IntegerField(default=0)
+    attention = serializers.IntegerField(default=0)
+    learn = serializers.IntegerField(default=0)
+    teacher_id = serializers.IntegerField(default=0)
+    comment_num = serializers.IntegerField(default=0)
+    stage_id = serializers.IntegerField(default=0)
+    tag_id = serializers.IntegerField(default=0)
+    recommand = serializers.CharField(max_length=50)
+    detail = serializers.CharField(max_length=200)
+    section_num = serializers.IntegerField(default=0)
+    path_id = serializers.IntegerField(default=0)
+
+    def create(self, data):
+        return Course.objects.create(**data)
+
+    def update(self, instance, validated_data):
+        instance.title = validated_data.get('title', instance.title)
+        instance.pic = validated_data.get('pic', instance.pic)
+        instance.info = validated_data.get('info', instance.info)
+        instance.online = validated_data.get('online', instance.online)
+        instance.member = validated_data.get('member', instance.member)
+        instance.attention = validated_data.get('attention', instance.attention)
+        instance.teacher_id = validated_data.get('teacher_id', instance.teacher_id)
+        instance.comment_num = validated_data.get('comment_num', instance.comment_num)
+        instance.stage_id = validated_data.get('stage_id', instance.stage_id)
+        instance.tag_id = validated_data.get('tag_id', instance.tag_id)
+        instance.recommand = validated_data.get('recommand', instance.recommand)
+        instance.detail = validated_data.get('detail', instance.detail)
+        instance.section_num = validated_data.get('section_num', instance.section_num)
+        instance.path_id = validated_data.get('path_id', instance.path_id)
+        instance.save()
+        return instance
+class TeacherSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Teacher
         fields = '__all__'
