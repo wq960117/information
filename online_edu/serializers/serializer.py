@@ -57,3 +57,34 @@ class Path_stageSerializers(serializers.Serializer):
         instance.stage_name = validated_data.get('stage_name', instance.stage_name)
         instance.save()
         return instance
+
+
+# 反序列化添加章节
+class SectionUserserializers(serializers.Serializer):
+    section = serializers.CharField(max_length=50)
+    course_id= serializers.IntegerField()
+    video = serializers.CharField(max_length=200)
+    sort =serializers.IntegerField()
+
+    def create(self,data):
+        return Section.objects.create(**data)
+    def update(self, instance, validated_data):
+        instance.section = validated_data.get('new_section', instance.section)
+        instance.course=validated_data.get('course_id',instance.course)
+        # instance.video=validated_data.get('video',instance.video)
+        instance.save()
+        return instance
+
+#序列化展示课程
+class CourseModelSerializer(serializers.ModelSerializer):
+    # course=serializers.SlugRelatedField(slug_field='course',read_only=True)
+    # title=serializers.CharField(source='course.title')
+    class Meta:
+        model=Course
+        fields='__all__'
+
+# 序列化展示章节
+class SectionModelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Section
+        fields='__all__'

@@ -326,3 +326,111 @@ class Delete_PathView(APIView):
 
         return Response(mes)
 
+
+
+# 展示课程
+class CourseList(APIView):
+    def get(self, request):
+        mes = {}
+        course = Course.objects.all()
+        c = CourseModelSerializer(course, many=True)
+        mes['code'] = 200
+        mes['courselist'] = c.data
+        return Response(mes)
+
+# django上传图片方法
+def uploadImg(request):
+    file = request.FILES.get('image')
+    mes = {}
+    mes['code'] = 10010
+    mes['url'] = 'error'
+    if file:
+        f = open(os.path.join(UPLOAD, '', file.name), 'wb')
+        for chunk in file.chunks():
+            f.write(chunk)
+        f.close()
+
+        mes['code'] = 200
+        mes['name'] = file.name
+        mes['url'] = 'http://127.0.0.1:8000/static/upload/' + file.name
+    return JsonResponse(mes)
+
+# 添加章节
+class AddSection(APIView):
+    def post(self,request):
+        mes={}
+
+        data=request.data
+        s=SectionUserserializers(data=data)
+        if s.is_valid():
+            print(data, 'ok-----------------------------------------------')
+            s.save()
+            mes['code']=200
+            mes['message']='添加成功'
+        return Response(mes)
+
+#展示章节
+class Sectionlist(APIView):
+    def get(self,request):
+        mes={}
+        sectionlists=Section.objects.all()
+        s=SectionModelSerializer(sectionlists,many=True)
+        mes['code']=200
+        mes['sectionlist']=s.data
+        return Response(mes)
+
+#删除章节
+class DeleteSection(APIView):
+    def post(self,request):
+        mes={}
+        data=request.data
+        print(data)
+        one_section=Section.objects.filter(id=int(data['id'])).first()
+        # print(one_section,'+++++++++++++++++++++++++++++++++')
+        video_name=one_section.video
+        # print(video_name)
+        video=video_name.split('/')[-1]
+        # print(video,'-----------------------------')
+        os.chdir(UPLOAD)
+        # print(os.getcwd())
+        try:
+            #删除
+            os.remove(video)
+            one_section.delete()
+            # print('aaaaaaaaaaaaaaaa')
+            mes['code'] = 200
+            mes['msg'] = '删除成功'
+        except:
+            # print('adfsdfasdf')
+            mes['code'] = 201
+            mes['msg'] = '删除失败'
+
+        return Response(mes)
+
+# 修改章节
+class UpdateSection(APIView):
+    def post(self, request):
+        mes = {}
+        data=request.data.copy()
+        print(data,'-------------------------------------------')
+        print(data)
+        try:
+            if data['id']:
+                id=int(data['id'])
+                one_section = Section.objects.get(id=id)
+                # 根据修改的外键名字换取对应的外键ID
+                one_course = Course.objects.filter(id=data['course']).first()
+                one_section.course_id = one_course.id
+                one_section.section=data['new_section']
+                one_section.course_id=data['course_id']
+                # one_section.video=data['video']
+                one_section.save()
+                mes['code'] = 200
+                mes['message'] = '修改成功'
+            else:
+                mes['code'] = 201
+                mes['message'] = '修改失败'
+        except:
+            mes['code'] = 202
+            mes['message'] = '错误信息'
+        return Response(mes)

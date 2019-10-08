@@ -39,6 +39,18 @@ urlpatterns = [
     path('update_Path/',views.UpdatePath_stageView.as_view()),
     #阶段的删除
     path('delete_path/',views.Delete_PathView.as_view()),
+    #添加章节
+    path('add_section/',views.AddSection.as_view()),
+    #展示课程
+    path('courselist/',views.CourseList.as_view()),
+    #展示章节
+    path('sectionlist/',views.Sectionlist.as_view()),
+    #上传图片
+    path('uploadImg/',views.uploadImg),
+    #修改章节
+    path('updatesection/',views.UpdateSection.as_view()),
+    #删除章节
+    path('deletesection/',views.DeleteSection.as_view())
 
 
 ]
