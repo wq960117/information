@@ -83,7 +83,16 @@ urlpatterns = [
     path('show_path/', views.Show_Path.as_view()),
 
     # 删除图片
-    path('delete_img/', views.delete_ssh)
+    path('delete_img/', views.delete_ssh),
+
+    # 展示课程价格接口
+    path('get_price/', views.GetPrice.as_view()),
+    # 添加课程价格
+    path('add_price/', views.AddPrice.as_view()),
+    # 删除课程价格
+    path('delete_price/', views.DeletePrice.as_view()),
+    # 批量删除课程价格
+    path('delete_prices/', views.DeletePrices.as_view()),
 
 
 

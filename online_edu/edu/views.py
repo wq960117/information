@@ -722,13 +722,13 @@ class DeleteClass(APIView):
             mes['msg'] = '删除失败'
         return Response(mes)
 import os
-from online_edu.settings import UPLOAD_ROOT
+from online_edu.settings import UPLOAD
 import paramiko
 
 def delete_ssh(request):
     '''页面加载图片后点击删除接口'''
     mes={}
-    os.chdir(UPLOAD_ROOT[0])
+    os.chdir(UPLOAD)
     print(os.getcwd())
     url=request.POST.get('url')
     print(url)
@@ -806,5 +806,96 @@ class Show_Path(APIView):
         show_path = Path.objects.all()
         mes['path'] = PathSerializers(show_path,many=True).data   #   序列化当前页的数据
         mes['code'] = 200
+        return Response(mes)
+
+
+class GetPrice(APIView):
+    """获取课程价格展示"""
+    def get(self,request):
+        mes = {}
+        all_prices = Price.objects.all()
+        page = request.GET.get('page')
+
+        if page:
+            page = int(page)
+        else:
+            page = 1
+        paginator = Paginator(all_prices, 2)
+        current_prices = paginator.get_page(page)
+        current_prices = PriceModelSerializer(current_prices, many=True)
+        total = paginator.num_pages
+
+        all_userlevel = UserLevel.objects.all()
+        all_course = Course.objects.all()
+        all_userlevel = UserLevelSerializer(all_userlevel, many=True)
+        all_course = ClassesModelSerializer(all_course, many=True)
+        mes['code'] = 200
+        mes['total'] = total
+        mes['all_price'] = current_prices.data
+        mes['all_userlevel'] = all_userlevel.data
+        mes['all_course'] = all_course.data
+        return Response(mes)
+class AddPrice(APIView):
+    """添加课程价格"""
+    def post(self,request):
+        mes={}
+        data=request.data.copy()
+        print(data)
+        id=data['id']
+        # 因为data里传递了修改对应的ID，所以存储序列化的时候无法验证，所以重新定义数据，将除了ID以外的数据重新赋值
+        datas={}
+        datas['type_id']=data['type']
+        datas['course_id']=data['course']
+        datas['discount']=float(data['discount'])
+        datas['pre_price']=float(data['pre_price'])
+        datas['discount_price']=float(data['pre_price'])*float(data['discount'])
+        print(datas)
+        if id:
+            """如果ID存在则修改"""
+            a_price=Price.objects.get(id=int(data['id']))
+            one_price = PriceSerializers(a_price, data=datas)
+        else:
+            """ID不存在为添加"""
+            one_price=PriceSerializers(data=datas)
+        try:
+            if one_price.is_valid():
+                one_price.save()
+                mes['code'] = 200
+                mes['message'] = '成功'
+
+            else:
+                mes['code'] = 201
+                mes['message'] = '添加失败'
+        except:
+            mes['code'] = 400
+            mes['message'] = '信息错误'
+        return Response(mes)
+class DeletePrice(APIView):
+    """删除课程价格接口"""
+    def post(self,request):
+        mes={}
+        data = request.data
+        one_price = Price.objects.filter(id=int(data['id'])).first()
+        one_price.delete()
+        mes['code'] = 200
+        mes['msg'] = '删除成功'
+        return Response(mes)
+class DeletePrices(APIView):
+    """批量删除课程价格接口"""
+    def post(self,request):
+        mes={}
+        data=request.data
+        ids=data['ids']
+        id_list =ids.split(',')
+        for id in id_list:
+            id=int(id)
+            one_price=Price.objects.get(id=id)
+            try:
+                one_price.delete()
+                mes['code']=200
+                mes['message']='删除成功'
+            except:
+                mes['code']=201
+                mes['message']='删除失败'
         return Response(mes)
 

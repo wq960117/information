@@ -135,6 +135,7 @@ class Teacher(models.Model):
 # """课程表"""
 #
 
+
 class Course(models.Model):
     title = models.CharField(max_length=50, verbose_name='课程标题')
     pic = models.CharField(max_length=255, verbose_name='课程图片')
@@ -147,10 +148,10 @@ class Course(models.Model):
     comment_num = models.IntegerField(default=0, verbose_name='评论数量')
     stage = models.ForeignKey(Path_stage, on_delete=models.CASCADE, verbose_name='关联阶段')
     tag = models.ForeignKey(Tag, on_delete=models.CASCADE, verbose_name='关联标签')
-    recommand = models.CharField(max_length=50, verbose_name='推荐课程')
+    recommand = models.CharField(max_length=50, verbose_name='推荐课程，0是1否')
     detail = models.CharField(max_length=200, verbose_name='课程详情')
     section_num = models.IntegerField(default=0, verbose_name='章节数')
-    path_id = models.IntegerField(default=0, verbose_name='所属路径')
+    path = models.ForeignKey(Path,on_delete=models.CASCADE, verbose_name='所属路径')
 
     class Meta:
         db_table = 'course'
@@ -159,14 +160,15 @@ class Course(models.Model):
 # """价格表"""
 #
 #
-# class Price(models.Model):
-#     type = models.IntegerField(default=0, verbose_name='类型0普通,1会员,2高级会员')
-#     course = models.ForeignKey(Course, on_delete=models.CASCADE, verbose_name='关联课程')
-#     discount = models.FloatField(max_length=50, verbose_name='折扣')
-#     discount_price = models.DecimalField(verbose_name='折扣后价格')
-#
-#     class Meta:
-#         db_table = 'price'
+class Price(models.Model):
+    type = models.ForeignKey(UserLevel,on_delete=models.CASCADE, verbose_name='类型0普通,1会员,2高级会员')
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, verbose_name='关联课程')
+    discount = models.FloatField(max_length=50, verbose_name='折扣')
+    pre_price=models.DecimalField(max_digits=7,decimal_places=2,verbose_name='原价格')
+    discount_price = models.DecimalField(max_digits=7,decimal_places=2,verbose_name='折扣后价格')
+
+    class Meta:
+        db_table = 'price'
 #
 #
 # """章节表"""

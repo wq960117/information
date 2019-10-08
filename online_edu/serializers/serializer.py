@@ -175,3 +175,29 @@ class PathSerializers(serializers.Serializer):
         instance.studynum = validated_data.get('studynum', instance.studynum)
         instance.save()
         return instance
+
+
+class PriceModelSerializer(serializers.ModelSerializer):
+    level_name=serializers.CharField(source='type.level')
+    course_title=serializers.CharField(source='course.title')
+    class Meta:
+        model=Price
+        fields = ['id','type','course','discount','pre_price','discount_price','level_name','course_title']
+class PriceSerializers(serializers.Serializer):
+    """课程价格反序列化"""
+    type_id = serializers.IntegerField()
+    course_id = serializers.IntegerField()
+    discount = serializers.FloatField()
+    pre_price = serializers.DecimalField(max_digits=7, decimal_places=2)
+    discount_price = serializers.DecimalField(max_digits=7, decimal_places=2)
+    def create(self, data):
+        return Price.objects.create(**data)
+
+    def update(self, instance, validated_data):
+        instance.course_id = validated_data.get('course_id', instance.course_id)
+        instance.type = validated_data.get('type', instance.type)
+        instance.discount = validated_data.get('discount', instance.discount)
+        instance.pre_price = validated_data.get('pre_price', instance.pre_price)
+        instance.discount_price = validated_data.get('discount_price', instance.discount_price)
+        instance.save()
+        return instance
