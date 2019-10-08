@@ -75,17 +75,37 @@ WSGI_APPLICATION = 'online_edu.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'HOST':'localhost',
+#         'PORT':3306,
+#         'USER':'root',
+#         'PASSWORD':'',
+#         'NAME':'edu'
+#     }
+# }
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'HOST':'localhost',
-        'PORT':3306,
-        'USER':'root',
-        'PASSWORD':'',
-        'NAME':'edu'
+        'HOST': '123.57.93.89',  # 数据库主机
+        'PORT': 3306,  # 数据库端口
+        'USER': 'root',  # 数据库用户名
+        'PASSWORD': 'root',  # 数据库用户密码
+        'NAME': 'edu'  # 数据库名字
+    },
+    'slave': {
+        'ENGINE': 'django.db.backends.mysql',
+        'HOST': '101.37.25.38',  # 数据库主机
+        'PORT': 3306,  # 数据库端口
+        'USER': 'root',  # 数据库用户名
+        'PASSWORD': 'root',  # 数据库用户密码
+        'NAME': 'edu'  # 数据库名字
     }
 }
 
+# 配置读写分离
+DATABASE_ROUTERS = ['utils.db_router.MasterSlaveRouter']
 
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators

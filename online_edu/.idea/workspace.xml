@@ -2,16 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="322418d9-c4f3-451f-a2d7-8140d1cb0631" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/edu/migrations/0002_auto_20190926_2037.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/edu/migrations/0003_auto_20190927_0734.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/serializers/serializer.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/utils/db_router.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/online_edu.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/online_edu.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/edu/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/edu/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/edu/migrations/0001_initial.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/edu/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/edu/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/edu/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/edu/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/online_edu/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/online_edu/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/online_edu/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/online_edu/settings.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -43,13 +40,16 @@
   </component>
   <component name="ProjectId" id="1RN93c4ZL9IhMRjdxMePyjU4RZs" />
   <component name="PropertiesComponent">
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path" value="node" />
+    <property name="restartRequiresConfirmation" value="false" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/edu/migrations" />
       <recent name="D:\shixun_1\online_edu\edu" />
     </key>
   </component>
@@ -132,6 +132,41 @@
       <workItem from="1569501939713" duration="7764000" />
       <workItem from="1569538862496" duration="3054000" />
       <workItem from="1569547840208" duration="130000" />
+      <workItem from="1569555970267" duration="12639000" />
+      <workItem from="1569579804136" duration="683000" />
+      <workItem from="1569580534137" duration="10597000" />
+      <workItem from="1569625493321" duration="6811000" />
+      <workItem from="1569657760017" duration="872000" />
+      <workItem from="1569702983099" duration="6201000" />
+      <workItem from="1569766075956" duration="109000" />
+      <workItem from="1569838113077" duration="5000" />
+      <workItem from="1569847458020" duration="198000" />
+      <workItem from="1569847852076" duration="89000" />
+      <workItem from="1569847978687" duration="29000" />
+      <workItem from="1569848103514" duration="24000" />
+      <workItem from="1569852364754" duration="161000" />
+      <workItem from="1569852627353" duration="22000" />
+      <workItem from="1569852678979" duration="327000" />
+      <workItem from="1569853186228" duration="45000" />
+      <workItem from="1569853317236" duration="73000" />
+      <workItem from="1569853425431" duration="294000" />
+      <workItem from="1569854466081" duration="103000" />
+      <workItem from="1569854629987" duration="137000" />
+      <workItem from="1569855265169" duration="304000" />
+      <workItem from="1569924399550" duration="2687000" />
+      <workItem from="1569981193212" duration="4457000" />
+      <workItem from="1570012561925" duration="2000" />
+      <workItem from="1570018085098" duration="1794000" />
+      <workItem from="1570064781955" duration="14305000" />
+      <workItem from="1570358162502" duration="4285000" />
+      <workItem from="1570373857568" duration="886000" />
+      <workItem from="1570404582752" duration="32674000" />
+      <workItem from="1570499977055" duration="140000" />
+      <workItem from="1570500230292" duration="828000" />
+      <workItem from="1570515917158" duration="278000" />
+      <workItem from="1570516300477" duration="851000" />
+      <workItem from="1570517544074" duration="7774000" />
+      <workItem from="1570535977436" duration="1161000" />
     </task>
     <servers />
   </component>
