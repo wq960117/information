@@ -88,3 +88,12 @@ class SectionModelSerializer(serializers.ModelSerializer):
     class Meta:
         model=Section
         fields='__all__'
+
+"""
+标签表
+========================================================================================================================
+"""
+class TagModelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tag
+        fields = '__all__'

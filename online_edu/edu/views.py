@@ -434,3 +434,78 @@ class UpdateSection(APIView):
             mes['code'] = 202
             mes['message'] = '错误信息'
         return Response(mes)
+
+"""
+标签操作
+------------------------------------------------------------------------------------------------------------------------
+"""
+class TagList(APIView):
+    def get(self, request):                                                     # todo 展示标签
+        tag = Tag.objects.all().order_by('id')
+
+        p = int(request.GET.get('page',1))                  # 获取网页参数 默认第1页
+        page = Paginator(tag,2)                             # 实例化分页对象，每页3条数据
+        tag_list = page.get_page(p)                         # 获取当前页的数据.get_page(p)
+        tpage = page.num_pages                              # 获取总页数
+
+        ser = TagModelSerializer(tag_list, many=True)
+
+        mes = {}
+        mes['code'] = 200
+        mes['data'] = ser.data
+        mes['tpage'] = tpage
+        return Response(mes)
+
+    def post(self, request):                                                    # todo 添加标签
+        ser = TagModelSerializer(data=request.data)
+        mes = {}
+        if ser.is_valid():
+            ser.save()
+            mes['code'] = '200'
+            mes['msg'] = '成功'
+            mes['data'] = ser.data
+        else:
+            print(ser.errors)
+            mes['code'] = 400
+            mes['msg'] = '失败'
+        return Response(mes)
+
+
+    def put(self,request):                                                       # todo 修改标签
+        content = request.data
+        id = int(content['id'])                             # 获取点击后的内容id
+        c1 = Tag.objects.get(id=id)
+        c = TagModelSerializer(c1,data=content)
+
+        mes = {}
+        if c.is_valid():
+            c.save()
+            mes['code'] = 200
+            mes['message'] = '修改成功'
+        else:
+            print(c.errors)
+            mes['code'] = 400
+            mes['message'] = '修改失败'
+        return Response(mes)
+
+    def delete(self, request):                                                    # todo 删除标签
+        id = request.GET.get('id')
+        tag = Tag.objects.filter(id=id).first()
+        tag.delete()
+        return Response('删除完成')
+
+class TagDeletes(APIView):                                                       # todo 批量删除标签
+    def post(self,request):
+        data=request.data
+        ids=data['ids']
+        id_list=ids.split(',')
+
+        for id in id_list:
+            id=int(id)
+            one_Tag=Tag.objects.get(id=id)
+            one_Tag.delete()
+
+            mes = {}
+            mes['code']=200
+            mes['message']='删除成功'
+        return Response(mes)

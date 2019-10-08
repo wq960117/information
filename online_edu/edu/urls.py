@@ -50,9 +50,11 @@ urlpatterns = [
     #修改章节
     path('updatesection/',views.UpdateSection.as_view()),
     #删除章节
-    path('deletesection/',views.DeleteSection.as_view())
+    path('deletesection/',views.DeleteSection.as_view()),
 
-
+    # todo 标签表
+    path('tag_list/', views.TagList.as_view()),  # 增删改查
+    path('tag_deletes/', views.TagDeletes.as_view()),  # 批量删除
 ]
 
 
