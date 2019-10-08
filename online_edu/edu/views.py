@@ -600,13 +600,13 @@ class GetClasses(APIView):
         total=paginator.num_pages
 
         all_teachers=Teacher.objects.all()
-        all_teachers=TeachersModelSerializer(all_teachers,many=True)
+        all_teachers=TeacherSerializer(all_teachers,many=True)
         all_paths=Path.objects.all()
-        all_paths=PathsModelSerializer(all_paths,many=True)
+        all_paths=PathModelSerializer(all_paths,many=True)
         all_stages=Path_stage.objects.all()
-        all_stages=StageModelSerializer(all_stages,many=True)
+        all_stages=Path_stageModelSerializer(all_stages,many=True)
         all_tags=Tag.objects.all()
-        all_tags=TagsModelSerializer(all_tags,many=True)
+        all_tags=TagModelSerializer(all_tags,many=True)
         mes['code']=200
         mes['total']=total
         mes['all_classes']=current_classes.data
@@ -616,7 +616,7 @@ class GetClasses(APIView):
         mes['all_tags']=all_tags.data
         return Response(mes)
 class Addclasses(APIView):
-    """添加管理员"""
+    """添加课程"""
     def post(self,request):
         mes={}
         data=request.data.copy()
@@ -648,7 +648,7 @@ class Addclasses(APIView):
             pic = pic_name.split('/')[-1]
             print(pic)
             # 跳转到指定目录
-            os.chdir(UPLOAD_ROOT[0])
+            os.chdir(UPLOAD)
             print(os.getcwd())
             try:
                 # 删除
@@ -707,7 +707,7 @@ class DeleteClass(APIView):
         pic=pic_name.split('/')[-1]
         print(pic)
         # 跳转到指定目录
-        os.chdir(UPLOAD_ROOT[0])
+        os.chdir(UPLOAD)
         print(os.getcwd())
         try:
             # 删除
@@ -747,23 +747,18 @@ def delete_ssh(request):
 # 添加路径
 class Path_Add(APIView):
     def post(self,requset):
+        mes = {}
         content = requset.data
         print(content)
-        file = requset.FILES.get('image')
-        print(file)
-        path = uploadImg(file)
-        print(path)
-        content['pic'] = path
-        pat = PathModelSerializer(data=content.data)
-        mes = {}
+        pat = PathSerializers(data=content)
         if pat.is_valid():
             pat.save()
             mes["code"] = 200
             mes["message"] = '成功'
         else:
             mes["code"] = 400
-            mes["message"] = '成功'
-        return Resources(mes)
+            mes["message"] = '失败'
+        return Response(mes)
 # 路径删除
 class DeletePath(APIView):
     def post(self,request):
@@ -778,25 +773,40 @@ class DeletePath(APIView):
 # 路径修改
 class Updatepath(APIView):
     def post(self,request):
+        mes={}
         data = request.data
-        file = request.FILES.get('pic')
-        path = uploadImg(file)
-        data['pic'] = path
+        print(data)
         if data['id']:
             pp = Path.objects.get(id=data['id'])
+            pic_name = pp.pic
+            print(pic_name)
+            pic = pic_name.split('/')[-1]
+            print(pic)
+            # 跳转到指定目录
+            os.chdir(UPLOAD)
+            print(os.getcwd())
+            try:
+                # 删除
+                os.remove(pic)
+                mes['code'] = 200
+                mes['msg'] = '删除成功'
+
+            except:
+                mes['code'] = 201
+                mes['msg'] = '删除失败'
             p = PathSerializers(pp,data=data)
         else:
             p = PathSerializers(data=data)
         if p.is_valid():
             p.save()
-            data = {}
-            data['code'] = 200
-            data['message'] = '成功'
+
+            mes['code'] = 200
+            mes['message'] = '成功'
         else:
-            data = {}
-            data['code'] = 400
-            data['message'] = '失败'
-        return Resources(data)
+
+            mes['code'] = 400
+            mes['message'] = '失败'
+        return Response(mes)
 
 '''路径展示'''
 class Show_Path(APIView):
@@ -804,7 +814,7 @@ class Show_Path(APIView):
         mes = {}
         # 获取等级
         show_path = Path.objects.all()
-        mes['path'] = PathSerializers(show_path,many=True).data   #   序列化当前页的数据
+        mes['path'] = PathModelSerializer(show_path,many=True).data   #   序列化当前页的数据
         mes['code'] = 200
         return Response(mes)
 
