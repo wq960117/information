@@ -60,6 +60,8 @@ class Path_stageSerializers(serializers.Serializer):
         return Path_stage.objects.create(**data)
     def update(self, instance, validated_data):
         instance.stage_name = validated_data.get('stage_name', instance.stage_name)
+        instance.path_id = validated_data.get('path_id', instance.path_id)
+        instance.sort = validated_data.get('sort', instance.sort)
         instance.save()
         return instance
 
@@ -201,3 +203,10 @@ class PriceSerializers(serializers.Serializer):
         instance.discount_price = validated_data.get('discount_price', instance.discount_price)
         instance.save()
         return instance
+
+"""优惠券表的序列化"""
+
+class CouponModelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Coupon
+        fields = '__all__'
