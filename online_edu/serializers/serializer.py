@@ -201,3 +201,66 @@ class PriceSerializers(serializers.Serializer):
         instance.discount_price = validated_data.get('discount_price', instance.discount_price)
         instance.save()
         return instance
+
+
+class CouponModelSerializer(serializers.ModelSerializer):
+    """优惠券序列化"""
+    class Meta:
+        model=Coupon
+        fields='__all__'
+
+
+class CouponSerializers(serializers.Serializer):
+    """优惠券反序列化"""
+    course_id = serializers.IntegerField(allow_null=True)
+    name = serializers.CharField(max_length=30)
+    count = serializers.IntegerField()
+    type = serializers.IntegerField()
+    start_time = serializers.DateTimeField()
+    end_time = serializers.DateTimeField()
+    condition = serializers.DecimalField(max_digits=7, decimal_places=2)
+    integral = serializers.IntegerField()
+    money = serializers.DecimalField(max_digits=7, decimal_places=2)
+    status = serializers.IntegerField()
+    def create(self, data):
+        return Coupon.objects.create(**data)
+
+    def update(self, instance, validated_data):
+        instance.course_id = validated_data.get('course_id', instance.course_id)
+        instance.name = validated_data.get('name', instance.name)
+        instance.count = validated_data.get('count', instance.count)
+        instance.type = validated_data.get('type', instance.type)
+        instance.start_time = validated_data.get('start_time', instance.start_time)
+        instance.end_time = validated_data.get('end_time', instance.end_time)
+        instance.condition = validated_data.get('condition', instance.condition)
+        instance.integral = validated_data.get('integral', instance.integral)
+        instance.money = validated_data.get('money', instance.money)
+        instance.status = validated_data.get('status', instance.status)
+        instance.save()
+        return instance
+class UserSerializer(serializers.Serializer):
+    """优惠券反序列化"""
+    username = serializers.CharField(max_length=20)
+    password = serializers.CharField(max_length=255)
+    pic = serializers.CharField(max_length=255)
+    level_id = serializers.IntegerField(default=0)
+    is_active = serializers.IntegerField(default=0)
+    integral = serializers.IntegerField(default=0)
+    invitation_code = serializers.CharField(max_length=50)
+    token = serializers.CharField(max_length=255)
+    email = serializers.CharField(max_length=255)
+    def create(self, data):
+        return Coupon.objects.create(**data)
+
+    def update(self, instance, validated_data):
+        instance.username = validated_data.get('username', instance.username)
+        instance.password = validated_data.get('password', instance.password)
+        instance.pic = validated_data.get('pic', instance.pic)
+        instance.level = validated_data.get('level', instance.level)
+        instance.is_active = validated_data.get('is_active', instance.is_active)
+        instance.integral = validated_data.get('integral', instance.integral)
+        instance.invitation_code = validated_data.get('invitation_code', instance.invitation_code)
+        instance.token = validated_data.get('token', instance.token)
+        instance.email = validated_data.get('email', instance.email)
+        instance.save()
+        return instance

@@ -9,7 +9,7 @@ import datetime
 import errno
 from fdfs_client.fdfs_protol import *
 from fdfs_client.connection import *
-from fdfs_client.sendfile import *
+# from fdfs_client.sendfile import *
 from fdfs_client.exceptions import (
     FDFSError,
     ConnectionError,
@@ -365,7 +365,7 @@ class Storage_client(object):
                                   offset, download_size, download_type, remote_filename):
         '''
         Core of download file from storage server.
-        You can choice download type, optional FDFS_DOWNLOAD_TO_FILE or 
+        You can choice download type, optional FDFS_DOWNLOAD_TO_FILE or
         FDFS_DOWNLOAD_TO_BUFFER. And you can choice file offset.
         @Return dictionary
             'Remote file name' : remote_filename,
@@ -388,7 +388,7 @@ class Storage_client(object):
             tcp_send_data(store_conn, send_buffer)
             th.recv_header(store_conn)
             # if th.status == 2:
-            #    raise DataError('[-] Error: remote file %s is not exist.' % 
+            #    raise DataError('[-] Error: remote file %s is not exist.' %
             #                    (store_serv.group_name + os.sep + remote_filename))
             if th.status != 0:
                 raise DataError('Error: %d %s' % (th.status, os.strerror(th.status)))

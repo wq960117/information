@@ -1,17 +1,23 @@
 from django.db import models
 import datetime
+class UserLevel(models.Model):
+    '''用户等级表'''
+    level = models.CharField(max_length=20)
 
+    class Meta():
+        db_table = 'userlevel'
 
 class User(models.Model):
     '''用户信息表'''
     username = models.CharField(max_length=20, verbose_name='用户名')
     password = models.CharField(max_length=255, verbose_name='密码')
     pic = models.CharField(max_length=255, verbose_name='用户头像')
-    level = models.IntegerField(default=0, verbose_name='用户类型，0普通用户，1普通会员，2高级会员')
+    level = models.ForeignKey(UserLevel, on_delete=models.CASCADE,verbose_name='用户类型，0普通用户，1普通会员，2高级会员')
     is_active = models.IntegerField(default=0, verbose_name='激活状态，0未激活，1激活')
     integral = models.IntegerField(default=0, verbose_name='积分')
     invitation_code = models.CharField(max_length=50, default='', verbose_name='邀请码')
     token = models.CharField(max_length=255, verbose_name='用户登录生成的token')
+    email=models.CharField(max_length=255,verbose_name='邮箱')
 
     class Meta():
         db_table = 'user'
@@ -44,12 +50,7 @@ class User(models.Model):
 #         db_table = 'memberorder'
 #
 #
-class UserLevel(models.Model):
-    '''用户等级表'''
-    level = models.CharField(max_length=20)
 
-    class Meta():
-        db_table = 'userlevel'
 
 
 class UserLevelCondition(models.Model):
@@ -62,15 +63,15 @@ class UserLevelCondition(models.Model):
         db_table = 'userlevelcondition'
 #
 #
-# class ThirdPartyLogin(models.Model):
-#     '''第三方登录表'''
-#     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='关联用户ID')
-#     uid = models.CharField(max_length=20, verbose_name='第三方登录平台返回的唯一uid')
-#     login_type = models.IntegerField(default=0, verbose_name='0微博，1微信，2qq')
-#
-#     class Meta():
-#         db_table = 'thridpartylogin'
-#
+class ThirdPartyLogin(models.Model):
+    '''第三方登录表'''
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='关联用户ID')
+    uid = models.CharField(max_length=20, verbose_name='第三方登录平台返回的唯一uid')
+    login_type = models.IntegerField(default=0, verbose_name='0微博，1微信，2qq')
+
+    class Meta():
+        db_table = 'thridpartylogin'
+
 #
 # class SiteMessage(models.Model):
 #     '''站内信息表'''
@@ -258,17 +259,17 @@ class Section(models.Model):
 #
 #
 # # 优惠券表
-# class Coupon(models.Model):
-#     course = models.ForeignKey('Course', on_delete=models.CASCADE)
-#     name = models.CharField(max_length=30)
-#     count = models.IntegerField()  # 数量
-#     type = models.IntegerField()  # 类型  1全场通用   2指定商品
-#     start_time = models.DateTimeField()  # 开始时间
-#     end_time = models.DateTimeField()  # 结束时间
-#     condition = models.DecimalField(max_digits=7, decimal_places=2)  # 满多少可以
-#     integral = models.IntegerField()  # 兑换所需积分数量
-#     money = models.DecimalField(max_digits=7, decimal_places=2)  # 实际抵消金额
-#     status = models.IntegerField()  # 状态  1可用  2过期
+class Coupon(models.Model):
+    course = models.ForeignKey('Course', on_delete=models.SET_NULL,blank=True,null=True)
+    name = models.CharField(max_length=30)
+    count = models.IntegerField()  # 数量
+    type = models.IntegerField()  # 类型  1全场通用   2指定商品
+    start_time = models.DateTimeField(auto_now=True)  # 开始时间
+    end_time = models.DateTimeField(auto_now=True)  # 结束时间
+    condition = models.DecimalField(max_digits=7, decimal_places=2)  # 满多少可以
+    integral = models.IntegerField()  # 兑换所需积分数量
+    money = models.DecimalField(max_digits=7, decimal_places=2)  # 实际抵消金额
+    status = models.IntegerField()  # 状态  1可用  2过期
 #
 #
 # # 用户优惠卷使用表

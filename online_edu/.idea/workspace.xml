@@ -2,13 +2,32 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="322418d9-c4f3-451f-a2d7-8140d1cb0631" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/utils/db_router.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/online_edu.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/online_edu.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/edu/task.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/shop/migrations/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/shop/urls.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/utils/captcha/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/utils/captcha/captcha.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/utils/captcha/fonts/Arial.ttf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/utils/captcha/fonts/Georgia.ttf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/utils/captcha/fonts/actionj.ttf" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/edu/fdfs_client/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/fdfs_client/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/edu/fdfs_client/client.py" beforeDir="false" afterPath="$PROJECT_DIR$/fdfs_client/client.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/edu/fdfs_client/connection.py" beforeDir="false" afterPath="$PROJECT_DIR$/fdfs_client/connection.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/edu/fdfs_client/exceptions.py" beforeDir="false" afterPath="$PROJECT_DIR$/fdfs_client/exceptions.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/edu/fdfs_client/fdfs_protol.py" beforeDir="false" afterPath="$PROJECT_DIR$/fdfs_client/fdfs_protol.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/edu/fdfs_client/fdfs_test.py" beforeDir="false" afterPath="$PROJECT_DIR$/fdfs_client/fdfs_test.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/edu/fdfs_client/sendfilemodule.c" beforeDir="false" afterPath="$PROJECT_DIR$/fdfs_client/sendfilemodule.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/edu/fdfs_client/storage_client.py" beforeDir="false" afterPath="$PROJECT_DIR$/fdfs_client/storage_client.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/edu/fdfs_client/tracker_client.py" beforeDir="false" afterPath="$PROJECT_DIR$/fdfs_client/tracker_client.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/edu/fdfs_client/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/fdfs_client/utils.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/edu/migrations/0001_initial.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/edu/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/edu/models.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/edu/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/edu/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/edu/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/edu/views.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/online_edu/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/online_edu/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/online_edu/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/online_edu/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/serializers/serializer.py" beforeDir="false" afterPath="$PROJECT_DIR$/serializers/serializer.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -28,6 +47,43 @@
   <component name="DjangoConsoleOptions" custom-start-script="import sys; print('Python %s on %s' % (sys.version, sys.platform))&#10;import django; print('Django %s' % django.get_version())&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;if 'setup' in dir(django): django.setup()&#10;import django_manage_shell; django_manage_shell.run(PROJECT_ROOT)">
     <option name="myCustomStartScript" value="import sys; print('Python %s on %s' % (sys.version, sys.platform))&#10;import django; print('Django %s' % django.get_version())&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;if 'setup' in dir(django): django.setup()&#10;import django_manage_shell; django_manage_shell.run(PROJECT_ROOT)" />
   </component>
+  <component name="FileEditorManager">
+    <leaf>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/edu/views.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="306">
+              <caret line="947" column="25" lean-forward="true" selection-start-line="947" selection-start-column="25" selection-end-line="947" selection-end-column="25" />
+              <folding>
+                <element signature="e#0#35#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/edu/urls.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="72">
+              <caret line="88" column="48" lean-forward="true" selection-start-line="88" selection-start-column="48" selection-end-line="88" selection-end-column="48" />
+              <folding>
+                <element signature="e#0#28#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/online_edu/settings.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="2160">
+              <caret line="120" column="6" lean-forward="true" selection-start-line="120" selection-start-column="6" selection-end-line="120" selection-end-column="6" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
@@ -38,19 +94,83 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/edu/views.py" />
+        <option value="$PROJECT_DIR$/edu/urls.py" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="245" />
+    <option name="y" value="140" />
+    <option name="width" value="980" />
+    <option name="height" value="1030" />
+  </component>
   <component name="ProjectId" id="1RN93c4ZL9IhMRjdxMePyjU4RZs" />
+  <component name="ProjectView">
+    <navigator proportions="" version="1">
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="online_edu" type="b2602c69:ProjectViewProjectNode" />
+              <item name="online_edu" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="online_edu" type="b2602c69:ProjectViewProjectNode" />
+              <item name="online_edu" type="462c0819:PsiDirectoryNode" />
+              <item name="edu" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="online_edu" type="b2602c69:ProjectViewProjectNode" />
+              <item name="online_edu" type="462c0819:PsiDirectoryNode" />
+              <item name="edu" type="462c0819:PsiDirectoryNode" />
+              <item name="migrations" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="online_edu" type="b2602c69:ProjectViewProjectNode" />
+              <item name="online_edu" type="462c0819:PsiDirectoryNode" />
+              <item name="online_edu" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="online_edu" type="b2602c69:ProjectViewProjectNode" />
+              <item name="online_edu" type="462c0819:PsiDirectoryNode" />
+              <item name="shop" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="online_edu" type="b2602c69:ProjectViewProjectNode" />
+              <item name="online_edu" type="462c0819:PsiDirectoryNode" />
+              <item name="utils" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+      <pane id="Scope" />
+    </panes>
+  </component>
   <component name="PropertiesComponent">
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/shop" />
     <property name="nodejs_interpreter_path" value="node" />
     <property name="restartRequiresConfirmation" value="false" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/shop" />
+      <recent name="$PROJECT_DIR$/utils" />
       <recent name="$PROJECT_DIR$/edu/migrations" />
       <recent name="D:\shixun_1\online_edu\edu" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -74,7 +194,7 @@
         <env name="PYTHONUNBUFFERED" value="1" />
         <env name="DJANGO_SETTINGS_MODULE" value="online_edu.settings" />
       </envs>
-      <option name="SDK_HOME" value="" />
+      <option name="SDK_HOME" value="D:\Program Files\Python37\python.exe" />
       <option name="WORKING_DIRECTORY" value="" />
       <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
@@ -166,9 +286,46 @@
       <workItem from="1570515917158" duration="278000" />
       <workItem from="1570516300477" duration="851000" />
       <workItem from="1570517544074" duration="7774000" />
-      <workItem from="1570535977436" duration="1161000" />
+      <workItem from="1570535977436" duration="4358000" />
+      <workItem from="1570576284139" duration="2587000" />
+      <workItem from="1570585814061" duration="2641000" />
+      <workItem from="1570591764004" duration="16400000" />
+      <workItem from="1570630779602" duration="10149000" />
+      <workItem from="1570694461437" duration="7877000" />
+      <workItem from="1570707810664" duration="587000" />
     </task>
     <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="587000" />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
+    <editor active="true" />
+    <layout>
+      <window_info id="Favorites" side_tool="true" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.25" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info anchor="bottom" id="Docker" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Database Changes" />
+      <window_info anchor="bottom" id="Version Control" />
+      <window_info anchor="bottom" id="Python Console" />
+      <window_info anchor="bottom" id="Terminal" weight="0.41501418" />
+      <window_info anchor="bottom" id="Event Log" side_tool="true" />
+      <window_info anchor="bottom" id="调试" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.3286119" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="right" id="SciView" />
+      <window_info anchor="right" id="Database" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+    </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
@@ -179,11 +336,70 @@
         <entry key="MAIN">
           <value>
             <State>
+              <option name="RECENTLY_FILTERED_USER_GROUPS">
+                <collection />
+              </option>
+              <option name="RECENTLY_FILTERED_BRANCH_GROUPS">
+                <collection />
+              </option>
               <option name="COLUMN_ORDER" />
             </State>
           </value>
         </entry>
       </map>
     </option>
+    <option name="RECENT_FILTERS">
+      <map>
+        <entry key="Branch">
+          <value>
+            <list />
+          </value>
+        </entry>
+        <entry key="User">
+          <value>
+            <list />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/edu/views.py</url>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/edu/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="947" column="25" lean-forward="true" selection-start-line="947" selection-start-column="25" selection-end-line="947" selection-end-column="25" />
+          <folding>
+            <element signature="e#0#35#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/edu/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="72">
+          <caret line="88" column="48" lean-forward="true" selection-start-line="88" selection-start-column="48" selection-end-line="88" selection-end-column="48" />
+          <folding>
+            <element signature="e#0#28#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/online_edu/settings.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2160">
+          <caret line="120" column="6" lean-forward="true" selection-start-line="120" selection-start-column="6" selection-end-line="120" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
   </component>
 </project>

@@ -38,7 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'edu',
-    'rest_framework'
+    'rest_framework',
+    'shop',
+    # 'djcelery',
 ]
 
 MIDDLEWARE = [
@@ -103,7 +105,7 @@ DATABASES = {
         'NAME': 'edu'  # 数据库名字
     }
 }
-
+#
 # 配置读写分离
 DATABASE_ROUTERS = ['utils.db_router.MasterSlaveRouter']
 
@@ -146,3 +148,18 @@ USE_TZ = False
 STATIC_URL = '/static/'
 STATICFILES_DIRS=[os.path.join(BASE_DIR,'static')]
 UPLOAD = os.path.join(BASE_DIR,'static/upload/')
+# 邮件配置
+EMAIL_USE_SSL = True # Secure Sockets Layer 安全套接层, 取决于邮件服务器是否开启加密协议
+EMAIL_HOST = 'smtp.qq.com'  # 邮件服务器地址
+EMAIL_PORT = 465 # 邮件服务器端口
+EMAIL_HOST_USER = '1334178184@qq.com' # 登陆邮件服务器的账号
+EMAIL_HOST_PASSWORD = 'qecfxmeqchwajhcd'  # 登陆邮件服务器的密码
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER # 邮件的发送者
+# 异步发邮件
+# import djcelery
+# djcelery.setup_loader()
+# BROKER_URL = 'redis://127.0.0.1:6379/1'  # 消息队列
+# CELERY_IMPORTS = ('edu.task')  # 任务路径
+# CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379/2'  # 结果存储
+
+

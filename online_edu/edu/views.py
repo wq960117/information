@@ -271,7 +271,6 @@ class AddPath_stageView(APIView):
     def post(self,request):
         ser = Path_stageSerializers(data=request.data)
         mes = {}
-
         print(request.data,'aaaaaaaaaaaaaaaaaaaaaa')
         if ser.is_valid():
             print('sssssssssssssssssssssssss')
@@ -725,7 +724,7 @@ import os
 from online_edu.settings import UPLOAD
 import paramiko
 
-def delete_ssh(request):
+def delete_uploadimg(request):
     '''页面加载图片后点击删除接口'''
     mes={}
     os.chdir(UPLOAD)
@@ -825,7 +824,6 @@ class GetPrice(APIView):
         mes = {}
         all_prices = Price.objects.all()
         page = request.GET.get('page')
-
         if page:
             page = int(page)
         else:
@@ -834,7 +832,6 @@ class GetPrice(APIView):
         current_prices = paginator.get_page(page)
         current_prices = PriceModelSerializer(current_prices, many=True)
         total = paginator.num_pages
-
         all_userlevel = UserLevel.objects.all()
         all_course = Course.objects.all()
         all_userlevel = UserLevelSerializer(all_userlevel, many=True)
@@ -870,6 +867,12 @@ class AddPrice(APIView):
         try:
             if one_price.is_valid():
                 one_price.save()
+                email = data['email']
+                send_m = EmailMessage('欢迎注册',
+                                      "欢迎你:<a href='http://localhost:8000/valid_email?code=" + token + "'>点此</a>点此链接进行激活",
+                                      settings.DEFAULT_FROM_EMAIL, [email, '1254918445@qq.com'])
+                send_m.content_subtype = 'html'
+                send_m.send()
                 mes['code'] = 200
                 mes['message'] = '成功'
 
@@ -902,6 +905,134 @@ class DeletePrices(APIView):
             one_price=Price.objects.get(id=id)
             try:
                 one_price.delete()
+                mes['code']=200
+                mes['message']='删除成功'
+            except:
+                mes['code']=201
+                mes['message']='删除失败'
+        return Response(mes)
+# from fdfs_client.client import Fdfs_client
+# def uploadmingwebimg(request):
+#     file = request.FILES.get('image')
+#     print(file.name)
+#     client=Fdfs_client('/Users/qianqian/githubproject/information/online_edu/edu/client.conf')
+#     res=client.upload_by_filename('/Users/qianqian/Desktop/小可爱/'+file.name)
+#     # res=client.upload_by_filename('/Users/qianqian/Desktop/小可爱/5.jpg')
+#     print(res)
+#     return HttpResponse('ok')
+#
+# import paramiko
+#
+# def get_ssh(host,username,password):
+#     sh = paramiko.SSHClient()
+#     sh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+#     sh.connect(host, username=username, password=password) #host是阿里云服务器的ip，username是root，password是ssh连接阿里云服务器的密码
+#     t = 'abc' #对应操作的文件信息
+#     stdin, stdout, stderr = sh.exec_command('cd /home/test;rm -rf '+t)
+#     result = stdout.read()
+#     sh.close()
+#     return result
+#
+# def beifen_ssh(request):
+#
+#     sh = paramiko.SSHClient()
+#     sh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+#
+#     sh.connect('120.27.246.172', username = 'root', password = 'Wq960117') #host是阿里云服务器的ip，username是root，password是ssh连接阿里云服务器的密码
+#     stdin, stdout, stderr = sh.exec_command('sh /home/soft/backupdb.sh')
+#     result = stdout.read()
+#     sh.close()
+#     return HttpResponse('ok')
+
+
+class GetCoupon(APIView):
+    """获取优惠券相关信息"""
+    def get(self,request):
+        mes={}
+        all_coupon=Coupon.objects.all()
+        page=request.GET.get('page')
+        if page:
+            page=int(page)
+        else:
+            page=1
+        print(page)
+        paginator=Paginator(all_coupon,2)
+        current_coupon=paginator.get_page(page)
+        current_coupon=CouponModelSerializer(current_coupon,many=True)
+        total=paginator.num_pages
+
+        all_course=Course.objects.all()
+        all_course=ClassesModelSerializer(all_course,many=True)
+
+        mes['code']=200
+        mes['total']=total
+        mes['all_coupon']=current_coupon.data
+        mes['all_course']=all_course.data
+        return Response(mes)
+class AddCoupon(APIView):
+    """添加优惠券价格"""
+    def post(self,request):
+        mes={}
+        data=request.data.copy()
+        print(data)
+        id=data['id']
+        # 因为data里传递了修改对应的ID，所以存储序列化的时候无法验证，所以重新定义数据，将除了ID以外的数据重新赋值
+        datas={}
+        # if (data['course']==''):
+        datas['course_id']=None
+        datas['name']=data['name']
+        datas['count']=data['count']
+        datas['type']=data['type']
+        datas['start_time']=data['start_time']
+        datas['end_time']=data['end_time']
+        datas['condition']=data['condition']
+        datas['integral']=data['integral']
+        datas['money']=float(data['money'])
+        datas['status']=data['status']
+        print(datas)
+
+        if id:
+            """如果ID存在则修改"""
+            a_coupon=Coupon.objects.get(id=int(data['id']))
+            one_coupon = CouponSerializers(a_coupon, data=datas)
+        else:
+            """ID不存在为添加"""
+            one_coupon=CouponSerializers(data=datas)
+        try:
+            if one_coupon.is_valid():
+                one_coupon.save()
+                mes['code'] = 200
+                mes['message'] = '成功'
+
+            else:
+                mes['code'] = 201
+                mes['message'] = '添加失败'
+        except:
+            mes['code'] = 400
+            mes['message'] = '信息错误'
+        return Response(mes)
+class DeleteCoupon(APIView):
+    """删除优惠券价格接口"""
+    def post(self,request):
+        mes={}
+        data = request.data
+        one_coupon = Coupon.objects.filter(id=int(data['id'])).first()
+        one_coupon.delete()
+        mes['code'] = 200
+        mes['msg'] = '删除成功'
+        return Response(mes)
+class DeleteCoupons(APIView):
+    """批量删除优惠券价格接口"""
+    def post(self,request):
+        mes={}
+        data=request.data
+        ids=data['ids']
+        id_list =ids.split(',')
+        for id in id_list:
+            id=int(id)
+            one_coupon=Coupon.objects.get(id=id)
+            try:
+                one_coupon.delete()
                 mes['code']=200
                 mes['message']='删除成功'
             except:

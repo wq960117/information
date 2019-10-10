@@ -45,8 +45,7 @@ urlpatterns = [
     path('courselist/',views.CourseList.as_view()),
     #展示章节
     path('sectionlist/',views.Sectionlist.as_view()),
-    #上传图片
-    path('uploadImg/',views.uploadImg),
+
     #修改章节
     path('updatesection/',views.UpdateSection.as_view()),
     #删除章节
@@ -70,7 +69,9 @@ urlpatterns = [
     path('get_classes/', views.GetClasses.as_view()),
     # 添加课程
     path('add_course/', views.Addclasses.as_view()),
+    # 批量删除课程
     path('delete_classes/', views.DeleteClasses.as_view()),
+    # 删除课程
     path('delete_class/', views.DeleteClass.as_view()),
 
     # 添加路径
@@ -82,8 +83,16 @@ urlpatterns = [
     # 展示路径
     path('show_path/', views.Show_Path.as_view()),
 
-    # 删除图片
-    path('delete_img/', views.delete_ssh),
+    # 本地upload上传图片
+    path('uploadImg/', views.uploadImg),
+    # 删除本地upload图片
+    path('delete_img/', views.delete_uploadimg),
+    # fastdfs上传图片
+    # path('upload_pic/', views.uploadmingwebimg),
+    # # 删除阿里云服务器的图片
+    # path('delete_pic/', views.get_ssh),
+    # #阿里云备份数据库
+    # path('beifen_ssh/', views.beifen_ssh),
 
     # 展示课程价格接口
     path('get_price/', views.GetPrice.as_view()),
@@ -93,6 +102,13 @@ urlpatterns = [
     path('delete_price/', views.DeletePrice.as_view()),
     # 批量删除课程价格
     path('delete_prices/', views.DeletePrices.as_view()),
+
+    # 获取优惠券展示
+    path('get_coupon/', views.GetCoupon.as_view()),
+    path('add_coupon/', views.AddCoupon.as_view()),
+    path('delete_coupon/', views.DeleteCoupon.as_view()),
+    path('delete_coupons/', views.DeleteCoupons.as_view()),
+
 
 
 
