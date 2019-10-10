@@ -258,18 +258,18 @@ class Section(models.Model):
 #
 #
 # # 优惠券表
-# class Coupon(models.Model):
-#     course = models.ForeignKey('Course', on_delete=models.CASCADE)
-#     name = models.CharField(max_length=30)
-#     count = models.IntegerField()  # 数量
-#     type = models.IntegerField()  # 类型  1全场通用   2指定商品
-#     start_time = models.DateTimeField()  # 开始时间
-#     end_time = models.DateTimeField()  # 结束时间
-#     condition = models.DecimalField(max_digits=7, decimal_places=2)  # 满多少可以
-#     integral = models.IntegerField()  # 兑换所需积分数量
-#     money = models.DecimalField(max_digits=7, decimal_places=2)  # 实际抵消金额
-#     status = models.IntegerField()  # 状态  1可用  2过期
-#
+class Coupon(models.Model):
+    course = models.ForeignKey('Course', on_delete=models.CASCADE)
+    name = models.CharField(max_length=30)
+    count = models.IntegerField()  # 数量
+    type = models.IntegerField()  # 类型  1全场通用   2指定商品
+    start_time = models.DateTimeField()  # 开始时间
+    end_time = models.DateTimeField()  # 结束时间
+    condition = models.DecimalField(max_digits=7, decimal_places=2)  # 满多少可以
+    integral = models.IntegerField()  # 兑换所需积分数量
+    money = models.DecimalField(max_digits=7, decimal_places=2)  # 实际抵消金额
+    status = models.IntegerField()  # 状态  1可用  2过期
+
 #
 # # 用户优惠卷使用表
 # class Integral_coupon(models.Model):

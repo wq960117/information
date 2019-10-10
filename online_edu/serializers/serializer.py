@@ -206,7 +206,40 @@ class PriceSerializers(serializers.Serializer):
 
 """优惠券表的序列化"""
 
+
 class CouponModelSerializer(serializers.ModelSerializer):
     class Meta:
-        model=Coupon
+        model = Coupon
         fields = '__all__'
+
+
+# 优惠券反序列化
+class CouponSerializers(serializers.Serializer):
+    course_id = serializers.IntegerField(allow_null=True)
+    name = serializers.CharField(max_length=30)
+    count = serializers.IntegerField()
+    type = serializers.IntegerField()
+    start_time = serializers.DateTimeField()
+    end_time = serializers.DateTimeField()
+    condition = serializers.DecimalField(max_digits=7, decimal_places=2)
+    integral = serializers.IntegerField()
+    money = serializers.DecimalField(max_digits=7, decimal_places=2)
+    status = serializers.IntegerField()
+
+    def create(self, data):
+        return Coupon.objects.create(**data)
+
+    def update(self, instance, validated_data):
+        instance.course_id = validated_data.get('course_id', instance.course_id)
+        instance.name = validated_data.get('name', instance.name)
+        instance.count = validated_data.get('count', instance.count)
+        instance.type = validated_data.get('type', instance.type)
+        instance.start_time = validated_data.get('start_time', instance.start_time)
+        instance.end_time = validated_data.get('end_time', instance.end_time)
+        instance.condition = validated_data.get('condition', instance.condition)
+        instance.integral = validated_data.get('integral', instance.integral)
+        instance.money = validated_data.get('money', instance.money)
+        instance.status = validated_data.get('status', instance.status)
+        instance.save()
+        return instance
+

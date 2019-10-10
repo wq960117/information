@@ -909,3 +909,108 @@ class DeletePrices(APIView):
                 mes['message']='删除失败'
         return Response(mes)
 
+
+class GetCoupon(APIView):
+    """获取优惠券相关信息"""
+
+    def get(self, request):
+        mes = {}
+        all_coupon = Coupon.objects.all()
+        page = request.GET.get('page')
+
+        if page:
+            page = int(page)
+        else:
+            page = 1
+        paginator = Paginator(all_coupon, 2)
+        current_coupon = paginator.get_page(page)
+        current_coupon = CouponModelSerializer(current_coupon, many=True)
+        total = paginator.num_pages
+
+        all_course = Course.objects.all()
+        all_course = ClassesModelSerializer(all_course, many=True)
+
+        mes['code'] = 200
+        mes['total'] = total
+        mes['all_coupon'] = current_coupon.data
+        mes['all_course'] = all_course.data
+        return Response(mes)
+
+
+class AddCoupon(APIView):
+    """添加优惠券价格"""
+
+    def post(self, request):
+        mes = {}
+        data = request.data.copy()
+        print(data)
+        id = data['id']
+        # 因为data里传递了修改对应的ID，所以存储序列化的时候无法验证，所以重新定义数据，将除了ID以外的数据重新赋值
+        datas = {}
+        # if (data['course']==''):
+        datas['course_id'] = None
+        datas['name'] = data['name']
+        datas['count'] = data['count']
+        datas['type'] = data['type']
+        datas['start_time'] = data['start_time']
+        datas['end_time'] = data['end_time']
+        datas['condition'] = data['condition']
+        datas['integral'] = data['integral']
+        datas['money'] = float(data['money'])
+        datas['status'] = data['status']
+        print(datas)
+
+        if id:
+            """如果ID存在则修改"""
+            a_coupon = Coupon.objects.get(id=int(data['id']))
+            one_coupon = CouponSerializers(a_coupon, data=datas)
+        else:
+            """ID不存在为添加"""
+            one_coupon = CouponSerializers(data=datas)
+        try:
+            if one_coupon.is_valid():
+                one_coupon.save()
+                mes['code'] = 200
+                mes['message'] = '成功'
+
+            else:
+                mes['code'] = 201
+                mes['message'] = '添加失败'
+        except:
+            mes['code'] = 400
+            mes['message'] = '信息错误'
+        return Response(mes)
+
+
+class DeleteCoupon(APIView):
+    """删除优惠券价格接口"""
+
+    def post(self, request):
+        mes = {}
+        data = request.data
+        one_coupon = Coupon.objects.filter(id=int(data['id'])).first()
+        one_coupon.delete()
+        mes['code'] = 200
+        mes['msg'] = '删除成功'
+        return Response(mes)
+
+
+class DeleteCoupons(APIView):
+    """批量删除优惠券价格接口"""
+
+    def post(self, request):
+        mes = {}
+        data = request.data
+        ids = data['ids']
+        id_list = ids.split(',')
+        for id in id_list:
+            id = int(id)
+            one_coupon = Coupon.objects.get(id=id)
+            try:
+                one_coupon.delete()
+                mes['code'] = 200
+                mes['message'] = '删除成功'
+            except:
+                mes['code'] = 201
+                mes['message'] = '删除失败'
+        return Response(mes)

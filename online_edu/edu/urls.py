@@ -94,7 +94,14 @@ urlpatterns = [
     # 批量删除课程价格
     path('delete_prices/', views.DeletePrices.as_view()),
 
-
+    # 优惠券的添加和修改
+    path('add_coupon/', views.AddCoupon.as_view()),
+    # 优惠券的展示
+    path('getCoupon/', views.GetCoupon.as_view()),
+    # 优惠券的删除
+    path('delete_coupon/', views.DeleteCoupon.as_view()),
+    # 优惠券的批量删除
+    path('delete_coupons/', views.DeleteCoupons.as_view()),
 
 ]
 
