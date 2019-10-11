@@ -31,46 +31,33 @@ class RegUser(APIView):
         password = data['password']
         email = data['email']
         data['level_id'] = one_leve.id
-        data['password'] = make_password(password)
+        password = make_password(password)
         print(data)
         code=request.session.get('image_code')
-        print(request.session.get('image_code'),'=================================')
+        print(request.session.get('image_code'))
         token = str(uuid.uuid1())
-        print(token)
         # 1  判断用户是否已经存在
         one_user = User.objects.filter(email=email).first()
         if one_user:
             mes['code'] = 402
             mes['message'] = '用户已存在'
-            print('-----------------------------')
         # 2  判断密码是否低于6位
         if len(password) <= 6:
             mes['code'] = 403
             mes['message'] = '密码低于6位'
-            print('++++++++++++++++++++++++++++++++++++++')
         # 3  判断邮箱格式是否正确
         if not re.match("^[a-z0-9A-Z]+[-|a-z0-9A-Z._]+@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-z]{2,}$", data['email']):
             mes['code'] = 407
             mes['message'] = '邮箱格式不正确'
-            print('111111111111111111111111111111111111111111')
-
         if code!=data['code']:
             mes['code'] = 406
             mes['message'] = '验证码错误'
         try:
             User.objects.create(password=password,email=email,level_id=data['level_id'],token=token)
-        # 4  信息匹配发送邮箱验证
-        # u = UserSerializer(data=data)
-        # print('222222222222222222222222222222222222222')
-        # sendmail.delay(email, token)
-        # print('ok')
-        # if u.is_valid():
-        #     print('========================================')
-        #     u.save()
-
-            send_m=EmailMessage('欢迎注册',"欢迎你:<a href=' http://127.0.0.1:8000/shop/active/?token="+token+"'>点此链接进行激活</a>",settings.DEFAULT_FROM_EMAIL,[email,'1254918445@qq.com'])
-            send_m.content_subtype = 'html'
-            send_m.send()
+            sendmail.delay(email,token)
+            # send_m=EmailMessage('欢迎注册',"欢迎你:<a href=' http://127.0.0.1:8000/shop/active/?token="+token+"'>点此链接进行激活</a>",settings.DEFAULT_FROM_EMAIL,[email,'1254918445@qq.com'])
+            # send_m.content_subtype = 'html'
+            # send_m.send()
             mes['code'] = 200
             mes['message'] = '注册成功'
         except:
@@ -98,7 +85,7 @@ class Login(APIView):
             #判断状态,是否验证通过
             if one_user.is_active == 1:
                 #判断图片验证码是否一致
-                print(request.session.get('image_code'),'-----------------------------------')
+                print(request.session.get('image_code'))
                 if request.session.get('image_code')==data['code']:
                     #判断密码是否与获取到的一致
                     # if check_password(password,one_user.password):
@@ -136,7 +123,7 @@ class Login(APIView):
 class SendMailAPIView(APIView):
     def get(self, request):
         ret={}
-        sendmail.delay('1334178184@qq.com')
+        sendmail.delay('1334178184@qq.com','123')
         ret['code'] = 200
         ret['message'] = '成功'
         return Response(ret)
