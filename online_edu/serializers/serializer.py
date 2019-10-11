@@ -240,17 +240,17 @@ class CouponSerializers(serializers.Serializer):
         return instance
 class UserSerializer(serializers.Serializer):
     """优惠券反序列化"""
-    username = serializers.CharField(max_length=20)
+    username = serializers.CharField(max_length=20,default='')
     password = serializers.CharField(max_length=255)
-    pic = serializers.CharField(max_length=255)
+    pic = serializers.CharField(max_length=255,default='')
     level_id = serializers.IntegerField(default=0)
     is_active = serializers.IntegerField(default=0)
     integral = serializers.IntegerField(default=0)
-    invitation_code = serializers.CharField(max_length=50)
-    token = serializers.CharField(max_length=255)
+    invitation_code = serializers.CharField(max_length=50,default='')
+    token = serializers.CharField(max_length=255,default='')
     email = serializers.CharField(max_length=255)
     def create(self, data):
-        return Coupon.objects.create(**data)
+        return User.objects.create(**data)
 
     def update(self, instance, validated_data):
         instance.username = validated_data.get('username', instance.username)

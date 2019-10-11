@@ -9,14 +9,14 @@ class UserLevel(models.Model):
 
 class User(models.Model):
     '''用户信息表'''
-    username = models.CharField(max_length=20, verbose_name='用户名')
+    username = models.CharField(max_length=20, verbose_name='用户名',default='',null=True)
     password = models.CharField(max_length=255, verbose_name='密码')
-    pic = models.CharField(max_length=255, verbose_name='用户头像')
+    pic = models.CharField(max_length=255, verbose_name='用户头像',default='',null=True)
     level = models.ForeignKey(UserLevel, on_delete=models.CASCADE,verbose_name='用户类型，0普通用户，1普通会员，2高级会员')
     is_active = models.IntegerField(default=0, verbose_name='激活状态，0未激活，1激活')
     integral = models.IntegerField(default=0, verbose_name='积分')
-    invitation_code = models.CharField(max_length=50, default='', verbose_name='邀请码')
-    token = models.CharField(max_length=255, verbose_name='用户登录生成的token')
+    invitation_code = models.CharField(max_length=50, default='', verbose_name='邀请码',null=True)
+    token = models.CharField(max_length=255, verbose_name='用户登录生成的token',default='',null=True)
     email=models.CharField(max_length=255,verbose_name='邮箱')
 
     class Meta():

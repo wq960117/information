@@ -1,9 +1,12 @@
 #!/usr/bin/env python
 import os
 import sys
-
+import django
 if __name__ == "__main__":
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "online_edu.settings")
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ok.settings')
+    django.setup()
+    pass
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:
@@ -13,3 +16,5 @@ if __name__ == "__main__":
             "forget to activate a virtual environment?"
         ) from exc
     execute_from_command_line(sys.argv)
+
+

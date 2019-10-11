@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'edu',
     'rest_framework',
     'shop',
-    # 'djcelery',
+    'djcelery',
+    'rest_framework_jwt'
 ]
 
 MIDDLEWARE = [
@@ -156,10 +157,12 @@ EMAIL_HOST_USER = '1334178184@qq.com' # 登陆邮件服务器的账号
 EMAIL_HOST_PASSWORD = 'qecfxmeqchwajhcd'  # 登陆邮件服务器的密码
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER # 邮件的发送者
 # 异步发邮件
-# import djcelery
-# djcelery.setup_loader()
+import djcelery
+djcelery.setup_loader()
 # BROKER_URL = 'redis://127.0.0.1:6379/1'  # 消息队列
-# CELERY_IMPORTS = ('edu.task')  # 任务路径
+CELERY_IMPORTS = ('shop.task')  # 任务路径
 # CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379/2'  # 结果存储
+BROKER_URL = 'amqp://root:root@120.27.246.172:5672/myvhost'
+CELERY_RESULT_BACKEND = 'amqp://root:root@120.27.246.172:5672/myvhost'
 
 
