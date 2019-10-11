@@ -6,7 +6,9 @@ urlpatterns = [
     path('register/', views.RegUser.as_view()),
     path('send/', views.SendMailAPIView.as_view()),
     path('login/',views.Login.as_view()),
-    path('active/',views.active)
+    path('active/',views.active),
+    path('all_path/', views.AllPath.as_view()),
+    path('course/', views.Courses.as_view())
 
 
 

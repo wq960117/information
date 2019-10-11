@@ -139,3 +139,30 @@ def active(request):
             one_user.is_active=1
             one_user.save()
             return HttpResponse('激活成功~~~~')
+
+
+#首页展示学习路径,推荐课程
+class AllPath(APIView):
+    def get(self,request):
+        mes = {}
+        # 路径
+        show_path = Path.objects.all()
+        # 推荐课程
+        course = Course.objects.filter(recommand=1)
+        mes['course'] = CourseModelSerializer(course, many=True).data
+        mes['pathlist'] = PathModelSerializer(show_path, many=True).data
+        mes['code'] = 200
+        return Response(mes)
+
+# 课程首页信息展示 1--标签   2---课程    Python  Linux
+class Courses(APIView):
+    def get(self,request):
+        mes={}
+        tag=Tag.objects.all()
+        course=Course.objects.all()
+        c=CourseModelSerializer(course,many=True)
+        t=TagModelSerializer(tag,many=True)
+        mes['code']=200
+        mes['courselist']=c.data
+        mes['taglist']=t.data
+        return Response(mes)
