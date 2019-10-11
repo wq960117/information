@@ -867,12 +867,10 @@ class AddPrice(APIView):
         try:
             if one_price.is_valid():
                 one_price.save()
-                email = data['email']
-                send_m = EmailMessage('欢迎注册',
-                                      "欢迎你:<a href='http://localhost:8000/valid_email?code=" + token + "'>点此</a>点此链接进行激活",
-                                      settings.DEFAULT_FROM_EMAIL, [email, '1254918445@qq.com'])
-                send_m.content_subtype = 'html'
-                send_m.send()
+                # email = data['email']
+                # send_m = EmailMessage('欢迎注册',"欢迎你:<a href='http://localhost:8000/valid_email?code=" + token + "'>点此</a>点此链接进行激活",settings.DEFAULT_FROM_EMAIL, [email, '1254918445@qq.com'])
+                # send_m.content_subtype = 'html'
+                # send_m.send()
                 mes['code'] = 200
                 mes['message'] = '成功'
 

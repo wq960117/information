@@ -34,21 +34,20 @@ class RegUser(APIView):
         data['password'] = make_password(password)
         print(data)
         code=request.session.get('image_code')
-        print(request.session.get('image_code'))
+        print(request.session.get('image_code'),'=================================')
         token = str(uuid.uuid1())
+        print(token)
         # 1  判断用户是否已经存在
         one_user = User.objects.filter(email=email).first()
         if one_user:
             mes['code'] = 402
             mes['message'] = '用户已存在'
             print('-----------------------------')
-
         # 2  判断密码是否低于6位
         if len(password) <= 6:
             mes['code'] = 403
             mes['message'] = '密码低于6位'
             print('++++++++++++++++++++++++++++++++++++++')
-
         # 3  判断邮箱格式是否正确
         if not re.match("^[a-z0-9A-Z]+[-|a-z0-9A-Z._]+@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-z]{2,}$", data['email']):
             mes['code'] = 407
@@ -59,7 +58,7 @@ class RegUser(APIView):
             mes['code'] = 406
             mes['message'] = '验证码错误'
         try:
-            User.objects.create(password=password,email=email,level_id=data['level_id'])
+            User.objects.create(password=password,email=email,level_id=data['level_id'],token=token)
         # 4  信息匹配发送邮箱验证
         # u = UserSerializer(data=data)
         # print('222222222222222222222222222222222222222')
@@ -69,9 +68,9 @@ class RegUser(APIView):
         #     print('========================================')
         #     u.save()
 
-            # send_m = EmailMessage('欢迎注册',"欢迎你:< a href=' " + token + "'>点此</ a>点此链接进行激活",settings.DEFAULT_FROM_EMAIL, [email, '1334178184@qq.com'])
-            # send_m.content_subtype = 'html'
-            # send_m.send()
+            send_m=EmailMessage('欢迎注册',"欢迎你:<a href=' http://127.0.0.1:8000/shop/active/?token="+token+"'>点此链接进行激活</a>",settings.DEFAULT_FROM_EMAIL,[email,'1254918445@qq.com'])
+            send_m.content_subtype = 'html'
+            send_m.send()
             mes['code'] = 200
             mes['message'] = '注册成功'
         except:
@@ -88,6 +87,7 @@ class Login(APIView):
     def post(self,request):
         mes={}
         data=request.data
+        print(data)
         # username=data['username']
         password=data['password']
         email=data['email']
@@ -97,25 +97,28 @@ class Login(APIView):
         if one_user:
             #判断状态,是否验证通过
             if one_user.is_active == 1:
-                #判断密码是否与获取到的一致
-                if check_password(password,one_user.password):
-                    #生成token保存到用户表中
-                    jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
-                    jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
-                    payload = jwt_payload_handler(one_user)
-                    token = jwt_encode_handler(payload)
-                    one_user.token=token
-                    u=UserSerializer(data=data)
-                    if u.is_valid():
-                        u.save()
+                #判断图片验证码是否一致
+                print(request.session.get('image_code'),'-----------------------------------')
+                if request.session.get('image_code')==data['code']:
+                    #判断密码是否与获取到的一致
+                    # if check_password(password,one_user.password):
+                    if password==one_user.password:
+                        #生成token保存到用户表中
+                        jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
+                        jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
+                        payload = jwt_payload_handler(one_user)
+                        token = jwt_encode_handler(payload)
+                        one_user.token=token
+                        one_user.save()
                         mes['code'] = 200
+                        # mes['']
                         mes['message'] = '登录成功'
                     else:
-                        mes['code'] = 400
-                        mes['message'] = '登录失败'
+                        mes['code'] = 401
+                        mes['message'] = '密码错误'
                 else:
-                    mes['code'] = 401
-                    mes['message'] = '密码错误'
+                    mes['code'] = 405
+                    mes['message'] = '验证码错误'
             else:
                 mes['code'] = 402
                 mes['message'] = '用户未激活'
@@ -139,3 +142,13 @@ class SendMailAPIView(APIView):
         return Response(ret)
 
 
+# 邮箱验证，修改用户状态
+def active(request):
+    token=request.GET.get('token')
+    print('用户点击验证')
+    if token:
+        one_user=User.objects.filter(token=token).first()
+        if one_user:
+            one_user.is_active=1
+            one_user.save()
+            return HttpResponse('激活成功~~~~')

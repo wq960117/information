@@ -264,3 +264,8 @@ class UserSerializer(serializers.Serializer):
         instance.email = validated_data.get('email', instance.email)
         instance.save()
         return instance
+class UserModelSerializer(serializers.ModelSerializer):
+    """优惠券序列化"""
+    class Meta:
+        model=User
+        fields='__all__'
