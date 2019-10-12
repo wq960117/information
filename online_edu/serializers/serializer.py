@@ -161,7 +161,7 @@ class PathModelSerializer(serializers.ModelSerializer):
 
 # 路径反序列化
 class PathSerializers(serializers.Serializer):
-    pic = serializers.CharField(max_length=50)
+    pic = serializers.CharField(max_length=255)
     path = serializers.CharField(max_length=255)
     info = serializers.CharField(max_length=255)
     studynum = serializers.IntegerField()

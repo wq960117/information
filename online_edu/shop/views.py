@@ -141,6 +141,71 @@ def active(request):
             return HttpResponse('激活成功~~~~')
 
 
+"""
+三方登录：
+1、vue页面点击微博登录，调用get_url的接口，返回的是微博授权的url
+2、requests请求微博授权的url，返回的是一个code
+3、内部请求授权接口，拼接地址，请求一个界面，要求用户输入邮箱绑定账号
+4、丙丁成功返回信息保存到第三3表中
+"""
+# 第三方登录授权页面的地址
+def get_url(request):
+    # #回调网址
+    redirect_url = "http://127.0.0.1:8000/shop/get_token/"
+    # #应用id
+    client_id = '204877894'
+    url = "https://api.weibo.com/oauth2/authorize?client_id={client_id}&response_type=code&redirect_uri={redirect_url}".format(client_id=client_id, redirect_url=redirect_url)
+    return redirect(url)
+
+import requests
+from django.http import HttpResponseRedirect
+def get_access_token(request):
+
+    #获取回调的code
+    code = request.GET.get('code')
+    print(code)
+    #微博认证地址
+    access_token_url = "https://api.weibo.com/oauth2/access_token"
+    #参数
+    response = requests.post(access_token_url,data={
+        "client_id": '204877894',
+        "client_secret": "14c2a1e227b3e073d4983c1258d424c6",
+        "grant_type": "authorization_code",
+        "code": code,
+        "redirect_uri": "http://127.0.0.1:8000/shop/get_token/",
+    })
+    res = response.text
+    res = eval(str(res))
+    uid = res.get('uid')
+    print(uid)
+    #uid和网站用户绑定
+
+    mes={}
+    mes['uid']=uid
+    one_user=ThirdPartyLogin.objects.filter(uid=uid).first()
+    if one_user:
+        return HttpResponseRedirect('http://127.0.0.1:8080/index')
+    else:
+        return HttpResponseRedirect('http://127.0.0.1:8080/user_bind/?uid='+uid)
+class UserBind(APIView):
+    def post(self,request):
+        mes={}
+        data = request.data
+        print(data)
+        email=data['email']
+        password=data['password']
+        one_user=User.objects.filter(email=data['email']).first()
+        if not all([email,password]):
+            mes['code'] = 201
+            mes['message'] = '信息不完整'
+        if not one_user:
+            mes['code']=201
+            mes['message']='邮箱账号不存在'
+        if check_password(data['password'],one_user.password):
+            mes['code'] = 200
+            mes['message'] = '绑定成功'
+        return Response(mes)
+
 #首页展示学习路径,推荐课程
 class AllPath(APIView):
     def get(self,request):
@@ -165,4 +230,23 @@ class Courses(APIView):
         mes['code']=200
         mes['courselist']=c.data
         mes['taglist']=t.data
+        return Response(mes)
+
+# 课程展示    获取到前台的类别id,标签id,进行查找,默认展示所有课程
+class Courselist(APIView):
+    def post(self,request):
+        mes={}
+        member_id=request.data['member_id']
+        tag_id=request.data['tag_id']
+        print(member_id,tag_id,'==========================')
+        #判断两个id都为0时,展示所有课程
+        if (member_id and tag_id)==0:
+            course=Course.objects.all()
+            mes['code']=200
+            mes['course']=CourseModelSerializer(course,many=True).data
+        #否则,按照条件查找
+        else:
+            course=Course.objects.filter(member=member_id,tag_id=tag_id).all()
+            mes['code']=200
+            mes['course']=CourseModelSerializer(course,many=True).data
         return Response(mes)

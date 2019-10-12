@@ -95,7 +95,7 @@ class ThirdPartyLogin(models.Model):
 #
 #
 class Path(models.Model):
-    pic = models.CharField(max_length=50, verbose_name='路径图片')
+    pic = models.CharField(max_length=255, verbose_name='路径图片')
     path = models.CharField(max_length=255, verbose_name='路径名称')
     info = models.CharField(max_length=255, verbose_name='路径简介')
     studynum = models.IntegerField(default=0, verbose_name='学习人数')
