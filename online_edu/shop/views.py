@@ -1,4 +1,4 @@
-from django.shortcuts import render,HttpResponse
+from django.shortcuts import render,HttpResponse,redirect
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from edu.models import *
