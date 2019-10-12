@@ -213,7 +213,7 @@ class AllPath(APIView):
         # 路径
         show_path = Path.objects.all()
         # 推荐课程
-        course = Course.objects.filter(recommand=1)
+        course = Course.objects.filter(recommand=0) # 0推荐 1不推荐
         mes['course'] = CourseModelSerializer(course, many=True).data
         mes['pathlist'] = PathModelSerializer(show_path, many=True).data
         mes['code'] = 200
