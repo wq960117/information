@@ -68,7 +68,7 @@ class Path_stageSerializers(serializers.Serializer):
 class SectionUserserializers(serializers.Serializer):
     section = serializers.CharField(max_length=50)
     course_id= serializers.IntegerField()
-    video = serializers.CharField(max_length=200)
+    video = serializers.CharField(max_length=255)
     sort =serializers.IntegerField()
 
     def create(self,data):
@@ -76,7 +76,8 @@ class SectionUserserializers(serializers.Serializer):
     def update(self, instance, validated_data):
         instance.section = validated_data.get('new_section', instance.section)
         instance.course=validated_data.get('course_id',instance.course)
-        # instance.video=validated_data.get('video',instance.video)
+        instance.video=validated_data.get('video',instance.video)
+        instance.sort=validated_data.get('sort',instance.sort)
         instance.save()
         return instance
 

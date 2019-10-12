@@ -88,7 +88,7 @@ urlpatterns = [
     # 删除本地upload图片
     path('delete_img/', views.delete_uploadimg),
     # fastdfs上传图片
-    # path('upload_pic/', views.uploadmingwebimg),
+    path('upload_pic/', views.uploadmingwebimg),
     # # 删除阿里云服务器的图片
     # path('delete_pic/', views.get_ssh),
     # #阿里云备份数据库

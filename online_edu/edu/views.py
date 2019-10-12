@@ -361,14 +361,15 @@ def uploadImg(request):
 class AddSection(APIView):
     def post(self,request):
         mes={}
-
-        data=request.data
-        s=SectionUserserializers(data=data)
-        if s.is_valid():
-            print(data, 'ok-----------------------------------------------')
-            s.save()
-            mes['code']=200
-            mes['message']='添加成功'
+        section=request.POST.get('section')
+        video=request.POST.get('video')
+        sort=request.POST.get('sort')
+        course_id=request.POST.get('course_id')
+        print(section,video,course_id,sort,'======================')
+        section=Section(video=video,section=section,sort=sort,course_id=course_id)
+        section.save()
+        mes['code']=200
+        mes['message']='添加成功'
         return Response(mes)
 
 #展示章节
@@ -909,15 +910,15 @@ class DeletePrices(APIView):
                 mes['code']=201
                 mes['message']='删除失败'
         return Response(mes)
-# from fdfs_client.client import Fdfs_client
-# def uploadmingwebimg(request):
-#     file = request.FILES.get('image')
-#     print(file.name)
-#     client=Fdfs_client('/Users/qianqian/githubproject/information/online_edu/edu/client.conf')
-#     res=client.upload_by_filename('/Users/qianqian/Desktop/小可爱/'+file.name)
-#     # res=client.upload_by_filename('/Users/qianqian/Desktop/小可爱/5.jpg')
-#     print(res)
-#     return HttpResponse('ok')
+from fdfs_client.client import Fdfs_client
+def uploadmingwebimg(request):
+    file = request.FILES.get('image')
+    print(file.name)
+    client=Fdfs_client('/Users/qianqian/githubproject/information/online_edu/edu/client.conf')
+    res=client.upload_by_filename('/Users/qianqian/Desktop/小可爱/'+file.name)
+    # res=client.upload_by_filename('/Users/qianqian/Desktop/小可爱/5.jpg')
+    print(res)
+    return HttpResponse('ok')
 #
 # import paramiko
 #

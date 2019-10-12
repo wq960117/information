@@ -178,7 +178,7 @@ class Price(models.Model):
 class Section(models.Model):
     section = models.CharField(max_length=50, verbose_name='课程章节名称')
     course = models.ForeignKey(Course, on_delete=models.CASCADE, verbose_name='关联课程')
-    video = models.CharField(max_length=50, verbose_name='视频链接')
+    video = models.CharField(max_length=255, verbose_name='视频链接')
     sort = models.IntegerField(default=0, verbose_name='排序')
 
     class Meta:
