@@ -23,7 +23,11 @@ urlpatterns = [
     # 首页所有推荐课程展示
     path('course/', views.Courses.as_view()),
     # 首页点击对应分类下课程展示
-    path('courselist/',views.Courselist.as_view())
+    path('courselist/',views.Courselist.as_view()),
+    # 获取某一课程的详细信息
+    path('get_course/',views.GetCourse.as_view()),
+    #路径展示
+    path('path/',views.PathView.as_view()),
 
 
 

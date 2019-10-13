@@ -68,7 +68,6 @@ class ThirdPartyLogin(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='关联用户ID')
     uid = models.CharField(max_length=20, verbose_name='第三方登录平台返回的唯一uid')
     login_type = models.IntegerField(default=0, verbose_name='0微博，1微信，2qq')
-
     class Meta():
         db_table = 'thridpartylogin'
 
@@ -186,39 +185,39 @@ class Section(models.Model):
 #
 #
 # # 实验报告
-# class Report(models.Model):
-#     section_id = models.ForeignKey(Section, on_delete=models.CASCADE, verbose_name='章节id')
-#     user_id = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='用户id')
-#     report_content = models.CharField(max_length=255, verbose_name='报告内容')
-#     report_title = models.CharField(max_length=255, verbose_name='报告标题')
-#     report_browse = models.IntegerField(verbose_name='实验报告浏览量')
-#     linknum = models.IntegerField(verbose_name='点赞数')
-#     course_id = models.ForeignKey(Course, on_delete=models.CASCADE, verbose_name='课程id')
-#
+class Report(models.Model):
+    section_id = models.ForeignKey(Section, on_delete=models.CASCADE, verbose_name='章节id')
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='用户id')
+    report_content = models.CharField(max_length=255, verbose_name='报告内容')
+    report_title = models.CharField(max_length=255, verbose_name='报告标题')
+    report_browse = models.IntegerField(verbose_name='实验报告浏览量')
+    linknum = models.IntegerField(verbose_name='点赞数')
+    course_id = models.ForeignKey(Course, on_delete=models.CASCADE, verbose_name='课程id')
+
 #
 # # 评论表
-# class Comment(models.Model):
-#     content = models.TextField(verbose_name='评论内容')
-#     pid = models.IntegerField(verbose_name='上一级评论id')
-#     top = models.IntegerField(verbose_name='顶级评论')
-#     type_ud = models.IntegerField(verbose_name='自身级别id')
-#     user_id = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='用户id')
-#     course = models.IntegerField(verbose_name='查询评论id')
-#     comment_type = models.IntegerField(default=0, verbose_name='评论类型')
-#     status = models.IntegerField(default=0, verbose_name='审核状态，0否1是')
-#     reason = models.CharField(max_length=255, verbose_name='失败原因')
+class Comment(models.Model):
+    content = models.TextField(verbose_name='评论内容')
+    pid = models.IntegerField(verbose_name='上一级评论id')
+    top = models.IntegerField(verbose_name='顶级评论')
+    type_ud = models.IntegerField(verbose_name='自身级别id')
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='用户id')
+    course = models.IntegerField(verbose_name='查询评论id')
+    comment_type = models.IntegerField(default=0, verbose_name='评论类型')
+    status = models.IntegerField(default=0, verbose_name='审核状态，0否1是')
+    reason = models.CharField(max_length=255, verbose_name='失败原因')
 #
 #
 # # 实验问答表
-# class Answer(models.Model):
-#     course_id = models.ForeignKey(Course, on_delete=models.CASCADE, verbose_name='课程id')
-#     answer_title = models.CharField(max_length=50, verbose_name='问答标题')
-#     answer_content = models.CharField(max_length=255, verbose_name='问答内容')
-#     browse_id = models.IntegerField(verbose_name='浏览量')
-#     user_id = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='用户id')
-#     pid = models.IntegerField(verbose_name='上一级评论')
-#     top = models.IntegerField(verbose_name='顶级评论')
-#     type = models.IntegerField(verbose_name='自身级别评论')
+class Answer(models.Model):
+    course_id = models.ForeignKey(Course, on_delete=models.CASCADE, verbose_name='课程id')
+    answer_title = models.CharField(max_length=50, verbose_name='问答标题')
+    answer_content = models.CharField(max_length=255, verbose_name='问答内容')
+    browse_id = models.IntegerField(verbose_name='浏览量')
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='用户id')
+    pid = models.IntegerField(verbose_name='上一级评论')
+    top = models.IntegerField(verbose_name='顶级评论')
+    type = models.IntegerField(verbose_name='自身级别评论')
 #
 #
 #

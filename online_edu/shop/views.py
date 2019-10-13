@@ -21,10 +21,12 @@ def generate_captcha(request):
     request.session['image_code']=text
     print(request.session.get('image_code'))
     return HttpResponse(image,'image/png')
-
+from django_redis import get_redis_connection
+import json
 # 注册
 class RegUser(APIView):
     def post(self, request):
+        conn = get_redis_connection('default')
         mes = {}
         one_leve = UserLevel.objects.get(level='普通用户')
         data = request.data.copy()
@@ -37,7 +39,9 @@ class RegUser(APIView):
         print(request.session.get('image_code'))
         token = str(uuid.uuid1())
         # 1  判断用户是否已经存在
-        one_user = User.objects.filter(email=email).first()
+        # one_user = User.objects.filter(email=email).first()
+        one_user=conn.get(token)
+        print(one_user)
         if one_user:
             mes['code'] = 402
             mes['message'] = '用户已存在'
@@ -53,13 +57,14 @@ class RegUser(APIView):
             mes['code'] = 406
             mes['message'] = '验证码错误'
         try:
-            User.objects.create(password=password,email=email,level_id=data['level_id'],token=token)
+            # User.objects.create(password=password,email=email,level_id=data['level_id'],token=token)
+            conn.set(token,json.dumps(data))
             sendmail.delay(email,token)
             # send_m=EmailMessage('欢迎注册',"欢迎你:<a href=' http://127.0.0.1:8000/shop/active/?token="+token+"'>点此链接进行激活</a>",settings.DEFAULT_FROM_EMAIL,[email,'1254918445@qq.com'])
             # send_m.content_subtype = 'html'
             # send_m.send()
             mes['code'] = 200
-            mes['message'] = '注册成功'
+            mes['message'] = '请验证邮箱'
         except:
             mes['code'] = 201
             mes['message'] = '注册失败'
@@ -132,9 +137,16 @@ class SendMailAPIView(APIView):
 # 邮箱验证，修改用户状态
 def active(request):
     token=request.GET.get('token')
+    conn = get_redis_connection('default')
     print('用户点击验证')
     if token:
-        one_user=User.objects.filter(token=token).first()
+        one_user_data=conn.get(token)
+        one_user_data=json.loads(one_user_data)
+        print(one_user_data)
+        print(one_user_data['email'])
+        one_user=User.objects.create(password=one_user_data['password'], email=one_user_data['email'], level_id=one_user_data['level_id'], token=token)
+        del token
+        # one_user=User.objects.filter(token=token).first()
         if one_user:
             one_user.is_active=1
             one_user.save()
@@ -186,7 +198,7 @@ def get_access_token(request):
     if one_user:
         return HttpResponseRedirect('http://127.0.0.1:8080/index')
     else:
-        return HttpResponseRedirect('http://127.0.0.1:8080/user_bind/?uid='+uid)
+        return HttpResponseRedirect('http://127.0.0.1:8080/user_bind/'+uid)
 class UserBind(APIView):
     def post(self,request):
         mes={}
@@ -194,16 +206,35 @@ class UserBind(APIView):
         print(data)
         email=data['email']
         password=data['password']
+        uid=data['uid']
         one_user=User.objects.filter(email=data['email']).first()
         if not all([email,password]):
             mes['code'] = 201
             mes['message'] = '信息不完整'
-        if not one_user:
-            mes['code']=201
-            mes['message']='邮箱账号不存在'
-        if check_password(data['password'],one_user.password):
-            mes['code'] = 200
-            mes['message'] = '绑定成功'
+        if one_user:
+            if check_password(data['password'],one_user.password):
+                if one_user.is_active==1:
+                    one_third=ThirdPartyLogin.objects.create(user=one_user,uid=uid,login_type=0) # 0微博，1微信，2qq
+                    jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
+                    jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
+                    payload = jwt_payload_handler(one_user)
+                    token = jwt_encode_handler(payload)
+                    one_user.token=token
+                    one_third.save()
+                    one_user.save()
+                    mes['code'] = 200
+                    mes['message'] = '绑定成功'
+                    mes['token'] = token
+                else:
+                    mes['code'] = 204
+                    mes['message'] = '邮箱未激活'
+            else:
+                mes['code'] = 202
+                mes['message'] = '密码错误'
+        else:
+
+            mes['code'] = 203
+            mes['message'] = '邮箱不存在'
         return Response(mes)
 
 #首页展示学习路径,推荐课程
@@ -225,28 +256,63 @@ class Courses(APIView):
         mes={}
         tag=Tag.objects.all()
         course=Course.objects.all()
+        path=Path.objects.all()
         c=CourseModelSerializer(course,many=True)
         t=TagModelSerializer(tag,many=True)
+        p=PathModelSerializer(path,many=True)
         mes['code']=200
         mes['courselist']=c.data
         mes['taglist']=t.data
+        mes['pathlist']=p.data
         return Response(mes)
-
 # 课程展示    获取到前台的类别id,标签id,进行查找,默认展示所有课程
 class Courselist(APIView):
     def post(self,request):
         mes={}
-        member_id=request.data['member_id']
-        tag_id=request.data['tag_id']
-        print(member_id,tag_id,'==========================')
-        #判断两个id都为0时,展示所有课程
-        if (member_id and tag_id)==0:
-            course=Course.objects.all()
-            mes['code']=200
-            mes['course']=CourseModelSerializer(course,many=True).data
-        #否则,按照条件查找
+        data=request.data
+        print(data)
+        filterdict={}
+        for i in data:
+            if i != 'change_id' and data[i]!=-1:
+                filterdict[i]=data[i]
+            else:
+                continue
+        print(filterdict)
+        # course = Course.objects.filter(**filterdict).order_by('-attention')
+        if data['change_id']=='attention':
+            course = Course.objects.filter(**filterdict).order_by('-attention')
         else:
-            course=Course.objects.filter(member=member_id,tag_id=tag_id).all()
-            mes['code']=200
-            mes['course']=CourseModelSerializer(course,many=True).data
+            course = Course.objects.filter(**filterdict).order_by('-learn')
+        course = CourseModelSerializer(course, many=True)
+        mes['code']=200
+        mes['courselist']=course.data
+        return Response(mes)
+class GetCourse(APIView):
+    """获取某一课程的全部信息"""
+    def post(self,request):
+        mes={}
+        data=request.data
+        print(data)
+        one_course=Course.objects.get(id=data['cid'])
+        teacher_courses=Course.objects.filter(teacher_id=one_course.teacher_id).count()
+        sections=Section.objects.filter(course_id=data['cid'])
+        one_teacher=Teacher.objects.get(id=one_course.teacher_id)
+        one_course = ClassesModelSerializer(one_course)
+        one_teacher = TeacherSerializer(one_teacher)
+        sections=SectionModelSerializer(sections,many=True)
+
+        mes['code']=200
+        mes['one_course']=one_course.data
+        mes['sections']=sections.data
+        mes['teacher_courses']=teacher_courses
+        mes['one_teacher']=one_teacher.data
+        return Response(mes)
+#路径展示
+class PathView(APIView):
+    def get(self,request):
+        mes = {}
+        path = Path.objects.all()
+        p = PathSerializers(path,many=True)
+        mes['code'] = 200
+        mes['pathlist'] = p.data
         return Response(mes)

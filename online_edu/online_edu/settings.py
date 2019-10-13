@@ -165,4 +165,15 @@ CELERY_IMPORTS = ('shop.task')  # 任务路径
 BROKER_URL = 'amqp://root:root@120.27.246.172:5672/myvhost'
 CELERY_RESULT_BACKEND = 'amqp://root:root@120.27.246.172:5672/myvhost'
 
-
+# redis配置
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            "CONNECTION_POOL_KWARGS": {"max_connections": 1000}
+            # "PASSWORD": "123",
+        }
+    }
+}
