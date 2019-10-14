@@ -1039,3 +1039,62 @@ class DeleteCoupons(APIView):
                 mes['message']='删除失败'
         return Response(mes)
 
+from django.shortcuts import render
+from dwebsocket import accept_websocket
+import time
+import paramiko
+import re
+import threading
+import time
+import sys
+host = '120.27.246.172'
+username = 'root'
+password = 'Wq960117'
+
+
+def recv_ssh_msg(channle, ws):
+    '''
+        channle: 建立好的SSH连接通道
+        这个函数会不停的接收ssh通道返回的命令
+        返回到前端的ws套接字里
+    '''
+    while not channle.exit_status_ready():
+        try:
+            buf = channle.recv(1024)  # 接收 蓝色
+            ws.send(buf)  # 巧克力色
+        except:
+            break
+
+
+@accept_websocket
+def webssh(request):
+    '''
+        1: 接收前端(ws)的命令，发给后台(ssh)
+        2: 接收后台的返回结果，给到前端
+    '''
+    if request.is_websocket:
+        # 判断是否属于websocket连接
+        sh = paramiko.SSHClient()
+
+        sh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        sh.connect(host, username=username, password=password)
+        channle = sh.invoke_shell(term='xterm')  #
+        ws = request.websocket
+        t = threading.Thread(target=recv_ssh_msg, args=(channle, ws))
+        t.setDaemon(True)  # 会随着主进程的消亡而消亡
+        t.start()
+        # 连接的客户端套接字对象
+        # ws.recv() ws.read() ws.wait() 接受前端发来的数据
+        # ws.send() ws.send() 发送给浏览器数据
+        while not channle.exit_status_ready():
+            # time.sleep(0.1)
+            cmd = ws.wait()  # 前台发来命令 红色
+            if cmd:
+                # 转交给后端
+                channle.send(cmd)  # 黄色
+            else:
+                # cmd为空，连接断开的标志
+                break
+        ws.close()
+        channle.close()
+    return HttpResponse('ok')
