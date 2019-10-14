@@ -251,10 +251,10 @@ class Answer(models.Model):
 #
 #
 # # 积分兑换规则表
-# class rule(models.Model):
-#     ratio = models.FloatField(default=0.01)  # 兑换比例
-#     min_integral = models.IntegerField(default=100)  # 最低兑换门槛
-#     max_integral = models.IntegerField(default=10000)  # 最高兑换门槛
+class rule(models.Model):
+    ratio = models.FloatField(default=0.01)  # 兑换比例
+    min_integral = models.IntegerField(default=100)  # 最低兑换门槛
+    max_integral = models.IntegerField(default=10000)  # 最高兑换门槛
 #
 #
 # # 优惠券表
@@ -272,16 +272,16 @@ class Coupon(models.Model):
 #
 #
 # # 用户优惠卷使用表
-# class Integral_coupon(models.Model):
-#     user = models.ForeignKey(User, on_delete=models.CASCADE)  # 兑换用户
-#     coupon_order = models.CharField(max_length=100)  # 优惠券编码
-#     count = models.IntegerField()  # 数量
-#     start_time = models.DecimalField()  # 使用时间
-#     end_time = models.DateTimeField()  # 结束时间
-#     coupon_money = models.DecimalField(max_digits=7, decimal_places=2)  # 优惠券金额
-#     max_money = models.DecimalField(max_digits=7, decimal_places=2)  # 满多少可以用
-#     type = models.IntegerField()  # 类型   1全场通用   2指定商品
-#     status = models.IntegerField()  # 状态  1已用  2未用  3过期
+class Integral_coupon(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)  # 兑换用户
+    coupon_order = models.CharField(max_length=100)  # 优惠券编码
+    count = models.IntegerField()  # 数量
+    start_time = models.DateTimeField(auto_now=True)  # 开始时间
+    end_time = models.DateTimeField(auto_now=True)  # 结束时间
+    coupon_money = models.DecimalField(max_digits=7, decimal_places=2)  # 优惠券金额
+    max_money = models.DecimalField(max_digits=7, decimal_places=2)  # 满多少可以用
+    type = models.IntegerField()  # 类型   1全场通用   2指定商品
+    status = models.IntegerField()  # 状态  1已用  2未用  3过期
 
 
 # # 积分记录表        总积分
@@ -295,9 +295,9 @@ class Coupon(models.Model):
 #     coupon_code = models.CharField()  # 优惠券码
 #
 #
-# class User_path(models.Model):  # 用户路径表
-#     user_id = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)  # 用户id
-#     path_id = models.ForeignKey(Path, null=True, on_delete=models.SET_NULL)  # 路径id
+class User_path(models.Model):  # 用户路径表
+    user_id = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)  # 用户id
+    path_id = models.ForeignKey(Path, null=True, on_delete=models.SET_NULL)  # 路径id
 #
 #
 # class User_course(models.Model):  # 学习记录表

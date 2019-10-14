@@ -108,6 +108,7 @@ urlpatterns = [
     path('add_coupon/', views.AddCoupon.as_view()),
     path('delete_coupon/', views.DeleteCoupon.as_view()),
     path('delete_coupons/', views.DeleteCoupons.as_view()),
+    # 可视化编辑窗口的显示
     path('webssh/', views.webssh),
 
 

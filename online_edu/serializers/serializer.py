@@ -266,7 +266,27 @@ class UserSerializer(serializers.Serializer):
         instance.save()
         return instance
 class UserModelSerializer(serializers.ModelSerializer):
-    """优惠券序列化"""
+    """用户序列化"""
     class Meta:
         model=User
+        fields='__all__'
+class CommentModelSerializer(serializers.ModelSerializer):
+    """评论序列化"""
+    class Meta:
+        model=Comment
+        fields='__all__'
+class ReportModelSerializer(serializers.ModelSerializer):
+    """实验报告序列化"""
+    class Meta:
+        model=Report
+        fields='__all__'
+class AnswerModelSerializer(serializers.ModelSerializer):
+    """实验问答序列化"""
+    class Meta:
+        model=Answer
+        fields='__all__'
+class Integral_couponModelSerializer(serializers.ModelSerializer):
+    """实验问答序列化"""
+    class Meta:
+        model=Integral_coupon
         fields='__all__'

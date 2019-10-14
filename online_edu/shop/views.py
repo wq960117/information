@@ -93,8 +93,8 @@ class Login(APIView):
                 print(request.session.get('image_code'))
                 if request.session.get('image_code')==data['code']:
                     #判断密码是否与获取到的一致
-                    # if check_password(password,one_user.password):
-                    if password==one_user.password:
+                    if check_password(password,one_user.password):
+                    # if password==one_user.password:
                         #生成token保存到用户表中
                         jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
                         jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
@@ -105,6 +105,9 @@ class Login(APIView):
                         mes['code'] = 200
                         # mes['']
                         mes['message'] = '登录成功'
+                        mes['user_id'] = one_user.id
+                        mes['username'] = one_user.email
+                        mes['token'] = one_user.token
                     else:
                         mes['code'] = 401
                         mes['message'] = '密码错误'
@@ -144,7 +147,7 @@ def active(request):
         one_user_data=json.loads(one_user_data)
         print(one_user_data)
         print(one_user_data['email'])
-        one_user=User.objects.create(password=one_user_data['password'], email=one_user_data['email'], level_id=one_user_data['level_id'], token=token)
+        one_user=User.objects.create(password=make_password(one_user_data['password']), email=one_user_data['email'], level_id=one_user_data['level_id'], token=token)
         del token
         # one_user=User.objects.filter(token=token).first()
         if one_user:
@@ -297,15 +300,21 @@ class GetCourse(APIView):
         teacher_courses=Course.objects.filter(teacher_id=one_course.teacher_id).count()
         sections=Section.objects.filter(course_id=data['cid'])
         one_teacher=Teacher.objects.get(id=one_course.teacher_id)
+        reports=Report.objects.filter(course_id_id=one_course.id).all()
+        if data['comment_type']==1:
+            comments=Comment.objects.filter(id=one_course.id).all()
+            comments = CommentModelSerializer(comments, many=True)
         one_course = ClassesModelSerializer(one_course)
         one_teacher = TeacherSerializer(one_teacher)
         sections=SectionModelSerializer(sections,many=True)
-
+        reports=ReportModelSerializer(reports,many=True)
         mes['code']=200
         mes['one_course']=one_course.data
         mes['sections']=sections.data
         mes['teacher_courses']=teacher_courses
         mes['one_teacher']=one_teacher.data
+        mes['comments']=comments.data
+        mes['reports']=reports.data
         return Response(mes)
 #路径展示
 class PathView(APIView):
@@ -315,4 +324,40 @@ class PathView(APIView):
         p = PathSerializers(path,many=True)
         mes['code'] = 200
         mes['pathlist'] = p.data
+        return Response(mes)
+
+# 所有优惠券展示接口
+class GetCoupons(APIView):
+    def get(self,request):
+        mes={}
+        user_id=request.GET.get('user_id')
+        print(user_id)
+        all_coupons=Coupon.objects.all()
+        all_coupons=CouponModelSerializer(all_coupons,many=True)
+        user_coupons = Integral_coupon.objects.filter(user_id=user_id).all()
+        user_coupons = Integral_couponModelSerializer(user_coupons, many=True)
+        mes['code']=200
+        mes['all_coupons']=all_coupons.data
+        mes['user_coupons'] = user_coupons.data
+        return Response(mes)
+
+class AddCoupon(APIView):
+    """添加用户优惠券"""
+    def post(self,request):
+        mes={}
+        data=request.data
+        print(data)
+        one_coupon=Coupon.objects.filter(id=data['id']).first()
+        one_user_coupon=Integral_coupon.objects.filter(coupon_order=data['id'],user_id=data['user_id']).first()
+        if one_user_coupon:
+            mes['code']=202
+            mes['message']='您已经领取该优惠券'
+            mes['user_coupons']=[]
+        else:
+            # Integral_coupon.objects.create(user_id=36,coupon_order=data['id'],count=1,max_money=one_coupon.money,coupon_money=one_coupon.condition,type=one_coupon.type,status=1,start_time='2019-12-18 00:00:00',end_time='2019-12-20 00:00:00')
+            Integral_coupon.objects.create(user_id=36,coupon_order=data['id'],count=1,max_money=one_coupon.money,coupon_money=one_coupon.condition,type=one_coupon.type,status=1)
+            one_coupon.save()
+            mes['code'] = 200
+            mes['message'] = '领取成功'
+
         return Response(mes)

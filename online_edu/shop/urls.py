@@ -28,6 +28,10 @@ urlpatterns = [
     path('get_course/',views.GetCourse.as_view()),
     #路径展示
     path('path/',views.PathView.as_view()),
+    # 所有优惠券展示
+    path('get_coupons/',views.GetCoupons.as_view()),
+    # 添加用户优惠券
+    path('add_coupon/',views.AddCoupon.as_view()),
 
 
 
