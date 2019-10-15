@@ -15,7 +15,7 @@ from .pay1 import AliPay
 
 
 #初始化阿里支付对象
-def get_ali_object():
+def get_ali_object(out_trade_no,order_sn):
     # 沙箱环境地址：https://openhome.alipay.com/platform/appDaily.htm?tab=info
     app_id = "2016101400681368"  #  APPID （沙箱应用）
 
@@ -23,7 +23,7 @@ def get_ali_object():
     notify_url = "http://localhost:8000/shop/finish_pay/"
 
     # 支付完成后，跳转的地址。
-    return_url = "http://localhost:8000/shop/finish_pay/"
+    return_url = "http://localhost:8000/shop/finish_pay/?out_trade_no="+out_trade_no+'&order_sn='+order_sn
     app_private_key_path = "./keys/app_private_2048.txt" # 应用私钥
     alipay_public_key_path = "./keys/alipay_public_2048.txt"  # 支付宝公钥
 
@@ -34,6 +34,7 @@ def get_ali_object():
         app_private_key_path=app_private_key_path,
         alipay_public_key_path=alipay_public_key_path,  # 支付宝的公钥，验证支付宝回传消息使用，不是你自己的公钥
         debug=True,  # 默认False,
+
     )
     return alipay
 
@@ -55,12 +56,12 @@ def page1(request):
         money = float(orders.amount)
         out_trade_no = "myorder" + str(time.time())
         # money = float(orders.tprice)
-        alipay = get_ali_object()
+        alipay = get_ali_object(out_trade_no,orders.order_sn)
 
         # 生成支付的url
         query_params = alipay.direct_pay(
             subject="邹氏集团",  # 商品简单描述
-            out_trade_no="myorder" + str(time.time()),  # 用户购买的商品订单号（每次不一样） 20180301073422891
+            out_trade_no="myorder" + str(time.time()),  # 用户购买的商品订单号（每次不一样） 20180301073422891，支付宝的订单号就是用户订单的流水号
             # out_trade_no=orders.order_sn,
             total_amount=money,  # 交易金额(单位: 元 保留俩位小数)
         )

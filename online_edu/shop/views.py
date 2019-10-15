@@ -87,29 +87,29 @@ class Login(APIView):
             if one_user.is_active == 1:
                 #判断图片验证码是否一致
                 print(request.session.get('image_code'))
-                # if request.session.get('image_code')==data['code']:
+                if request.session.get('image_code')==data['code']:
                     #判断密码是否与获取到的一致
-                if check_password(password,one_user.password):
-                # if password==one_user.password:
-                    #生成token保存到用户表中
-                    jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
-                    jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
-                    payload = jwt_payload_handler(one_user)
-                    token = jwt_encode_handler(payload)
-                    one_user.token=token
-                    one_user.save()
-                    mes['code'] = 200
-                    # mes['']
-                    mes['message'] = '登录成功'
-                    mes['user_id'] = one_user.id
-                    mes['username'] = one_user.email
-                    mes['token'] = one_user.token
+                    if check_password(password,one_user.password):
+                    # if password==one_user.password:
+                        #生成token保存到用户表中
+                        jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
+                        jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
+                        payload = jwt_payload_handler(one_user)
+                        token = jwt_encode_handler(payload)
+                        one_user.token=token
+                        one_user.save()
+                        mes['code'] = 200
+                        # mes['']
+                        mes['message'] = '登录成功'
+                        mes['user_id'] = one_user.id
+                        mes['username'] = one_user.email
+                        mes['token'] = one_user.token
+                    else:
+                        mes['code'] = 401
+                        mes['message'] = '密码错误'
                 else:
-                    mes['code'] = 401
-                    mes['message'] = '密码错误'
-                # else:
-                #     mes['code'] = 405
-                #     mes['message'] = '验证码错误'
+                    mes['code'] = 405
+                    mes['message'] = '验证码错误'
             else:
                 mes['code'] = 402
                 mes['message'] = '用户未激活'
@@ -370,8 +370,8 @@ class AddCoupon(APIView):
         print(mes['message'])
 
         return Response(mes)
-
-class AddArder(APIView):
+class AddOrder(APIView):
+    """添加会员订单接口"""
     def post(self,request):
         mes={}
         data=request.data
@@ -384,17 +384,38 @@ class AddArder(APIView):
             mes['order_sn'] = ''
         else:
             order_sn=uuid.uuid1()
-            MemberOrder.objects.create(order_sn=order_sn,amount=data['money'],level=data['level'],status=0,type=data['type'],user_id=data['user_id'])
-            mes['code']=200
-            mes['message'] = '生成订单成功'
-            mes['order_sn'] = order_sn
+            one_order= MemberOrder.objects.filter(order_sn=order_sn).first()
+            if one_order:
+                mes['code'] = 407
+                mes['message'] = '已有重复未支付订单'
+                mes['order_sn'] = ''
+            else:
+                one_member=Member.objects.filter(user_id=data['user_id']).first()
+                if one_member:
+                #     在有效会员表中判断是否有会员信息，如果在有效会员时间内，则不能购买
+                    mes['code'] = 408
+                    mes['message'] = '已购买会员在有效时间内'
+                    mes['order_sn'] = ''
+                else:
+                    MemberOrder.objects.create(order_sn=order_sn,amount=data['money'],level=data['level'],status=0,type=data['type'],user_id=data['user_id'])
+                    mes['code']=200
+                    mes['message'] = '生成订单成功'
+                    mes['order_sn'] = order_sn
         return Response(mes)
-
 class FinishPay(APIView):
+    """支付完成后修改订单信息接口"""
     def get(self,request):
         mes={}
-        code=request.GET.get('out_trade_no')
-        print(code)
+        # 接收支付成功后返回的流水号和订单号
+        out_trade_no=request.GET.get('out_trade_no')
+        order_sn=request.GET.get('order_sn')
+        # 查询并修改对应订单信息，支付状态，流水号等
+        one_order=MemberOrder.objects.filter(order_sn=order_sn).first()
+        one_order.serial_number=out_trade_no
+        one_order.status=1
+        one_order.save()
+        Member.objects.create(user_id=one_order.user_id,level=one_order.level)
+        print(out_trade_no)
         mes['code']=200
         return HttpResponseRedirect('http://127.0.0.1:8080/index')
 

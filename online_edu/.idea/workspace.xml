@@ -4,8 +4,6 @@
     <list default="true" id="322418d9-c4f3-451f-a2d7-8140d1cb0631" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/edu/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/edu/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/keys/alipay_public_2048.txt" beforeDir="false" afterPath="$PROJECT_DIR$/keys/alipay_public_2048.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/keys/app_private_2048.txt" beforeDir="false" afterPath="$PROJECT_DIR$/keys/app_private_2048.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/shop/pay.py" beforeDir="false" afterPath="$PROJECT_DIR$/shop/pay.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/shop/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/shop/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/shop/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/shop/views.py" afterDir="false" />
@@ -236,7 +234,7 @@
       <workItem from="1570937330732" duration="144000" />
       <workItem from="1570937577797" duration="19829000" />
       <workItem from="1571057573058" duration="18041000" />
-      <workItem from="1571118789097" duration="11519000" />
+      <workItem from="1571118789097" duration="14289000" />
     </task>
     <servers />
   </component>
@@ -255,17 +253,6 @@
         </entry>
       </map>
     </option>
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/shop/views.py</url>
-          <line>175</line>
-          <option name="timeStamp" value="5" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/online_edu$ceshi.coverage" NAME="ceshi Coverage Results" MODIFIED="1571106960897" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/shop" />

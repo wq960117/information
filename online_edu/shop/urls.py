@@ -38,7 +38,7 @@ urlpatterns = [
     # 生成用户邀请码接口
     path('get_invitation_code/', views.GetInvitationCode.as_view()),
     # 生成会员订单
-    path('add_order/', views.AddArder.as_view()),
+    path('add_order/', views.AddOrder.as_view()),
     # 根据传回的流水号
     path('finish_pay/', views.FinishPay.as_view()),
 

@@ -23,15 +23,15 @@ class User(models.Model):
     class Meta():
         db_table = 'user'
 
-# class Member(models.Model):
-#     '''有效会员表'''
-#     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='关联用户ID')
-#     level = models.IntegerField(default=0, verbose_name='0普通会员，1高级会员')
-#     start_time = models.DateTimeField(auto_now=True)
-#     end_time = models.DateTimeField(auto_now_add=True)
-#
-#     class Meta():
-#         db_table = 'member'
+class Member(models.Model):
+    '''有效会员表'''
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='关联用户ID')
+    level = models.IntegerField(default=0, verbose_name='0普通会员，1高级会员')
+    start_time = models.DateTimeField(auto_now=True)
+    end_time = models.DateTimeField(auto_now_add=True)
+
+    class Meta():
+        db_table = 'member'
 #
 #
 class MemberOrder(models.Model):
