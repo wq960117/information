@@ -15,14 +15,14 @@ class User(models.Model):
     level = models.ForeignKey(UserLevel, on_delete=models.CASCADE,verbose_name='用户类型，0普通用户，1普通会员，2高级会员')
     is_active = models.IntegerField(default=0, verbose_name='激活状态，0未激活，1激活')
     integral = models.IntegerField(default=0, verbose_name='积分')
-    invitation_code = models.CharField(max_length=50, default='', verbose_name='邀请码',null=True)
+    invitation_code = models.CharField(max_length=50, verbose_name='邀请码')
+    invitation_coded = models.CharField(max_length=50, default='', verbose_name='被邀请码',null=True)
     token = models.CharField(max_length=255, verbose_name='用户登录生成的token',default='',null=True)
     email=models.CharField(max_length=255,verbose_name='邮箱')
 
     class Meta():
         db_table = 'user'
-#
-#
+
 # class Member(models.Model):
 #     '''有效会员表'''
 #     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='关联用户ID')

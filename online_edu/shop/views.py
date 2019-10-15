@@ -352,12 +352,13 @@ class AddCoupon(APIView):
         if one_user_coupon:
             mes['code']=202
             mes['message']='您已经领取该优惠券'
-            mes['user_coupons']=[]
+
         else:
             # Integral_coupon.objects.create(user_id=36,coupon_order=data['id'],count=1,max_money=one_coupon.money,coupon_money=one_coupon.condition,type=one_coupon.type,status=1,start_time='2019-12-18 00:00:00',end_time='2019-12-20 00:00:00')
-            Integral_coupon.objects.create(user_id=36,coupon_order=data['id'],count=1,max_money=one_coupon.money,coupon_money=one_coupon.condition,type=one_coupon.type,status=1)
+            Integral_coupon.objects.create(user_id=data['user_id'],coupon_order=data['id'],count=1,max_money=one_coupon.money,coupon_money=one_coupon.condition,type=one_coupon.type,status=1)
             one_coupon.save()
             mes['code'] = 200
             mes['message'] = '领取成功'
+        print(mes['message'])
 
         return Response(mes)

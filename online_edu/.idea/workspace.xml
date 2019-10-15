@@ -2,12 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="322418d9-c4f3-451f-a2d7-8140d1cb0631" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/edu/migrations/0007_integral_coupon_rule_user_path.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/edu/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/edu/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/edu/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/edu/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/serializers/serializer.py" beforeDir="false" afterPath="$PROJECT_DIR$/serializers/serializer.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/shop/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/shop/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/shop/views.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -207,7 +203,7 @@
       <workItem from="1570841752749" duration="27653000" />
       <workItem from="1570937330732" duration="144000" />
       <workItem from="1570937577797" duration="19829000" />
-      <workItem from="1571057573058" duration="7727000" />
+      <workItem from="1571057573058" duration="11101000" />
     </task>
     <servers />
   </component>
