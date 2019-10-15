@@ -36,7 +36,12 @@ urlpatterns = [
     # 获取支付宝支付接口
     path('getpayurl/', pay.page1),
     # 生成用户邀请码接口
-    path('get_invitation_code/', views.GetInvitationCode.as_view())
+    path('get_invitation_code/', views.GetInvitationCode.as_view()),
+    # 生成会员订单
+    path('add_order/', views.AddArder.as_view()),
+    # 根据传回的流水号
+    path('finish_pay/', views.FinishPay.as_view()),
+
 
 
 

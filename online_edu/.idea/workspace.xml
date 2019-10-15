@@ -48,16 +48,16 @@
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/shop" />
+      <recent name="$PROJECT_DIR$" />
+    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/keys" />
       <recent name="$PROJECT_DIR$/utils" />
       <recent name="$PROJECT_DIR$/shop" />
       <recent name="$PROJECT_DIR$/edu/migrations" />
       <recent name="D:\shixun_1\online_edu\edu" />
-    </key>
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/shop" />
-      <recent name="$PROJECT_DIR$" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -235,7 +235,8 @@
       <workItem from="1570841752749" duration="27653000" />
       <workItem from="1570937330732" duration="144000" />
       <workItem from="1570937577797" duration="19829000" />
-      <workItem from="1571057573058" duration="15245000" />
+      <workItem from="1571057573058" duration="18041000" />
+      <workItem from="1571118789097" duration="11519000" />
     </task>
     <servers />
   </component>
@@ -254,6 +255,17 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/shop/views.py</url>
+          <line>175</line>
+          <option name="timeStamp" value="5" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/online_edu$ceshi.coverage" NAME="ceshi Coverage Results" MODIFIED="1571106960897" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/shop" />

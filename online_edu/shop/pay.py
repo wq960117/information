@@ -51,15 +51,17 @@ def page1(request):
         # order_sn代表传入的订单号
         id = request.GET.get('order_sn')
         orders = MemberOrder.objects.filter(order_sn=id).first()
+        print(orders)
         money = float(orders.amount)
+        out_trade_no = "myorder" + str(time.time())
         # money = float(orders.tprice)
         alipay = get_ali_object()
 
         # 生成支付的url
         query_params = alipay.direct_pay(
-            subject="test",  # 商品简单描述
-            # out_trade_no="myorder" + str(time.time()),  # 用户购买的商品订单号（每次不一样） 20180301073422891
-            out_trade_no=orders.order_sn,
+            subject="邹氏集团",  # 商品简单描述
+            out_trade_no="myorder" + str(time.time()),  # 用户购买的商品订单号（每次不一样） 20180301073422891
+            # out_trade_no=orders.order_sn,
             total_amount=money,  # 交易金额(单位: 元 保留俩位小数)
         )
         #支付二维码的地址pay_url
@@ -67,5 +69,5 @@ def page1(request):
 
         mes={}
         mes['code'] = 200
-        mes['path'] = pay_url
+        mes['pay_url'] = pay_url
         return HttpResponse(json.dumps(mes))

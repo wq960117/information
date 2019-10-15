@@ -69,10 +69,6 @@ class RegUser(APIView):
             mes['code'] = 201
             mes['message'] = '注册失败'
         return Response(mes)
-
-
-
-
 '''用户名,密码,邮箱,判断用户表邮箱状态,比对密码'''
 # 登录
 class Login(APIView):
@@ -91,29 +87,29 @@ class Login(APIView):
             if one_user.is_active == 1:
                 #判断图片验证码是否一致
                 print(request.session.get('image_code'))
-                if request.session.get('image_code')==data['code']:
+                # if request.session.get('image_code')==data['code']:
                     #判断密码是否与获取到的一致
-                    if check_password(password,one_user.password):
-                    # if password==one_user.password:
-                        #生成token保存到用户表中
-                        jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
-                        jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
-                        payload = jwt_payload_handler(one_user)
-                        token = jwt_encode_handler(payload)
-                        one_user.token=token
-                        one_user.save()
-                        mes['code'] = 200
-                        # mes['']
-                        mes['message'] = '登录成功'
-                        mes['user_id'] = one_user.id
-                        mes['username'] = one_user.email
-                        mes['token'] = one_user.token
-                    else:
-                        mes['code'] = 401
-                        mes['message'] = '密码错误'
+                if check_password(password,one_user.password):
+                # if password==one_user.password:
+                    #生成token保存到用户表中
+                    jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
+                    jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
+                    payload = jwt_payload_handler(one_user)
+                    token = jwt_encode_handler(payload)
+                    one_user.token=token
+                    one_user.save()
+                    mes['code'] = 200
+                    # mes['']
+                    mes['message'] = '登录成功'
+                    mes['user_id'] = one_user.id
+                    mes['username'] = one_user.email
+                    mes['token'] = one_user.token
                 else:
-                    mes['code'] = 405
-                    mes['message'] = '验证码错误'
+                    mes['code'] = 401
+                    mes['message'] = '密码错误'
+                # else:
+                #     mes['code'] = 405
+                #     mes['message'] = '验证码错误'
             else:
                 mes['code'] = 402
                 mes['message'] = '用户未激活'
@@ -121,9 +117,8 @@ class Login(APIView):
             mes['code'] = 403
             mes['message'] = '用户不存在'
         return Response(mes)
-
-
 class GetInvitationCode(APIView):
+    """获取邀请码"""
     def get(self,request):
         mes={}
         user_id=request.GET.get('user_id')
@@ -132,13 +127,9 @@ class GetInvitationCode(APIView):
         one_user.invitation_code=invitation_code
         one_user.save()
         mes['code']=200
-        mes['message']='成功'
+        mes['message']='邀请码获取成功，您的邀请码为：%s'%invitation_code
         return Response(mes)
-
-
-
-
-# 发送邮件
+# celery异步发送邮件
 class SendMailAPIView(APIView):
     def get(self, request):
         ret={}
@@ -146,8 +137,6 @@ class SendMailAPIView(APIView):
         ret['code'] = 200
         ret['message'] = '成功'
         return Response(ret)
-
-
 # 邮箱验证，修改用户状态
 def active(request):
     token=request.GET.get('token')
@@ -158,15 +147,24 @@ def active(request):
         one_user_data=json.loads(one_user_data)
         print(one_user_data)
         print(one_user_data['email'])
-        one_user=User.objects.create(password=make_password(one_user_data['password']), email=one_user_data['email'], level_id=one_user_data['level_id'], token=token)
+        # 保存注册人信息
+        one_user=User.objects.create(password=make_password(one_user_data['password']), email=one_user_data['email'], level_id=one_user_data['level_id'], token=token,invitation_coded=one_user_data['invitation_coded'])
+
+        # 查询邀请人信息
+        invitater=User.objects.filter(invitation_code=one_user.invitation_coded).first()
+        if invitater:
+            # 修改邀请人信息,默认注册为普通用户，积分加100
+            a_user=User.objects.get(id=invitater.id)
+            a_user.integral+=100
+            a_user.save()
+        else:
+            pass
         del token
         # one_user=User.objects.filter(token=token).first()
         if one_user:
             one_user.is_active=1
             one_user.save()
             return HttpResponse('激活成功~~~~')
-
-
 """
 三方登录：
 1、vue页面点击微博登录，调用get_url的接口，返回的是微博授权的url
@@ -182,7 +180,6 @@ def get_url(request):
     client_id = '204877894'
     url = "https://api.weibo.com/oauth2/authorize?client_id={client_id}&response_type=code&redirect_uri={redirect_url}".format(client_id=client_id, redirect_url=redirect_url)
     return redirect(url)
-
 import requests
 from django.http import HttpResponseRedirect
 def get_access_token(request):
@@ -214,6 +211,7 @@ def get_access_token(request):
     else:
         return HttpResponseRedirect('http://127.0.0.1:8080/user_bind/'+uid)
 class UserBind(APIView):
+    """用户授权后绑定网站账号信息"""
     def post(self,request):
         mes={}
         data = request.data
@@ -250,7 +248,6 @@ class UserBind(APIView):
             mes['code'] = 203
             mes['message'] = '邮箱不存在'
         return Response(mes)
-
 #首页展示学习路径,推荐课程
 class AllPath(APIView):
     def get(self,request):
@@ -263,7 +260,6 @@ class AllPath(APIView):
         mes['pathlist'] = PathModelSerializer(show_path, many=True).data
         mes['code'] = 200
         return Response(mes)
-
 # 课程首页信息展示 1--标签   2---课程    Python  Linux
 class Courses(APIView):
     def get(self,request):
@@ -336,7 +332,6 @@ class PathView(APIView):
         mes['code'] = 200
         mes['pathlist'] = p.data
         return Response(mes)
-
 # 所有优惠券展示接口
 class GetCoupons(APIView):
     def get(self,request):
@@ -347,11 +342,13 @@ class GetCoupons(APIView):
         all_coupons=CouponModelSerializer(all_coupons,many=True)
         user_coupons = Integral_coupon.objects.filter(user_id=user_id).all()
         user_coupons = Integral_couponModelSerializer(user_coupons, many=True)
+        one_user=User.objects.get(id=user_id)
+        invitation_code=one_user.invitation_code
         mes['code']=200
         mes['all_coupons']=all_coupons.data
         mes['user_coupons'] = user_coupons.data
+        mes['invitation_code'] = invitation_code
         return Response(mes)
-
 class AddCoupon(APIView):
     """添加用户优惠券"""
     def post(self,request):
@@ -373,3 +370,32 @@ class AddCoupon(APIView):
         print(mes['message'])
 
         return Response(mes)
+
+class AddArder(APIView):
+    def post(self,request):
+        mes={}
+        data=request.data
+        print(data)
+        code=request.session.get('image_code')
+        print(code)
+        if code!=data['code']:
+            mes['code'] = 406
+            mes['message'] = '验证码错误'
+            mes['order_sn'] = ''
+        else:
+            order_sn=uuid.uuid1()
+            MemberOrder.objects.create(order_sn=order_sn,amount=data['money'],level=data['level'],status=0,type=data['type'],user_id=data['user_id'])
+            mes['code']=200
+            mes['message'] = '生成订单成功'
+            mes['order_sn'] = order_sn
+        return Response(mes)
+
+class FinishPay(APIView):
+    def get(self,request):
+        mes={}
+        code=request.GET.get('out_trade_no')
+        print(code)
+        mes['code']=200
+        return HttpResponseRedirect('http://127.0.0.1:8080/index')
+
+

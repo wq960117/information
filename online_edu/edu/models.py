@@ -38,8 +38,8 @@ class MemberOrder(models.Model):
     '''会员订单记录表'''
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='关联用户ID')
     order_sn = models.CharField(max_length=255, verbose_name='订单号')
-    level = models.IntegerField(default=0, verbose_name='1普通会员，2高级会员')
-    status = models.IntegerField(default=0, verbose_name='支付状态')
+    level = models.IntegerField(default=0, verbose_name='1普通会员，2高级会员')  #应该是外键关联
+    status = models.IntegerField(default=0, verbose_name='支付状态 0未支付 1已支付 ')
     amount = models.DecimalField(max_digits=7, decimal_places=2, verbose_name='总价')
     type = models.IntegerField(default=0, verbose_name='支付方式，0支付宝，1微信')
     serial_number = models.CharField(max_length=255, default='', verbose_name='支付流水号')
