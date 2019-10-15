@@ -1,5 +1,6 @@
 from django.urls import path
 from shop import views
+from shop import pay
 urlpatterns = [
     # path('ceshi/', views.ceshi.as_view()),
     # 获取验证码接口
@@ -32,6 +33,10 @@ urlpatterns = [
     path('get_coupons/',views.GetCoupons.as_view()),
     # 添加用户优惠券
     path('add_coupon/',views.AddCoupon.as_view()),
+    # 获取支付宝支付接口
+    path('getpayurl/', pay.page1),
+    # 生成用户邀请码接口
+    path('get_invitation_code/', views.GetInvitationCode.as_view())
 
 
 

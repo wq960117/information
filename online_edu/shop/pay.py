@@ -1,7 +1,7 @@
 from django.shortcuts import render,redirect
 #导包
 from django.http import HttpResponse,HttpResponseRedirect
-#导入类视图 
+#导入类视图
 from django.views import View
 import os
 import json
@@ -20,10 +20,10 @@ def get_ali_object():
     app_id = "2016101400681368"  #  APPID （沙箱应用）
 
     # 支付完成后，支付偷偷向这里地址发送一个post请求，识别公网IP,如果是 192.168.20.13局域网IP ,支付宝找不到，def page2() 接收不到这个请求
-    notify_url = "http://127.0.0.1:8000/md_tast/page1_"
+    notify_url = "http://localhost:8000/shop/finish_pay/"
 
     # 支付完成后，跳转的地址。
-    return_url = "http://127.0.0.1:8000/md_tast/page1_"
+    return_url = "http://localhost:8000/shop/finish_pay/"
     app_private_key_path = "./keys/app_private_2048.txt" # 应用私钥
     alipay_public_key_path = "./keys/alipay_public_2048.txt"  # 支付宝公钥
 
@@ -44,14 +44,14 @@ def get_ali_object():
 #         return redirect('http://127.0.0.1:8080/user_center_order.html')
 
 
-from meiduo.models import Orders
+from edu.models import MemberOrder
 def page1(request):
     if request.method == "GET":
         # 根据当前用户的配置，生成URL，并跳转。
         # order_sn代表传入的订单号
         id = request.GET.get('order_sn')
-        orders = Orders.objects.filter(order_sn=id).first()
-        money = float(orders.tmoney)
+        orders = MemberOrder.objects.filter(order_sn=id).first()
+        money = float(orders.amount)
         # money = float(orders.tprice)
         alipay = get_ali_object()
 

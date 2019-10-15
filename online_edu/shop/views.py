@@ -123,6 +123,17 @@ class Login(APIView):
         return Response(mes)
 
 
+class GetInvitationCode(APIView):
+    def get(self,request):
+        mes={}
+        user_id=request.GET.get('user_id')
+        one_user=User.objects.get(id=user_id)
+        invitation_code=uuid.uuid4()
+        one_user.invitation_code=invitation_code
+        one_user.save()
+        mes['code']=200
+        mes['message']='成功'
+        return Response(mes)
 
 
 
