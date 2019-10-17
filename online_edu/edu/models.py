@@ -38,7 +38,7 @@ class MemberOrder(models.Model):
     '''会员订单记录表'''
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='关联用户ID')
     order_sn = models.CharField(max_length=255, verbose_name='订单号')
-    level = models.IntegerField(default=0, verbose_name='1普通会员，2高级会员')  #应该是外键关联
+    level = models.IntegerField(default=0, verbose_name='2普通会员，3高级会员')  #应该是外键关联
     status = models.IntegerField(default=0, verbose_name='支付状态 0未支付 1已支付 ')
     amount = models.DecimalField(max_digits=7, decimal_places=2, verbose_name='总价')
     type = models.IntegerField(default=0, verbose_name='支付方式，0支付宝，1微信')
@@ -236,22 +236,22 @@ class Answer(models.Model):
 #
 #
 # # 课程订单表
-# class Cours_order(models.Model):
-#     order_number = models.CharField(max_length=100)  # 订单编号
-#     user = models.ForeignKey('User', on_delete=models.CASCADE)  # 用户外键
-#     course = models.ForeignKey('Course', on_delete=models.CASCADE)  # 课程外键
-#     pyt_type = models.IntegerField()  # 支付方式  1微信  2支付宝
-#     price = models.DecimalField(max_digits=7, decimal_places=2)  # 商品价格
-#     pay_price = models.DecimalField(max_digits=7, decimal_places=2)  # 实际支付
-#     preferential_way = models.IntegerField()  # 优惠方式  0 未使用  1积分  2优惠券
-#     preferential_money = models.DecimalField(max_digits=7, decimal_places=2)  # 优惠金额
-#     order_status = models.IntegerField()  # 订单状态  1待支付  2支付成功
-#     code = models.CharField(max_length=100)  # 流水号
-#     coupon = models.CharField(max_length=100)  # 优惠码
+class Cours_order(models.Model):
+    order_number = models.CharField(max_length=100)  # 订单编号
+    user = models.ForeignKey('User', on_delete=models.CASCADE)  # 用户外键
+    course = models.ForeignKey('Course', on_delete=models.CASCADE)  # 课程外键
+    pyt_type = models.IntegerField()  # 支付方式  1微信  2支付宝
+    price = models.DecimalField(max_digits=7, decimal_places=2)  # 商品价格
+    pay_price = models.DecimalField(max_digits=7, decimal_places=2)  # 实际支付
+    preferential_way = models.IntegerField()  # 优惠方式  0 未使用  1积分  2优惠券
+    preferential_money = models.DecimalField(max_digits=7, decimal_places=2)  # 优惠金额
+    order_status = models.IntegerField()  # 订单状态  0待支付 1支付成功
+    code = models.CharField(max_length=100,null=True)  # 流水号
+    coupon = models.CharField(max_length=100,null=True)  # 优惠码
 #
 #
 # # 积分兑换规则表
-class rule(models.Model):
+class Rules(models.Model):
     ratio = models.FloatField(default=0.01)  # 兑换比例
     min_integral = models.IntegerField(default=100)  # 最低兑换门槛
     max_integral = models.IntegerField(default=10000)  # 最高兑换门槛

@@ -48,6 +48,11 @@ class AdminModelSerializer(serializers.ModelSerializer):
 
 #阶段的序列化
 class Path_stageModelSerializer(serializers.ModelSerializer):
+    courses=serializers.SerializerMethodField()
+    def get_courses(self,row):
+        all_courses=Course.objects.filter(stage_id=row.id,path_id=row.path_id).all()
+        all_courses=ClassesModelSerializer(all_courses,many=True)
+        return all_courses.data
     class Meta:
         model = Path_stage
         fields = '__all__'
@@ -156,6 +161,11 @@ class TeacherSerializer(serializers.ModelSerializer):
 
 # 路径序列化
 class PathModelSerializer(serializers.ModelSerializer):
+    path_amount = serializers.SerializerMethodField()
+
+    def get_path_amount(self,row):
+        amount=Course.objects.filter(path_id=row.id).count()
+        return amount
     class Meta:
         model = Path
         fields = '__all__'
@@ -289,4 +299,14 @@ class Integral_couponModelSerializer(serializers.ModelSerializer):
     """实验问答序列化"""
     class Meta:
         model=Integral_coupon
+        fields='__all__'
+class RuleModelSerializer(serializers.ModelSerializer):
+    """积分兑换规则序列化"""
+    class Meta:
+        model=Rules
+        fields='__all__'
+class CoursOrderModelSerializer(serializers.ModelSerializer):
+    """用户课程订单序列化"""
+    class Meta:
+        model=Cours_order
         fields='__all__'

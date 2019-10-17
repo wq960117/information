@@ -28,7 +28,7 @@ urlpatterns = [
     # 获取某一课程的详细信息
     path('get_course/',views.GetCourse.as_view()),
     #路径展示
-    path('path/',views.PathView.as_view()),
+    path('pathlist/',views.PathView.as_view()),
     # 所有优惠券展示
     path('get_coupons/',views.GetCoupons.as_view()),
     # 添加用户优惠券
@@ -41,10 +41,12 @@ urlpatterns = [
     path('add_order/', views.AddOrder.as_view()),
     # 根据传回的流水号
     path('finish_pay/', views.FinishPay.as_view()),
-
-
-
-
+    # 添加课程订单
+    path('add_course/', views.AddCourse.as_view()),
+    # 获取用户选择优惠券的信息
+    path('get_coupon/', views.GetCoupon.as_view()),
+    # 获取用户登录后的个人优惠券等信息
+    path('get_user_info/', views.GetUserInfo.as_view()),
 ]
 
 

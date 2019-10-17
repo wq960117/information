@@ -2,8 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="322418d9-c4f3-451f-a2d7-8140d1cb0631" name="Default" comment="">
+      <change afterPath="$PROJECT_DIR$/edu/migrations/0011_auto_20191016_0743.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/edu/migrations/0013_auto_20191016_1706.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/edu/migrations/0014_auto_20191016_1929.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/edu/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/edu/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/online_edu/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/online_edu/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/serializers/serializer.py" beforeDir="false" afterPath="$PROJECT_DIR$/serializers/serializer.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/shop/pay.py" beforeDir="false" afterPath="$PROJECT_DIR$/shop/pay.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/shop/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/shop/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/shop/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/shop/views.py" afterDir="false" />
@@ -40,7 +45,7 @@
   <component name="PropertiesComponent">
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/keys" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path" value="node" />
     <property name="restartRequiresConfirmation" value="false" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
@@ -234,7 +239,12 @@
       <workItem from="1570937330732" duration="144000" />
       <workItem from="1570937577797" duration="19829000" />
       <workItem from="1571057573058" duration="18041000" />
-      <workItem from="1571118789097" duration="14289000" />
+      <workItem from="1571118789097" duration="14786000" />
+      <workItem from="1571181606598" duration="8731000" />
+      <workItem from="1571197100330" duration="523000" />
+      <workItem from="1571198080171" duration="19700000" />
+      <workItem from="1571239096251" duration="3931000" />
+      <workItem from="1571267946175" duration="17353000" />
     </task>
     <servers />
   </component>
@@ -253,6 +263,22 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/serializers/serializer.py</url>
+          <line>267</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/edu/models.py</url>
+          <line>264</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/online_edu$ceshi.coverage" NAME="ceshi Coverage Results" MODIFIED="1571106960897" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/shop" />

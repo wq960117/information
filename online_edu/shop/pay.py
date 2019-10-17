@@ -12,7 +12,7 @@ from django.db import connection
 import time
 import datetime
 from .pay1 import AliPay
-
+from django_redis import get_redis_connection
 
 #初始化阿里支付对象
 def get_ali_object(out_trade_no,order_sn):
@@ -35,6 +35,7 @@ def get_ali_object(out_trade_no,order_sn):
         alipay_public_key_path=alipay_public_key_path,  # 支付宝的公钥，验证支付宝回传消息使用，不是你自己的公钥
         debug=True,  # 默认False,
 
+
     )
     return alipay
 
@@ -45,25 +46,36 @@ def get_ali_object(out_trade_no,order_sn):
 #         return redirect('http://127.0.0.1:8080/user_center_order.html')
 
 
-from edu.models import MemberOrder
+from edu.models import *
 def page1(request):
     if request.method == "GET":
+        conn=get_redis_connection('default')
         # 根据当前用户的配置，生成URL，并跳转。
         # order_sn代表传入的订单号
-        id = request.GET.get('order_sn')
-        orders = MemberOrder.objects.filter(order_sn=id).first()
-        print(orders)
-        money = float(orders.amount)
+        order_sn = request.GET.get('order_sn')
+
+        orders = MemberOrder.objects.filter(order_sn=order_sn).first()
+        if orders:
+            print(orders)
+            money = float(orders.amount)
+        else:
+            orders = conn.get(order_sn)
+            orders = json.loads(orders)
+            # orders = Cours_order.objects.filter(order_number=order_sn).first()
+            print(orders)
+            money = float(orders['total_price'])
         out_trade_no = "myorder" + str(time.time())
         # money = float(orders.tprice)
-        alipay = get_ali_object(out_trade_no,orders.order_sn)
+        alipay = get_ali_object(out_trade_no,order_sn)
 
         # 生成支付的url
         query_params = alipay.direct_pay(
-            subject="邹氏集团",  # 商品简单描述
+            subject="小邹店铺",  # 商品简单描述
             out_trade_no="myorder" + str(time.time()),  # 用户购买的商品订单号（每次不一样） 20180301073422891，支付宝的订单号就是用户订单的流水号
             # out_trade_no=orders.order_sn,
             total_amount=money,  # 交易金额(单位: 元 保留俩位小数)
+            timeout_express='5m'  #设置扫码支付页的过期时间
+
         )
         #支付二维码的地址pay_url
         pay_url = "https://openapi.alipaydev.com/gateway.do?{0}".format(query_params)  # 支付宝网关地址（沙箱应用）

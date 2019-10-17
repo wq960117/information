@@ -177,3 +177,17 @@ CACHES = {
         }
     }
 }
+# 定时任务 minute(分钟)  hour(小时,钟头)   dat_for_month(‘1’)(每月的第几天)
+# 这些都可以套用,比如:
+# 每月1号的6点启动
+# 'schedule': crontab(hour=6, minute=0, day_of_month='1'),
+from celery.schedules import crontab
+CELERYBEAT_SCHEDULE = {
+    #定时任务一：　每一分钟执行一次任务(del_redis_data)
+    u'定义一个任务名为:sendmail': {
+        "task": "shop.task.sendmail",
+        # "schedule": crontab(hour='*/1'),
+        "schedule": crontab(minute='*'),
+        "args": (),
+},
+}
