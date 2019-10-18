@@ -47,6 +47,7 @@ urlpatterns = [
     path('get_coupon/', views.GetCoupon.as_view()),
     # 获取用户登录后的个人优惠券等信息
     path('get_user_info/', views.GetUserInfo.as_view()),
+    path('redis_search/',views.RedisSearch.as_view())
 ]
 
 

@@ -12,7 +12,8 @@ from serializers.serializer import *
 from django.db.models import Q
 from rest_framework_jwt.settings import api_settings
 from .task import sendmail
-
+from redisearch import Client,TextField
+from datetime import datetime
 
 
 # 获取图片验证码
@@ -660,4 +661,59 @@ class GetCoupon(APIView):
         one_coupon=CouponModelSerializer(one_coupon)
         mes['code']=200
         mes['one_coupon']=one_coupon.data
+        return Response(mes)
+#
+# class FullTextSearch(APIView):
+#     def post(self,request):
+#         #获取前台查找的关键字
+#         data=request.data
+#         #创建一个客户端与给定索引名称
+#         client= Client('oneindex', host='localhost', port='6379')
+#         #创建索引定义和模式
+#         client.create_index((TextField('title'),TextField('body')))
+#         # 索引文件
+#         client.add_document('doc2', title='你好', body='中国上下5000年,唐诗三百首', language='chinese')
+#         # 查找搜索
+#         res=client.search(('上下'))
+#         print(res.docs[0].title)
+
+
+class RedisSearch(APIView):
+    def get(self, request):
+        # data=request.data
+        mes = {}
+        search_key=request.GET.get('key')
+        print(search_key)
+        all_classes = Course.objects.all()
+        print("开始创建索引——————————————————————————")
+        # 创建一个客户端与给定索引名称
+        client = Client('CII' + str(datetime.now()), host='101.37.25.38', port='6666')
+
+        # 创建索引定义和模式
+        client.create_index((TextField('title'), TextField('body')))
+        print('索引创建完毕————————————————————————————————')
+        print('开始添加数据————————————————————————————————')
+
+        for i in all_classes:
+            print(str(i.id) + str(i.title))
+            # 索引文
+            client.add_document('result' + str(datetime.now()), title=i.title + '@' + str(i.id), info=i.info,
+                                language='chinese')
+            print(333333333)
+        print('数据添加完毕————————————————————————————————')
+        print(client.info())
+        # 查找搜索
+        res = client.search(search_key)
+        print('查询结束————————————————————————————————————————————————')
+        id_list=[]
+        print(res.docs)
+        for i in res.docs:
+            # print(i.title)  # 取出title，以@切割，取课程ID查询，然后序列化展示
+            id=i.title.split('@')[1]
+            id_list.append(id)
+        course=Course.objects.filter(id__in=id_list).all()
+        c=CourseModelSerializer(course,many=True)
+        mes['course']=c.data
+        mes['code'] = 200
+        mes['message'] = '搜索完毕'
         return Response(mes)
