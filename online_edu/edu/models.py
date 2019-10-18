@@ -70,29 +70,24 @@ class ThirdPartyLogin(models.Model):
     login_type = models.IntegerField(default=0, verbose_name='0微博，1微信，2qq')
     class Meta():
         db_table = 'thridpartylogin'
+######
+'''站内信息表'''
+class SiteMessage(models.Model):
+    title = models.CharField(max_length=255, verbose_name='站内信息标题')
+    content = models.TextField(verbose_name='站内信息内容')
+    class Meta():
+        db_table = 'sitemessage'
+#######
+"""用户站内信"""
+class UserSiteMessage(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='外键关联用户ID')
+    SiteMessage_id = models.ForeignKey(SiteMessage, on_delete=models.CASCADE, verbose_name='外键关联站内信息表')
+    status = models.IntegerField(verbose_name='状态，0未读，1已读')
+    class Meta():
+        db_table = 'usersitemessage'
 
-#
-# class SiteMessage(models.Model):
-#     '''站内信息表'''
-#     title = models.CharField(max_length=255, verbose_name='站内信息标题')
-#     content = models.TextField(verbose_name='站内信息内容')
-#
-#     class Meta():
-#         db_table = 'sitemessage'
-#
-#
-# class UserSiteMessage(models.Model):
-#     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='外键关联用户ID')
-#     SiteMessage_id = models.ForeignKey(SiteMessage, on_delete=models.CASCADE, verbose_name='外键关联站内信息表')
-#     status = models.IntegerField(verbose_name='状态，0未读，1已读')
-#
-#     class Meta():
-#         db_table = 'usersitemessage'
-#
-#
-# """路径表"""
-#
-#
+
+"""路径表"""
 class Path(models.Model):
     pic = models.CharField(max_length=255, verbose_name='路径图片')
     path = models.CharField(max_length=255, verbose_name='路径名称')
@@ -221,18 +216,22 @@ class Answer(models.Model):
 #
 #
 #
-#
-# # 用户关注表
-# class UserTeacher(models.Model):
-#     user_id = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='用户id')
-#     teacher_id = models.ForeignKey(Teacher, on_delete=models.CASCADE, verbose_name='课程id')
-#
-#
-# # 用户和收藏实验问答表
-# class Collect(models.Model):
-#     user_id = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='用户id')
-#     find_id = models.IntegerField(verbose_name='寻找对应id')
-#     collect_type = models.IntegerField(default=0, verbose_name='收藏类型0实验报告1实验问答')
+########
+"""用户关注表"""
+class UserTeacher(models.Model):
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='用户id')
+    teacher_id = models.ForeignKey(Teacher, on_delete=models.CASCADE, verbose_name='课程id')
+    class Meta:
+        db_table = 'userteacher'
+
+#########
+""" 用户和收藏实验问答表"""
+class Collect(models.Model):
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='用户id')
+    find_id = models.IntegerField(verbose_name='寻找对应id')
+    collect_type = models.IntegerField(default=0, verbose_name='收藏类型0实验报告1实验问答')
+    class Meta:
+        db_table = 'collect'
 #
 #
 # # 课程订单表
@@ -284,36 +283,44 @@ class Integral_coupon(models.Model):
     status = models.IntegerField()  # 状态  1已用  2未用  3过期
 
 
-# # 积分记录表        总积分
-# class Coupon_record(models.Model):
-#     user = models.ForeignKey('User', on_delete=models.CASCADE)
-#     x_integral = models.IntegerField()  # 操作类型  1增加  2减少
-#     s_integral = models.IntegerField()  # 当前总积分
-#     before_integral = models.IntegerField()  # 本次使用积分
-#     end_integral = models.IntegerField()  # 使用后剩余积分
-#     effect = models.IntegerField()  # 使用方式   1抵扣金额  2优惠卷
-#     coupon_code = models.CharField()  # 优惠券码
-#
+"""积分记录表        总积分"""
+class Coupon_record(models.Model):
+    user = models.ForeignKey('User', on_delete=models.CASCADE)
+    x_integral = models.IntegerField(default=0,verbose_name='1增加，2减少')  # 操作类型  1增加  2减少
+    s_integral = models.IntegerField(default=0)  # 当前总积分
+    before_integral = models.IntegerField(default=0)  # 本次使用积分
+    end_integral = models.IntegerField(default=0)  # 使用后剩余积分
+    effect = models.IntegerField(default=0,verbose_name='1抵消金额，2优惠券')  # 使用方式   1抵扣金额  2优惠卷
+    coupon_code = models.CharField(max_length=255)  # 优惠券码
+
 #
 class User_path(models.Model):  # 用户路径表
     user_id = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)  # 用户id
     path_id = models.ForeignKey(Path, null=True, on_delete=models.SET_NULL)  # 路径id
-#
-#
-# class User_course(models.Model):  # 学习记录表
-#     course_id = models.ForeignKey(Course, null=True, on_delete=models.SET_NULL)  # 课程外键
-#     user_id = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)  # 用户外键
-#     section_id = models.ForeignKey(Section, null=True, on_delete=models.SET_NULL)  # 章节外键
-#     status = models.IntegerField(default=0)  # 完成状态0未完成1完成
-#
-#
-# class Banner(models.Model):  # 焦点图
-#     name = models.CharField(max_length=50, unique=True)  # 名称
-#     url = models.CharField(max_length=100)  # 跳转链接
-#     pic = models.CharField(max_length=100)  # 图片
-#     type = models.IntegerField()  # 类型（1首页 2课程 3路径 4训练营）
-#     is_show = models.IntegerField(default=1)  # 是否显示（1显示,2不显示）
-#     sort = models.IntegerField()  # 显示顺序
+
+######
+"""# 学习记录表"""
+class User_course(models.Model):
+    course_id = models.ForeignKey(Course, null=True, on_delete=models.SET_NULL)  # 课程外键
+    user_id = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)  # 用户外键
+    section_id = models.ForeignKey(Section, null=True, on_delete=models.SET_NULL)  # 章节外键
+    status = models.IntegerField(default=0)  # 完成状态0未完成1完成
+    class Meta:
+        db_table = 'user_course'
+
+#####
+"""# 焦点图"""
+class Banner(models.Model):
+    name = models.CharField(max_length=50, unique=True)  # 名称
+    url = models.CharField(max_length=100)  # 跳转链接
+    pic = models.CharField(max_length=100)  # 图片
+    type = models.IntegerField()  # 类型（1首页 2课程 3路径 4训练营）
+    is_show = models.IntegerField(default=1)  # 是否显示（1显示,2不显示）
+    sort = models.IntegerField()  # 显示顺序
+    class Meta:
+        db_table = 'banner'
+
+
 
 
 
@@ -333,69 +340,92 @@ class Resources(models.Model):
     status = models.IntegerField(default=1)  # 状态(0为停用，1为启用)
     roles= models.ManyToManyField(Roles,related_name='resources')  # 使用多对多自动创建第三张表
 
-# 角色资源表    roles_resources
-# class Roles_Resources(models.Model):
-#     roles= models.ForeignKey(Roles,on_delete=models.CASCADE)  # 权限名称
-#     resources = models.ForeignKey(Resources,on_delete=models.CASCADE)  # 全线路有
+"""# 角色资源表    roles_resources"""
+class Roles_Resources(models.Model):
+    roles= models.ForeignKey(Roles,on_delete=models.CASCADE)  # 权限名称
+    resources = models.ForeignKey(Resources,on_delete=models.CASCADE)  # 全线路有
+
+    class Meta:
+        db_table = 'roles_resources'
 
 
 class Admin(models.Model):  # 管理员用户表
     username = models.CharField(max_length=50)  # 管理员用户名
     password = models.CharField(max_length=255)  # 管理员密码
     roles = models.ForeignKey(Roles, on_delete=models.CASCADE)  # 外键关联角色表
-#
-# # 活动表    act
-# class Act(models.Model):
-#     title = models.CharField(max_length=155)  # 活动标题
-#     data = models.DateTimeField(auto_now=True)  # 活动日期
-#
-#
-# # 秒杀时间表    time
-# class Time(models.Model):
-#     start = models.DateTimeField(auto_now=True)  # 活动开始时间
-#     end = models.DateTimeField(auto_now=True)  # 活动结束时间
+######
+"""活动表"""
+class Act(models.Model):
+    title = models.CharField(max_length=155)  # 活动标题
+    data = models.DateTimeField(auto_now=True)  # 活动日期
+    class Meta:
+        db_table = 'act'
 #
 #
-# # 秒杀产品表    sk
-# class Sk(models.Model):
-#     act = models.ForeignKey(Act, on_delete=True)  # 秒杀活动外键
-#     time = models.ForeignKey(Time, on_delete=True)  # 秒杀活动时间外键
-#     price = models.DecimalField(max_digits=7,decimal_places=2)  # 秒杀价格
-#     course = models.ForeignKey(Course, on_delete=True)  # 优惠券外键
+"""秒杀时间表"""
+class Time(models.Model):
+    start = models.DateTimeField(auto_now=True)  # 活动开始时间
+    end = models.DateTimeField(auto_now=True)  # 活动结束时间
+    class Meta:
+        db_table = 'time'
+#
+#######
+"""秒杀产品表"""
+class Sk(models.Model):
+    act = models.ForeignKey(Act, on_delete=True)  # 秒杀活动外键
+    time = models.ForeignKey(Time, on_delete=True)  # 秒杀活动时间外键
+    price = models.DecimalField(max_digits=7,decimal_places=2)  # 秒杀价格
+    course = models.ForeignKey(Course, on_delete=True)  # 课程外键
+    count=models.IntegerField(default=0)
+    class Meta:
+        db_table = 'sk'
+#
+######
+"""# 工单表    work_order
+"""
+class Work_Order(models.Model):
+    user_id = models.IntegerField()  # 外键关联用户表
+    problem = models.CharField(max_length=155)  # 问题标题
+    content = models.CharField(max_length=155)  # 问题内容
+    pid = models.CharField(max_length=155)  # 关联问题回复
+    status = models.IntegerField(default=0,verbose_name='0未处理，1处理')  # 状态(0为未处理，1为处理)
+    class Meta:
+        db_table = 'work_order'
+#
+####
+"""日志表"""
+class Log(models.Model):
+    dates = models.DateTimeField(auto_now=True)  # 执行时间
+    operation = models.CharField(max_length=155)  # 执行操作
+    result = models.IntegerField(default=0,verbose_name='0失败，1成功')  # 操作结果(0为失败，1为成功)
+    reason = models.CharField(max_length=155)  # 失败原因
+    admin_id = models.CharField(max_length=155)  # 操作管理员，外键关联管理员
+    class Meta:
+        db_table = 'log'
 #
 #
-# # 工单表    work_order
-# class Work_Order(models.Model):
-#     user_id = models.IntegerField()  # 外键关联用户表
-#     problem = models.CharField(max_length=155)  # 问题标题
-#     content = models.CharField(max_length=155)  # 问题内容
-#     pid = models.CharField(max_length=155)  # 关联问题回复
-#     status = models.IntegerField()  # 状态(0为未处理，1为处理)
+"""讨论区"""
+class Forum(models.Model):
+    name = models.CharField(max_length=155)  # 优惠券名称
+    count = models.IntegerField()  # 优惠券数量
+    types = models.IntegerField(default=0,verbose_name='1首次,2全场,3指定商品,4指定会员')  # 类型（1首次注册会员送  2全场能用  3指定商品  4指定会员）
+    course_id = models.IntegerField(default=0,verbose_name='类型为3时指定课程')  #
+    start_time = models.DateTimeField(auto_now=True)  # 优惠券使用开始时间
+    end_time = models.DateTimeField(auto_now=True)  # 优惠券使用结束时间
+    status = models.IntegerField()  # 优惠券发放状态
+    condition = models.DecimalField(max_digits=7,decimal_places=2)  # 满多少钱可以使用
+    money = models.DecimalField(max_digits=7,decimal_places=2)  # 优惠券金额
+    class Meta:
+        db_table = 'forum'
 #
 #
-# # 日志表    log
-# class Log(models.Model):
-#     dates = models.DateTimeField(auto_now=True)  # 执行时间
-#     operation = models.CharField(max_length=155)  # 执行操作
-#     result = models.IntegerField()  # 操作结果(0为失败，1为成功)
-#     reason = models.CharField(max_length=155)  # 失败原因
-#     admin_id = models.CharField(max_length=155)  # 操作管理员，外键关联管理员
+""" 课程收藏表    course_collect
+"""
+class Course_Collect(models.Model):
+    user_id = models.ForeignKey(User,on_delete=models.CASCADE)  # 用户id
+    course_id = models.ForeignKey(Course,on_delete=models.CASCADE)  # 课程id
+
+    class Meta:
+        db_table = 'course_collect'
 #
-#
-# # 讨论区    forum
-# class Forum(models.Model):
-#     name = models.CharField(max_length=155)  # 优惠券名称
-#     count = models.IntegerField()  # 优惠券数量
-#     types = models.IntegerField()  # 类型（1首次注册会员送  2全场能用  3指定商品  4指定会员）
-#     course_id = models.IntegerField()  # 类型为3时指定课程
-#     start_time = models.DateTimeField()  # 优惠券使用开始时间
-#     end_time = models.DateTimeField()  # 优惠券使用结束时间
-#     status = models.IntegerField()  # 优惠券发放状态
-#     condition = models.DecimalField(max_digits=7,decimal_places=2)  # 满多少钱可以使用
-#     money = models.DecimalField(max_digits=7,decimal_places=2)  # 优惠券金额
-#
-#
-# # 课程收藏表    course_collect
-# class Course_Collect(models.Model):
-#     user_id = models.ForeignKey(User,on_delete=models.CASCADE)  # 用户id
-#     course_id = models.ForeignKey(Course,on_delete=models.CASCADE)  # 课程id
+
