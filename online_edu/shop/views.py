@@ -649,6 +649,7 @@ class AddCourse(APIView):
         #             mes['code'] = 201
         #             mes['message'] = '订单生成失败'
         return Response(mes)
+
 class GetCoupon(APIView):
     def post(self,request):
 
@@ -660,4 +661,40 @@ class GetCoupon(APIView):
         one_coupon=CouponModelSerializer(one_coupon)
         mes['code']=200
         mes['one_coupon']=one_coupon.data
+        return Response(mes)
+
+# 训练营   首页展示
+class Show_D(APIView):
+    def get(self,request):
+        mes = {}
+        drill = Course.objects.filter(member=2).all()
+        alist = []
+        for x in drill:
+            d= {}
+            d['id'] = x.id
+            d['name'] = x.title
+            d['info'] = x.info
+            d['image'] = x.pic
+            d['online'] = x.online
+            price = Price.objects.filter(course_id=x.id).all()
+
+            d1 = {}
+            for i in price:
+                if i.type==0:
+                    name = '免费'
+                elif i.type == 1:
+                    name = '初级会员'
+                else:
+                    name = '高级会员'
+                d1[name] = i.discount_price
+
+            sections = Section.objects.filter(course=x.id).all()[:4]
+            d2 = {}
+            for s in sections:
+                d2[s.sort] = s.section
+            d['price'] = d1
+            d['section'] = d2
+            alist.append(d)
+        mes['code'] = 200
+        mes['message'] = alist
         return Response(mes)

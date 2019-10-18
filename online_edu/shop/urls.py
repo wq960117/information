@@ -47,6 +47,8 @@ urlpatterns = [
     path('get_coupon/', views.GetCoupon.as_view()),
     # 获取用户登录后的个人优惠券等信息
     path('get_user_info/', views.GetUserInfo.as_view()),
+    #训练营
+    path('xun/', views.Show_D.as_view()),
 ]
 
 
