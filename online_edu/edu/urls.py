@@ -110,6 +110,8 @@ urlpatterns = [
     path('delete_coupons/', views.DeleteCoupons.as_view()),
     # 可视化编辑窗口的显示
     path('webssh/', views.webssh),
+    # 创建索引
+    path('redis_search/', views.RedisSearch.as_view()),
 
 
 

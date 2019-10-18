@@ -582,22 +582,25 @@ class Teacher_update(APIView):
             mes['code'] = 400
             mes['msg'] = '修改失败'
         return Response(mes)
-
+import random
+from  datetime import datetime
 class GetClasses(APIView):
     """获取课程相关信息"""
     def get(self,request):
         mes={}
-        all_classes=Course.objects.all()
+        all_classes = Course.objects.all()
         page=request.GET.get('page')
 
         if page:
             page=int(page)
         else:
             page=1
-        paginator=Paginator(all_classes,2)
-        current_classes=paginator.get_page(page)
-        current_classes=ClassesModelSerializer(current_classes,many=True)
-        total=paginator.num_pages
+        # paginator=Paginator(all_classes,2)
+        # current_classes=paginator.get_page(page)
+        # current_classes=ClassesModelSerializer(current_classes,many=True)
+        all_classes=ClassesModelSerializer(all_classes,many=True)
+        # total=paginator.num_pages
+
 
         all_teachers=Teacher.objects.all()
         all_teachers=TeacherSerializer(all_teachers,many=True)
@@ -608,13 +611,16 @@ class GetClasses(APIView):
         all_tags=Tag.objects.all()
         all_tags=TagModelSerializer(all_tags,many=True)
         mes['code']=200
-        mes['total']=total
-        mes['all_classes']=current_classes.data
+        # mes['total']=total
+        mes['total']=2
+        # mes['all_classes']=current_classes.data
+        mes['all_classes']=all_classes.data
         mes['all_teachers']=all_teachers.data
         mes['all_paths']=all_paths.data
         mes['all_stages']=all_stages.data
         mes['all_tags']=all_tags.data
         return Response(mes)
+from redisearch import Client, TextField
 class Addclasses(APIView):
     """添加课程"""
     def post(self,request):
@@ -663,9 +669,12 @@ class Addclasses(APIView):
         else:
             """ID不存在为添加"""
             one_course=ClassesSerializers(data=datas)
-        try:
+
+
+        # try:
             if one_course.is_valid():
                 one_course.save()
+
                 mes['code'] = 200
                 mes['message'] = '成功'
                 # except:
@@ -674,9 +683,9 @@ class Addclasses(APIView):
             else:
                 mes['code'] = 201
                 mes['message'] = '添加失败'
-        except:
-            mes['code'] = 400
-            mes['message'] = '信息错误'
+        # except:
+        #     mes['code'] = 400
+        #     mes['message'] = '信息错误'
         return Response(mes)
 class DeleteClasses(APIView):
     """批量删除课程"""
@@ -1098,3 +1107,36 @@ def webssh(request):
         ws.close()
         channle.close()
     return HttpResponse('ok')
+class RedisSearch(APIView):
+    def get(self,request):
+        # data=request.data
+        mes={}
+        # search_key=request.GET.get('key')
+        all_classes = Course.objects.all()
+        print("开始创建索引——————————————————————————")
+        # 创建一个客户端与给定索引名称
+        client = Client('CIndex' + str(datetime.now()), host='120.27.246.172', port='6666')
+
+        # 创建索引定义和模式
+        client.create_index((TextField('title'), TextField('body')))
+        print('索引创建完毕————————————————————————————————')
+        print('开始添加数据————————————————————————————————')
+
+        for i in all_classes:
+            print(str(i.id) + str(i.title))
+            # 索引文
+            client.add_document('result' + str(datetime.now()), title=i.title+'@'+str(i.id), info=i.info,language='chinese')
+            print(333333333)
+        print('数据添加完毕————————————————————————————————')
+        print(client.info())
+        # 查找搜索
+        res = client.search('短发')
+        print('查询结束————————————————————————————————————————————————')
+
+        print(res.docs)
+        for i in res.docs:
+            print(i.title)  #取出title，以@切割，取课程ID查询，然后序列化展示
+        mes['code']=200
+        mes['message']='搜索完毕'
+        return Response(mes)
+

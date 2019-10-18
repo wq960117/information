@@ -175,6 +175,15 @@ CACHES = {
             "CONNECTION_POOL_KWARGS": {"max_connections": 1000}
             # "PASSWORD": "123",
         }
+    },
+"search": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6666",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            "CONNECTION_POOL_KWARGS": {"max_connections": 1000}
+            # "PASSWORD": "123",
+        }
     }
 }
 # 定时任务 minute(分钟)  hour(小时,钟头)   dat_for_month(‘1’)(每月的第几天)
