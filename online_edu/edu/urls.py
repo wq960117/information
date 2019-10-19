@@ -110,9 +110,7 @@ urlpatterns = [
     path('delete_coupons/', views.DeleteCoupons.as_view()),
     # 可视化编辑窗口的显示
     path('webssh/', views.webssh),
-
-
-
+    path('sk/', views.SKAPIView.as_view())
 
 ]
 

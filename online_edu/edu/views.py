@@ -1098,3 +1098,65 @@ def webssh(request):
         ws.close()
         channle.close()
     return HttpResponse('ok')
+
+
+
+
+import datetime
+from datetime import timedelta
+
+class SKAPIView(APIView):
+    def get(self, request):
+        ret = {}
+        activeList = Act.objects.all()
+        skList = Sk.objects.all()
+        timeList = Time.objects.all()
+        activeList = ActiveModelSerializer(activeList, many=True)
+        skList = SkModelSerializer(skList, many=True)
+        timeList = TimeModelSerializer(timeList, many=True)
+        ret['activeList'] = activeList.data
+        ret['skList'] = skList.data
+        ret['timeList'] = timeList.data
+        ret['code'] = 200
+        ret['message'] = '成功'
+        return Response(ret)
+
+    def post(self, request):
+        ret = {}
+        ret['code'] = 200
+        ret['message'] = '成功'
+        data = request.data.copy()
+        if data.get('start') and data.get('end'):
+            data['start'] = datetime.datetime.strptime(data['start'].replace('T', ' ')[:-5], "%Y-%m-%d %H:%M:%S")+ timedelta(hours=8)
+            data['end'] = datetime.datetime.strptime(data['end'].replace('T', ' ')[:-5], "%Y-%m-%d %H:%M:%S")+ timedelta(hours=8)
+            # print(data['start'],data['end'],data['act_id'],'======================================')
+            Time.objects.create(start=data['start'],end=data['end'],act_id=data['act_id'])
+        elif data.get('title') and data.get('date'):
+            print('添加活动')
+            data['date'] = datetime.datetime.strptime(data['date'].replace('T', ' ')[:-5], "%Y-%m-%d %H:%M:%S")+ timedelta(hours=8)
+            data['date']=data['date']
+            print(data)
+            Act.objects.create(title=data['title'],data=data['date'])
+        elif data.get('course_id') and data.get('time_id') and data.get('act_id'):
+            print('添加秒杀商品')
+            Sk.objects.create(course_id=data.get('course_id'), time_id=data['time_id'], act_id=data['act_id'],price=data['sk_price'], count=data['count'])
+        else:
+            ret['code'] = 601
+            ret['message'] = '失败'
+        return Response(ret)
+
+    def delete(self, request):
+        data = request.data.copy()
+        mes = {}
+        mes['code'] = 200
+        mes['msg'] = "删除成功"
+        if data.get('sk_id'):
+            Sk.objects.get(id=data.get('sk_id')).delete()
+        elif data.get('time_id'):
+            Time.objects.get(id=data.get('time_id')).delete()
+        elif data.get('active_id'):
+            Act.objects.get(id=data.get('active_id')).delete()
+        else:
+            mes['code'] = 400
+            mes['msg'] = "删除失败"
+        return Response(mes)

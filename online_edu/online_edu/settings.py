@@ -95,7 +95,10 @@ DATABASES = {
         'PORT': 3306,  # 数据库端口
         'USER': 'root',  # 数据库用户名
         'PASSWORD': 'root',  # 数据库用户密码
-        'NAME': 'edu'  # 数据库名字
+        'NAME': 'edu' , # 数据库名字
+        'OPTIONS': {
+                    "init_command": "SET foreign_key_checks = 0;",
+                }
     },
     'slave': {
         'ENGINE': 'django.db.backends.mysql',
@@ -103,7 +106,7 @@ DATABASES = {
         'PORT': 3306,  # 数据库端口
         'USER': 'root',  # 数据库用户名
         'PASSWORD': 'root',  # 数据库用户密码
-        'NAME': 'edu'  # 数据库名字
+        'NAME': 'edu' , # 数据库名字
     }
 }
 #
