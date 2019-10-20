@@ -310,7 +310,7 @@ class CoursOrderModelSerializer(serializers.ModelSerializer):
     class Meta:
         model=Cours_order
         fields='__all__'
-<<<<<<< HEAD
+        
 class TimeModelSerializer(serializers.ModelSerializer):
     """秒杀活动序列化"""
     class Meta:
@@ -367,37 +367,4 @@ class ActOrderSerializer(serializers.Serializer):
         instance.code = validated_data.get('code', instance.code)
         instance.save()
         return instance
-=======
 
-
-
-class SkModelSerializer(serializers.ModelSerializer):
-    """秒杀课程序列化展示"""
-    act_title = serializers.CharField(source='act.title')
-    course_title = serializers.CharField(source='course.title')
-    start = serializers.CharField(source='time.start')
-    end = serializers.CharField(source='time.end')
-
-    class Meta:
-        model = Sk
-        fields = ['act_title', 'course_title', 'id', 'price', 'count', 'start', 'end']
-
-
-class TimeModelSerializer(serializers.ModelSerializer):
-    """秒杀时间序列化展示"""
-    act_title = serializers.CharField(source='act.title')
-
-    class Meta:
-        model = Time
-        fields = ['start', 'end', 'act_title', 'act_id']
-
-
-class ActiveModelSerializer(serializers.ModelSerializer):
-    """活动表序列化展示"""
-
-    class Meta:
-        model = Act
-        fields = '__all__'
-
-
->>>>>>> 2c959b7bd75345ce671f337bdfc957a70ce61b29
