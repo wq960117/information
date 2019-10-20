@@ -183,11 +183,19 @@ CACHES = {
 # 'schedule': crontab(hour=6, minute=0, day_of_month='1'),
 from celery.schedules import crontab
 CELERYBEAT_SCHEDULE = {
-    #定时任务一：　每一分钟执行一次任务(del_redis_data)
-    u'定义一个任务名为:sendmail': {
-        "task": "shop.task.sendmail",
+    #定时任务一：　每一分钟执行一次任务(add_redis_data)
+    u'定义一个任务名为:AddSk': {
+        "task": "shop.task.AddSk",
         # "schedule": crontab(hour='*/1'),
-        "schedule": crontab(minute='*'),
+        "schedule": crontab(hour='*'),
+        "args": (),
+},
+ #定时任务二：　每一分钟执行一次任务(del_redics_data)
+    u'定义一个任务名为:DelSk': {
+        "task": "shop.task.DelSk",
+        # "schedule": crontab(hour='*/1'),
+        # "schedule": crontab('59 23 * * *'),
+        "schedule": crontab(hour='*'),
         "args": (),
 },
 }

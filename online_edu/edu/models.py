@@ -233,7 +233,6 @@ class Collect(models.Model):
     class Meta:
         db_table = 'collect'
 #
-#
 # # 课程订单表
 class Cours_order(models.Model):
     order_number = models.CharField(max_length=100)  # 订单编号
@@ -366,6 +365,7 @@ class Act(models.Model):
 class Time(models.Model):
     start = models.DateTimeField(auto_now=True)  # 活动开始时间
     end = models.DateTimeField(auto_now=True)  # 活动结束时间
+    act=models.ForeignKey(Act,on_delete=models.CASCADE) #关联活动外键
     class Meta:
         db_table = 'time'
 #
@@ -427,5 +427,16 @@ class Course_Collect(models.Model):
 
     class Meta:
         db_table = 'course_collect'
-#
+
+"""秒杀订单表"""
+class ActOrder(models.Model):
+    order_sn=models.CharField(max_length=255)
+    start_time=models.DateTimeField(auto_now=True)
+    count=models.IntegerField(default=1)
+    money=models.DecimalField(max_digits=7,decimal_places=2)
+    user=models.ForeignKey(User,on_delete=models.CASCADE)
+    course=models.ForeignKey(Course,on_delete=models.CASCADE)
+    status=models.IntegerField(default=0)  #1支付成功2已评论
+    code=models.CharField(max_length=255)
+
 

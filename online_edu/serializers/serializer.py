@@ -310,3 +310,59 @@ class CoursOrderModelSerializer(serializers.ModelSerializer):
     class Meta:
         model=Cours_order
         fields='__all__'
+class TimeModelSerializer(serializers.ModelSerializer):
+    """秒杀活动序列化"""
+    class Meta:
+        model=Time
+        fields='__all__'
+class ActModelSerializer(serializers.ModelSerializer):
+    """活动时间段序列化"""
+    class Meta:
+        model=Act
+        fields='__all__'
+
+class SkModelSerializer(serializers.ModelSerializer):
+    """秒杀产品序列化"""
+    act_course=serializers.SerializerMethodField()
+    act=serializers.SerializerMethodField()
+    time=serializers.SerializerMethodField()
+    def get_act_course(self,row):
+        one_course=Course.objects.filter(id=row.course_id).first()
+        one_course=ClassesModelSerializer(one_course).data
+        return one_course
+    def get_act(self,row):
+        one_act=Act.objects.filter(id=row.act_id).first()
+        one_act=ActModelSerializer(one_act).data
+        return one_act
+    def get_time(self,row):
+        one_time=Time.objects.filter(id=row.time_id).first()
+        one_time=TimeModelSerializer(one_time)
+        return one_time.data
+    class Meta:
+        model=Sk
+        fields=['id','act','time','price','course','count','act_course']
+class ActOrderSerializer(serializers.Serializer):
+    """秒杀产品订单反序列化"""
+    order_sn = serializers.CharField(max_length=255)
+    start_time = serializers.DateTimeField()
+    count = serializers.IntegerField(default=1)
+    money = serializers.DecimalField(max_digits=7, decimal_places=2)
+    user_id = serializers.IntegerField()
+    course_id = serializers.IntegerField()
+    status = serializers.IntegerField(default=0)  # 1支付成功2已评论
+    code = serializers.CharField(max_length=255)
+
+    def create(self, data):
+        return Price.objects.create(**data)
+
+    def update(self, instance, validated_data):
+        instance.order_sn = validated_data.get('order_sn', instance.order_sn)
+        instance.start_time = validated_data.get('start_time', instance.start_time)
+        instance.count = validated_data.get('count', instance.count)
+        instance.money = validated_data.get('money', instance.money)
+        instance.user_id = validated_data.get('user_id', instance.user_id)
+        instance.course_id = validated_data.get('course_id', instance.course_id)
+        instance.status = validated_data.get('status', instance.status)
+        instance.code = validated_data.get('code', instance.code)
+        instance.save()
+        return instance

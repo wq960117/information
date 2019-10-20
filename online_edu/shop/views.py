@@ -13,7 +13,7 @@ from django.db.models import Q
 from rest_framework_jwt.settings import api_settings
 from .task import sendmail
 from redisearch import Client,TextField
-from datetime import datetime
+import datetime
 
 
 # 获取图片验证码
@@ -717,3 +717,60 @@ class RedisSearch(APIView):
         mes['code'] = 200
         mes['message'] = '搜索完毕'
         return Response(mes)
+
+
+class AddActOrder(APIView):
+    """添加活动商品订单接口"""
+    def post(self,request):
+        mes={}
+        data=request.data
+        print(data)
+        one_act_order=ActOrderSerializer(data=data)
+        if one_act_order.is_valid():
+            one_act_order.save()
+            mes['code']=200
+            mes['message']='添加成功'
+        else:
+            one_act_order.save()
+            mes['code'] = 201
+            mes['message'] = '添加失败'
+        return Response(mes)
+
+class ActInfo(APIView):
+    """获取活动商品的信息"""
+    def get(self,request):
+        mes={}
+        """
+        redis中获取信息
+        
+        conn = get_redis_connection('default')
+        # 获取当前日期，到redis中查询
+        date_now = datetime.datetime.now().strftime('%Y-%m-%d')
+        date_now = datetime.datetime.strptime(date_now, "%Y-%m-%d")
+        # 获取当天日期redis中所有de数据
+        conn.lrange(date_now, 0, -1)
+        """
+        conn = get_redis_connection('default')
+        # 获取当前日期，到redis中查询
+        date_now = datetime.datetime.now().strftime('%Y-%m-%d')
+        date_now = datetime.datetime.strptime(date_now, "%Y-%m-%d")
+        # "2019-10-19 00:00:00"
+        print(date_now)
+        # 获取当天日期redis中所有de数据
+        # hgetall()获取的redis数据是一个字典
+        # hvals()获取的redis数据是一个列表
+        # json.loads()  the JSON object must be str, bytes or bytearray, not list json解析的数据必须是字节或者字符串，列表和字典不可以
+        all_act_course=conn.hvals(date_now)
+        print(all_act_course)
+        # 取出下标为0的元素并解码，取出数据的类型为str
+        all_act_course=all_act_course[0].decode()
+        # 将str类型转为dict字典型，可以对应下标取
+        act_courses=eval(all_act_course)
+        act_courses_list = []
+        act_courses_list.append(act_courses)
+        print(act_courses_list)
+        print(type(act_courses['act_course']))
+        mes['code']=200
+        mes['act_info']=act_courses_list
+        return Response(mes)
+

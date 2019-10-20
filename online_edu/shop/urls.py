@@ -47,7 +47,13 @@ urlpatterns = [
     path('get_coupon/', views.GetCoupon.as_view()),
     # 获取用户登录后的个人优惠券等信息
     path('get_user_info/', views.GetUserInfo.as_view()),
-    path('redis_search/',views.RedisSearch.as_view())
+
+    # 全文检索
+    path('redis_search/',views.RedisSearch.as_view()),
+    # 添加活动商品订单
+    path('add_actorder/',views.AddActOrder.as_view()),
+    # 获取活动商品的信息
+    path('act_info/',views.ActInfo.as_view()),
 ]
 
 

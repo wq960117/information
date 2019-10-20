@@ -15,6 +15,12 @@ import time
 from django.core.mail import EmailMessage
 from django.conf import settings
 from celery import task
+from online_edu import settings
+from edu.models import *
+import datetime
+from django_redis import get_redis_connection
+from serializers.serializer import *
+import json
 @task
 def sendmail(email,token):
     print(email,token)
@@ -23,3 +29,53 @@ def sendmail(email,token):
     send_m.send()
     print('已发送')
     return True
+@task
+def AddSk():
+    print('开始定时任务')
+    conn = get_redis_connection('default')
+    time.sleep(10)
+    # 获取当前时间,转为字符串
+    date_now = datetime.datetime.now().strftime('%Y-%m-%d')
+    # 当前时间，日期型
+    date_now = datetime.datetime.strptime(date_now, "%Y-%m-%d")
+
+    # 所有活动，精确到日
+    all_act=Act.objects.all()
+    for act in all_act:
+
+        start_time=act.data
+        # 计算活动开始时间对于
+        total_interval_time = (start_time - date_now).total_seconds()
+        # 以小时计算活动时间和当前时间的差值
+        time_value=total_interval_time/3600
+        print('距离活动还有' + str(time_value)+'个小时')
+        # if time_value<=24 and time_value>0:
+        if time_value<=24 and time_value>=0:
+            all_time = Time.objects.filter(act_id=act.id).all()
+            all_sk = Sk.objects.filter(act_id=act.id).all()
+            # all_sk=SkModelSerializer(all_sk).data
+            print(all_sk)
+            for sk in all_sk:
+                print('开始添加活动时间')
+                # 当天日期的key 对应第一个value是活动场次，第二个value秒杀产品的信息,第三个value是具体的课程信息
+                one_sk=SkModelSerializer(sk).data
+                conn.hset(date_now,date_now,one_sk)
+                print('活动时间添加成功')
+
+        print('结束定时任务')
+    return True
+
+@task
+def DelSk():
+    print('定时任务开始')
+    conn = get_redis_connection('default')
+    # 获取当前日期，到redis中查询
+    date_now = datetime.datetime.now().strftime('%Y-%m-%d')
+    date_now = datetime.datetime.strptime(date_now, "%Y-%m-%d")
+    # # 获取当天日期redis中所有de数据
+    # conn.lrange(date_now,0,-1)
+    # # 活动全部结束删除当天所有的活动信息
+    # conn.lrem(date_now)
+    print(date_now)
+    print(type(date_now))
+    print('定时任务结束')
