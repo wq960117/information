@@ -1098,6 +1098,13 @@ def webssh(request):
         ws.close()
         channle.close()
     return HttpResponse('ok')
+<<<<<<< HEAD
+=======
+
+
+
+
+>>>>>>> 2c959b7bd75345ce671f337bdfc957a70ce61b29
 import datetime
 from datetime import timedelta
 
@@ -1107,7 +1114,11 @@ class SKAPIView(APIView):
         activeList = Act.objects.all()
         skList = Sk.objects.all()
         timeList = Time.objects.all()
+<<<<<<< HEAD
         activeList = ActModelSerializer(activeList, many=True)
+=======
+        activeList = ActiveModelSerializer(activeList, many=True)
+>>>>>>> 2c959b7bd75345ce671f337bdfc957a70ce61b29
         skList = SkModelSerializer(skList, many=True)
         timeList = TimeModelSerializer(timeList, many=True)
         ret['activeList'] = activeList.data

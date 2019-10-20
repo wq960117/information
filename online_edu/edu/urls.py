@@ -111,9 +111,12 @@ urlpatterns = [
     # 可视化编辑窗口的显示
     path('webssh/', views.webssh),
     path('sk/', views.SKAPIView.as_view())
+<<<<<<< HEAD
 
 
 
+=======
+>>>>>>> 2c959b7bd75345ce671f337bdfc957a70ce61b29
 
 ]
 
