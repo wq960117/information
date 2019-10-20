@@ -2,10 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="322418d9-c4f3-451f-a2d7-8140d1cb0631" name="Default" comment="">
+      <change afterPath="$PROJECT_DIR$/edu/migrations/0019_auto_20191020_1703.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/edu/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/edu/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/edu/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/edu/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/serializers/serializer.py" beforeDir="false" afterPath="$PROJECT_DIR$/serializers/serializer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/edu/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/edu/models.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/shop/task.py" beforeDir="false" afterPath="$PROJECT_DIR$/shop/task.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/shop/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/shop/views.py" afterDir="false" />
     </list>
@@ -351,7 +350,7 @@
       <workItem from="1571533701580" duration="3109000" />
       <workItem from="1571536964982" duration="6000" />
       <workItem from="1571537748222" duration="462000" />
-      <workItem from="1571539037069" duration="14232000" />
+      <workItem from="1571539037069" duration="16672000" />
     </task>
     <servers />
   </component>

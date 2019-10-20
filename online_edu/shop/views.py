@@ -754,6 +754,7 @@ class ActInfo(APIView):
         conn = get_redis_connection('default')
         # 获取当前日期，到redis中查询，转为字符型，redis存的时候key为字符型
         date_now = datetime.datetime.now().strftime("%Y-%m-%d")
+        # date_now = datetime.datetime.strptime(date_now, "%Y-%m-%d")  # "2019-10-19 00:00:00"
         # 日期型
         # date_now = datetime.datetime.strptime(date_now, "%Y-%m-%d") # "2019-10-19 00:00:00"
         # 获取当天日期redis中所有de数据
@@ -762,26 +763,25 @@ class ActInfo(APIView):
         # json.loads()  the JSON object must be str, bytes or bytearray, not list json解析的数据必须是字节或者字符串，列表和字典不可以
         # 以key为当前日期，属性也为当前日期存入redis，查询出来的列表只有一个，包含了所有场次和商品的信息
 
-        # all_act_times=conn.hgetall(date_now)
         all_act_times=conn.hgetall(date_now)
-        # for i in all_act_times:
-        #     print(i.decode())
-        #     print(all_act_times[i].decode())
         for act_time in all_act_times:
             # 每一个时间段
-            print(act_time.decode())
+            # print(act_time.decode())
             # 对取出的商品bytes解码为str
             act_courses=all_act_times[act_time].decode()
             act_courses=json.loads(act_courses)
-            print(act_courses)
             # 转为日期型进行比较
             now=datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             date_now = datetime.datetime.strptime(now, "%Y-%m-%d %H:%M:%S")  # "2019-10-19 00:00:00"
             act_strat = datetime.datetime.strptime(act_time.decode(), "%Y-%m-%d %H:%M:%S")
             total_interval_time = (act_strat - date_now).total_seconds()
             time_value = total_interval_time / 3600
-            print(time_value)
-        mes['code'] = 200
-        # mes['act_info'] = act_courses
-        return Response(mes)
-
+            # print(type(time_value))
+            if time_value<4:
+                print(time_value)
+                mes['code'] = 200
+                mes['act_info'] = act_courses
+            else:
+                print(time_value)
+                continue
+            return Response(mes)

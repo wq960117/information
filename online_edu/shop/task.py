@@ -47,7 +47,7 @@ def AddSk():
         time_value=total_interval_time/3600
 
         print('距离活动还有' + str(time_value)+'个小时')
-        if time_value<=24 and time_value>=0:
+        if time_value==0:
             all_time=Time.objects.filter(act_id=act.id)
             print(all_time)
             for time in all_time:
@@ -57,7 +57,8 @@ def AddSk():
                 # 当天日期的key 对应第一个value是活动场次，第二个value秒杀产品的信息,第三个value是具体的课程信息
                 all_sk = SkModelSerializer(all_sk,many=True).data
                 # 遍历场次，属性按照场次
-                conn.hset(date_now, time.start, json.dumps(all_sk))
+                conn.hset(act.data, time.start, json.dumps(all_sk))
+                conn.expire(act.data, 86440)
                 # key 和属性都按照日期存
                 # conn.hset(date_now, date_now, json.dumps(all_sk))
                 print('活动时间添加成功')

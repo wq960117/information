@@ -356,15 +356,15 @@ class Admin(models.Model):  # 管理员用户表
 """活动表"""
 class Act(models.Model):
     title = models.CharField(max_length=155)  # 活动标题
-    data = models.DateTimeField(auto_now=True)  # 活动日期
+    data = models.DateField(auto_now=True)  # 活动日期
     class Meta:
         db_table = 'act'
 #
 #
 """秒杀时间表"""
 class Time(models.Model):
-    start = models.DateTimeField(auto_now=True)  # 活动开始时间
-    end = models.DateTimeField(auto_now=True)  # 活动结束时间
+    start = models.TimeField(auto_now=True)  # 活动开始时间
+    end = models.TimeField(auto_now=True)  # 活动结束时间
     act=models.ForeignKey(Act,on_delete=models.CASCADE) #关联活动外键
     class Meta:
         db_table = 'time'
