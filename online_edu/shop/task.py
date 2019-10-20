@@ -33,35 +33,34 @@ def sendmail(email,token):
 def AddSk():
     print('开始定时任务')
     conn = get_redis_connection('default')
-    time.sleep(10)
     # 获取当前时间,转为字符串
     date_now = datetime.datetime.now().strftime('%Y-%m-%d')
-    # 当前时间，日期型
-    date_now = datetime.datetime.strptime(date_now, "%Y-%m-%d")
-
     # 所有活动，精确到日
     all_act=Act.objects.all()
     for act in all_act:
-
         start_time=act.data
         # 计算活动开始时间对于
-        total_interval_time = (start_time - date_now).total_seconds()
+        today=datetime.datetime.strptime(date_now, "%Y-%m-%d")
+        # 日期型之间进行比较
+        total_interval_time = (start_time - today).total_seconds()
         # 以小时计算活动时间和当前时间的差值
         time_value=total_interval_time/3600
+
         print('距离活动还有' + str(time_value)+'个小时')
-        # if time_value<=24 and time_value>0:
         if time_value<=24 and time_value>=0:
-            all_time = Time.objects.filter(act_id=act.id).all()
-            all_sk = Sk.objects.filter(act_id=act.id).all()
-            # all_sk=SkModelSerializer(all_sk).data
-            print(all_sk)
-            for sk in all_sk:
+            all_time=Time.objects.filter(act_id=act.id)
+            print(all_time)
+            for time in all_time:
+                all_sk = Sk.objects.filter(act_id=act.id,time_id=time.id).all()
+                print(all_sk)
                 print('开始添加活动时间')
                 # 当天日期的key 对应第一个value是活动场次，第二个value秒杀产品的信息,第三个value是具体的课程信息
-                one_sk=SkModelSerializer(sk).data
-                conn.hset(date_now,date_now,one_sk)
+                all_sk = SkModelSerializer(all_sk,many=True).data
+                # 遍历场次，属性按照场次
+                conn.hset(date_now, time.start, json.dumps(all_sk))
+                # key 和属性都按照日期存
+                # conn.hset(date_now, date_now, json.dumps(all_sk))
                 print('活动时间添加成功')
-
         print('结束定时任务')
     return True
 

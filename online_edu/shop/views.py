@@ -687,7 +687,7 @@ class RedisSearch(APIView):
         all_classes = Course.objects.all()
         print("开始创建索引——————————————————————————")
         # 创建一个客户端与给定索引名称
-        client = Client('CII' + str(datetime.now()), host='101.37.25.38', port='6666')
+        client = Client('CII' + str(datetime.datetime.now()), host='101.37.25.38', port='6666')
 
         # 创建索引定义和模式
         client.create_index((TextField('title'), TextField('body')))
@@ -697,7 +697,7 @@ class RedisSearch(APIView):
         for i in all_classes:
             print(str(i.id) + str(i.title))
             # 索引文
-            client.add_document('result' + str(datetime.now()), title=i.title + '@' + str(i.id), info=i.info,
+            client.add_document('result' + str(datetime.datetime.now()), title=i.title + '@' + str(i.id), info=i.info,
                                 language='chinese')
             print(333333333)
         print('数据添加完毕————————————————————————————————')
@@ -735,14 +735,15 @@ class AddActOrder(APIView):
             mes['code'] = 201
             mes['message'] = '添加失败'
         return Response(mes)
+import json
+from collections import OrderedDict
 
 class ActInfo(APIView):
     """获取活动商品的信息"""
     def get(self,request):
         mes={}
         """
-        redis中获取信息
-        
+        redis list中获取信息
         conn = get_redis_connection('default')
         # 获取当前日期，到redis中查询
         date_now = datetime.datetime.now().strftime('%Y-%m-%d')
@@ -751,26 +752,36 @@ class ActInfo(APIView):
         conn.lrange(date_now, 0, -1)
         """
         conn = get_redis_connection('default')
-        # 获取当前日期，到redis中查询
-        date_now = datetime.datetime.now().strftime('%Y-%m-%d')
-        date_now = datetime.datetime.strptime(date_now, "%Y-%m-%d")
-        # "2019-10-19 00:00:00"
-        print(date_now)
+        # 获取当前日期，到redis中查询，转为字符型，redis存的时候key为字符型
+        date_now = datetime.datetime.now().strftime("%Y-%m-%d")
+        # 日期型
+        # date_now = datetime.datetime.strptime(date_now, "%Y-%m-%d") # "2019-10-19 00:00:00"
         # 获取当天日期redis中所有de数据
         # hgetall()获取的redis数据是一个字典
         # hvals()获取的redis数据是一个列表
         # json.loads()  the JSON object must be str, bytes or bytearray, not list json解析的数据必须是字节或者字符串，列表和字典不可以
-        all_act_course=conn.hvals(date_now)
-        print(all_act_course)
-        # 取出下标为0的元素并解码，取出数据的类型为str
-        all_act_course=all_act_course[0].decode()
-        # 将str类型转为dict字典型，可以对应下标取
-        act_courses=eval(all_act_course)
-        act_courses_list = []
-        act_courses_list.append(act_courses)
-        print(act_courses_list)
-        print(type(act_courses['act_course']))
-        mes['code']=200
-        mes['act_info']=act_courses_list
+        # 以key为当前日期，属性也为当前日期存入redis，查询出来的列表只有一个，包含了所有场次和商品的信息
+
+        # all_act_times=conn.hgetall(date_now)
+        all_act_times=conn.hgetall(date_now)
+        # for i in all_act_times:
+        #     print(i.decode())
+        #     print(all_act_times[i].decode())
+        for act_time in all_act_times:
+            # 每一个时间段
+            print(act_time.decode())
+            # 对取出的商品bytes解码为str
+            act_courses=all_act_times[act_time].decode()
+            act_courses=json.loads(act_courses)
+            print(act_courses)
+            # 转为日期型进行比较
+            now=datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            date_now = datetime.datetime.strptime(now, "%Y-%m-%d %H:%M:%S")  # "2019-10-19 00:00:00"
+            act_strat = datetime.datetime.strptime(act_time.decode(), "%Y-%m-%d %H:%M:%S")
+            total_interval_time = (act_strat - date_now).total_seconds()
+            time_value = total_interval_time / 3600
+            print(time_value)
+        mes['code'] = 200
+        # mes['act_info'] = act_courses
         return Response(mes)
 

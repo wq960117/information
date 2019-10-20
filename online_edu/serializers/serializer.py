@@ -310,12 +310,12 @@ class CoursOrderModelSerializer(serializers.ModelSerializer):
     class Meta:
         model=Cours_order
         fields='__all__'
-        
+
 class TimeModelSerializer(serializers.ModelSerializer):
     """秒杀活动序列化"""
     class Meta:
         model=Time
-        fields='__all__'
+        fields=['id','start','end','act_id']
 class ActModelSerializer(serializers.ModelSerializer):
     """活动时间段序列化"""
     class Meta:
@@ -324,24 +324,27 @@ class ActModelSerializer(serializers.ModelSerializer):
 
 class SkModelSerializer(serializers.ModelSerializer):
     """秒杀产品序列化"""
+    # 活动产品信息
     act_course=serializers.SerializerMethodField()
-    act=serializers.SerializerMethodField()
-    time=serializers.SerializerMethodField()
+    # 活动信息
+    act_info=serializers.SerializerMethodField()
+    # 活动场次信息
+    time_info=serializers.SerializerMethodField()
     def get_act_course(self,row):
         one_course=Course.objects.filter(id=row.course_id).first()
         one_course=ClassesModelSerializer(one_course).data
         return one_course
-    def get_act(self,row):
+    def get_act_info(self,row):
         one_act=Act.objects.filter(id=row.act_id).first()
         one_act=ActModelSerializer(one_act).data
         return one_act
-    def get_time(self,row):
+    def get_time_info(self,row):
         one_time=Time.objects.filter(id=row.time_id).first()
-        one_time=TimeModelSerializer(one_time)
-        return one_time.data
+        one_time=TimeModelSerializer(one_time).data
+        return one_time
     class Meta:
         model=Sk
-        fields=['id','act','time','price','course','count','act_course']
+        fields=['id','act_info','time_info','price','course','count','act_course']
 class ActOrderSerializer(serializers.Serializer):
     """秒杀产品订单反序列化"""
     order_sn = serializers.CharField(max_length=255)
