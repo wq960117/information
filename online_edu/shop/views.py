@@ -528,50 +528,62 @@ class FinishPay(APIView):
         else:
             conn=get_redis_connection('default')
             one_order=conn.get(order_sn)
-            one_order=json.loads(one_order)
-            print(one_order)
-            if one_order['coupon'] != -1:
-                one_user_coupon = Integral_coupon.objects.get(id=one_order['coupon'])
-                print(one_user_coupon)
-                """使用优惠券情况"""
-                one_coupon = Coupon.objects.get(id=one_user_coupon.coupon_order)
-                print(one_coupon)
+            if one_order:
+                one_order=json.loads(one_order)
+                print(one_order)
                 try:
-                # 修改订单状态
-                    print('begin')
-                    Cours_order.objects.create(code=out_trade_no,order_number=order_sn, user_id=one_order['user_id'], course_id=one_order['course_id'],pyt_type=one_order['pyt_type'], pay_price=float(one_order['total_price']), price=float(one_order['price']), order_status=1,coupon=one_coupon.id, preferential_way=one_order['preferential_way'],preferential_money=one_order['preferential_money'])
-                #     修改优惠券状态
-                    one_user_coupon = Integral_coupon.objects.get(user_id=one_order['user_id'],coupon_order=one_coupon.id)
-                    one_user_coupon.status=1
-                    one_user_coupon.save()
-                    mes['code'] = 200
-                    mes['message'] = '购买成功'
-                    print('success1')
-                except Exception as e:
-                    print(e)
-                    mes['code'] = 200
-                    mes['message'] = '购买失败'
-                    print('error1')
+                    if one_order['pay_price']:
+                        if one_order['coupon'] != -1:
+                            one_user_coupon = Integral_coupon.objects.get(id=one_order['coupon'])
+                            print(one_user_coupon)
+                            """使用优惠券情况"""
+                            one_coupon = Coupon.objects.get(id=one_user_coupon.coupon_order)
+                            print(one_coupon)
+                            try:
+                            # 修改订单状态
+                                print('begin')
+                                Cours_order.objects.create(code=out_trade_no,order_number=order_sn, user_id=one_order['user_id'], course_id=one_order['course_id'],pyt_type=one_order['pyt_type'], pay_price=float(one_order['total_price']), price=float(one_order['price']), order_status=1,coupon=one_coupon.id, preferential_way=one_order['preferential_way'],preferential_money=one_order['preferential_money'])
+                            #     修改优惠券状态
+                                one_user_coupon = Integral_coupon.objects.get(user_id=one_order['user_id'],coupon_order=one_coupon.id)
+                                one_user_coupon.status=1
+                                one_user_coupon.save()
+                                mes['code'] = 200
+                                mes['message'] = '购买成功'
+                                print('success1')
+                                return HttpResponseRedirect('http://127.0.0.1:8080/index')
+                            except Exception as e:
+                                print(e)
+                                mes['code'] = 200
+                                mes['message'] = '购买失败'
+                                print('error1')
+                                return HttpResponseRedirect('http://127.0.0.1:8080/notfind')
 
-            else:
-                try:
-                    Cours_order.objects.create(code=out_trade_no,order_number=order_sn, user_id=one_order['user_id'], course_id=one_order['course_id'],pyt_type=one_order['pyt_type'], pay_price=float(one_order['pay_price']), price=float(one_order['price']), order_status=1,preferential_way=one_order['preferential_way'], preferential_money=one_order['preferential_money'])
-                    # 修改积分
-                    one_user = User.objects.get(id=one_order['user_id'])
-                    one_user.inintegral -= one_order['inintegral']
-                    one_user.save()
-                    mes['code'] = 200
-                    mes['message'] = '购买成功'
-                    print('success2')
-                except Exception as e:
-                    print(e)
-                    mes['code'] = 200
-                    mes['message'] = '购买失败'
-                    print('error2')
-
-            # # one_user.integral-=
-
-            return HttpResponseRedirect('http://127.0.0.1:8080/index')
+                        else:
+                            try:
+                                Cours_order.objects.create(code=out_trade_no,order_number=order_sn, user_id=one_order['user_id'], course_id=one_order['course_id'],pyt_type=one_order['pyt_type'], pay_price=float(one_order['pay_price']), price=float(one_order['price']), order_status=1,preferential_way=one_order['preferential_way'], preferential_money=one_order['preferential_money'])
+                                # 修改积分
+                                one_user = User.objects.get(id=one_order['user_id'])
+                                one_user.inintegral -= one_order['inintegral']
+                                one_user.save()
+                                mes['code'] = 200
+                                mes['message'] = '购买成功'
+                                print('success2')
+                                return HttpResponseRedirect('http://127.0.0.1:8080/index')
+                            except Exception as e:
+                                print(e)
+                                mes['code'] = 200
+                                mes['message'] = '购买失败'
+                                print('error2')
+                                return HttpResponseRedirect('http://127.0.0.1:8080/notfind')
+                except:
+                    '''秒杀订单接口'''
+                    # try:
+                    ActOrder.objects.create(order_sn=order_sn,code=out_trade_no,count=1,money=one_order['money'],user_id=one_order['user_id'],course_id=one_order['course_id'],status=1)
+                    mes['code']=200
+                    mes['message']='秒杀成功'
+                    return HttpResponseRedirect('http://127.0.0.1:8080/index')
+                    # except:
+                    #     return HttpResponseRedirect('http://127.0.0.1:8080/notfind')
 
 """
     order_number = models.CharField(max_length=100)  # 订单编号
@@ -718,22 +730,140 @@ class RedisSearch(APIView):
         mes['message'] = '搜索完毕'
         return Response(mes)
 
+import time
+redis_client = get_redis_connection('default')
+#获取一个锁
+# lock_name：锁定名称
+# acquire_time: 客户端等待获取锁的时间
+# time_out: 锁的超时时间
+def acquire_lock(lock_name, acquire_time=10, time_out=10):
+    """获取一个分布式锁,其实就是给锁设置一个超时时间并返回一个锁的标识"""
+    identifier = str(uuid.uuid4())
+    # 获取锁的结束时间
+    end = time.time() + acquire_time
+    # 锁的名称
+    lock = "string:lock:" + lock_name
+    while time.time() < end:
+        if redis_client.setnx(lock, identifier):
+            # 给锁设置超时时间, 防止进程崩溃导致其他进程无法获取锁
+            redis_client.expire(lock, time_out)
+            return identifier
+        # 判断当前锁是否还存在过期时间, ttl返回剩余的过期时间
+        elif not redis_client.ttl(lock):
+            redis_client.expire(lock, time_out)
+        time.sleep(0.001)
+    return False
 
+
+#释放一个锁
+def release_lock(lock_name, identifier):
+    """通用的锁释放函数"""
+    lock = "string:lock:" + lock_name
+    # 开启一个队列
+    pip = redis_client.pipeline(True)
+    while True:
+        try:
+            # 对lock这个锁进行监听
+            pip.watch(lock)
+            lock_value = redis_client.get(lock)
+            if not lock_value:
+                return True
+            if lock_value.decode() == identifier:
+                print('查看标识', lock_value.decode())
+                # 标记一个事务块的开始,事务内的命令会放在队列中
+                pip.multi()
+                # 删除锁
+                pip.delete(lock)
+                # 最后有execute触发执行事务
+                pip.execute()
+                return True
+            # 取消监听
+            pip.unwatch()
+            # 退出
+            break
+        except:
+        # except redis.excetions.WacthcError:
+            pass
+    return False
+
+def seckill(one_buy):
+    identifier=acquire_lock('resource')
+    if identifier:
+        time.sleep(1)
+        if one_buy['count']<1:
+            print("没抢到，产品没有了")
+            release_lock('resource', identifier)
+            return False
+        else:
+            one_buy['count'] -= 1
+            redis_client.hset('course' + str(datetime.now())[:10],
+                              str(one_buy['act']) + ',' + str(one_buy['time']) + ',' + str(one_buy['course']),
+                              json.dumps(one_buy))
+            print("抢到一个产品，还剩%d张票" % one_buy['count'])
+            release_lock('resource', identifier)
+            return True
+    else:
+        return False
 class AddActOrder(APIView):
     """添加活动商品订单接口"""
+    """
+    点击秒杀
+    后台先获取锁
+    获取到锁之后在判断库存，查询所有redis活动数据json.loads(act_info)，通过传递时间段index和课程信息的index查询
+    库存充足将订单存入redis中并修改对应的库存act_info[index][index]...
+    修改完成之后 直接提交修改后act_info，新的act_info只修改的对应index的记录，其他的记录并没有修改
+    释放锁
+    """
+    """
+     order_sn=models.CharField(max_length=255)
+    start_time=models.DateTimeField(auto_now=True)
+    count=models.IntegerField(default=1)
+    money=models.DecimalField(max_digits=7,decimal_places=2)
+    user=models.ForeignKey(User,on_delete=models.CASCADE)
+    course=models.ForeignKey(Course,on_delete=models.CASCADE)
+    status=models.IntegerField(default=0)  #1支付成功2已评论
+    code=models.CharField(max_length=255)
+    """
     def post(self,request):
-        mes={}
-        data=request.data
-        print(data)
-        one_act_order=ActOrderSerializer(data=data)
-        if one_act_order.is_valid():
-            one_act_order.save()
-            mes['code']=200
-            mes['message']='添加成功'
+        mes = {}
+        conn = get_redis_connection('default')
+        identifier = acquire_lock('resource')
+        if identifier:
+            data=request.data
+            print(data)
+            date_now=datetime.datetime.now().strftime('%Y-%m-%d')
+            act_info=conn.hget(date_now,date_now)
+            # 先获取所有的活动信息
+            act_info=json.loads(act_info.decode())
+            # 加锁判断库存
+            if act_info[data['index1']]['course_info'][data['cindex']]['count']>0:
+                order_sn = uuid.uuid1()  # 订单号
+                try:
+                    # conn.set(order_number,json.dumps(data),timeout=300)
+                    conn.set(order_sn, json.dumps(data), 300)
+                    # 库存减少1
+                    act_info[data['index1']]['course_info'][data['cindex']]['count'] -= 1
+                    conn.hset(date_now, date_now, json.dumps(act_info))
+                    conn.expire(date_now, 86440)
+                    print("抢到一个产品，还剩%d个课程" % act_info[data['index1']]['course_info'][data['cindex']]['count'])
+                    release_lock('resource', identifier)
+                    mes['code'] = 200
+                    mes['message'] = '订单生成成功'
+                    mes['order_sn'] = order_sn
+                    # return True
+                except Exception as e:
+                    print(e)
+                    mes['code'] = 201
+                    mes['message'] = '订单生成失败'
+                    mes['order_sn'] = None
+                    # return False
         else:
-            one_act_order.save()
-            mes['code'] = 201
-            mes['message'] = '添加失败'
+            print("没抢到，产品没有了")
+            release_lock('resource', identifier)
+            mes['code'] = 203
+            mes['message'] = '秒杀失败'
+            mes['order_sn'] = None
+            # return False
         return Response(mes)
 import json
 from collections import OrderedDict
@@ -763,25 +893,16 @@ class ActInfo(APIView):
         # json.loads()  the JSON object must be str, bytes or bytearray, not list json解析的数据必须是字节或者字符串，列表和字典不可以
         # 以key为当前日期，属性也为当前日期存入redis，查询出来的列表只有一个，包含了所有场次和商品的信息
 
-        all_act_times=conn.hgetall(date_now)
-        for act_time in all_act_times:
-            # 每一个时间段
-            # print(act_time.decode())
-            # 对取出的商品bytes解码为str
-            act_courses=all_act_times[act_time].decode()
-            act_courses=json.loads(act_courses)
-            # 转为日期型进行比较
-            now=datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            date_now = datetime.datetime.strptime(now, "%Y-%m-%d %H:%M:%S")  # "2019-10-19 00:00:00"
-            act_strat = datetime.datetime.strptime(act_time.decode(), "%Y-%m-%d %H:%M:%S")
-            total_interval_time = (act_strat - date_now).total_seconds()
-            time_value = total_interval_time / 3600
-            # print(type(time_value))
-            if time_value<4:
-                print(time_value)
-                mes['code'] = 200
-                mes['act_info'] = act_courses
-            else:
-                print(time_value)
-                continue
-            return Response(mes)
+        # all_act_course=conn.hget(date_now,date_now)
+        all_act_course=conn.hget(date_now,date_now)
+        act_info=json.loads(all_act_course.decode())
+        mes['code']=200
+        mes['act_info']=act_info
+        return Response(mes)
+
+"""
+协同过滤：判断用户相似度，直接推荐课程
+基于用户：数据构造：{（用户：购买的课程)....}
+        关联课程表：  {课程ID：相似度}
+基于课程：数据构造：{（课程：购买的用户)....}
+"""

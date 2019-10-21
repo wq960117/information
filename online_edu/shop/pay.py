@@ -58,16 +58,25 @@ def page1(request):
         if orders:
             print(orders)
             money = float(orders.amount)
+
         else:
             orders = conn.get(order_sn)
             orders = json.loads(orders)
             # orders = Cours_order.objects.filter(order_number=order_sn).first()
             print(orders)
-            money = float(orders['total_price'])
+
+            try:
+                if orders['total_price']:
+                    money = float(orders['total_price'])
+
+            except:
+                money = float(orders['money'])
+
+
         out_trade_no = "myorder" + str(time.time())
         # money = float(orders.tprice)
         alipay = get_ali_object(out_trade_no,order_sn)
-
+        print(money)
         # 生成支付的url
         query_params = alipay.direct_pay(
             subject="小邹店铺",  # 商品简单描述

@@ -30,7 +30,8 @@ import datetime
 # print(interval_time)
 # print(total_interval_time)
 #
-# date_now=datetime.datetime.now().strftime('%Y-%m-%d')
+date_now=datetime.datetime.now().strftime('%H:%M:%S')
+print(date_now)
 # date_now=datetime.datetime.now().strftime('%Y-%m-%d')
 # date_now=datetime.datetime.strptime(date_now, "%Y-%m-%d")
 # if date_now > t1:
@@ -39,17 +40,28 @@ import datetime
 #     print('2222222')
 # total_interval_time = (date_now-t1).total_seconds()
 # print(total_interval_time)
-from edu.models import *
-all_act = Act.objects.all()
-for act in all_act:
 
-    date_now=datetime.datetime.now()
-    print(date_now)
-    print(type(date_now))
-    start_time = act.data
-    # 计算活动开始时间对于
-    total_interval_time = (start_time - date_now).total_seconds()
-    print(total_interval_time)
-    # 以小时计算活动时间和当前时间的差值
-    time_value = total_interval_time / 3600
-    print('距离活动还有' + str(time_value)+'个小时')
+
+
+# from edu.models import *
+# all_act = Act.objects.all()
+# for act in all_act:
+#
+#     date_now=datetime.datetime.now()
+#     print(date_now)
+#     print(type(date_now))
+#     start_time = act.data
+#     # 计算活动开始时间对于
+#     total_interval_time = (start_time - date_now).total_seconds()
+#     print(total_interval_time)
+#     # 以小时计算活动时间和当前时间的差值
+#     time_value = total_interval_time / 3600
+#     print('距离活动还有' + str(time_value)+'个小时')
+
+
+
+
+
+
+
+

@@ -33,36 +33,21 @@ def sendmail(email,token):
 def AddSk():
     print('开始定时任务')
     conn = get_redis_connection('default')
+
+    # 所有活动，精确到日
+
+    # 计算活动开始时间对于
     # 获取当前时间,转为字符串
     date_now = datetime.datetime.now().strftime('%Y-%m-%d')
-    # 所有活动，精确到日
-    all_act=Act.objects.all()
-    for act in all_act:
-        start_time=act.data
-        # 计算活动开始时间对于
-        today=datetime.datetime.strptime(date_now, "%Y-%m-%d")
-        # 日期型之间进行比较
-        total_interval_time = (start_time - today).total_seconds()
-        # 以小时计算活动时间和当前时间的差值
-        time_value=total_interval_time/3600
-
-        print('距离活动还有' + str(time_value)+'个小时')
-        if time_value==0:
-            all_time=Time.objects.filter(act_id=act.id)
-            print(all_time)
-            for time in all_time:
-                all_sk = Sk.objects.filter(act_id=act.id,time_id=time.id).all()
-                print(all_sk)
-                print('开始添加活动时间')
-                # 当天日期的key 对应第一个value是活动场次，第二个value秒杀产品的信息,第三个value是具体的课程信息
-                all_sk = SkModelSerializer(all_sk,many=True).data
-                # 遍历场次，属性按照场次
-                conn.hset(act.data, time.start, json.dumps(all_sk))
-                conn.expire(act.data, 86440)
-                # key 和属性都按照日期存
-                # conn.hset(date_now, date_now, json.dumps(all_sk))
-                print('活动时间添加成功')
-        print('结束定时任务')
+    one_act=Act.objects.filter(data=date_now).first()
+    print(one_act)
+    all_time=Time.objects.filter(act_id=one_act.id).all()
+    all_time=TimeModelSerializer(all_time,many=True).data
+    # 属性按照日期，在value中包含时间和课程的信息
+    conn.hset(one_act.data, one_act.data, json.dumps(all_time))
+    conn.expire(one_act.data, 86440)
+    print('活动时间添加成功')
+    print('结束定时任务')
     return True
 
 @task
@@ -79,3 +64,41 @@ def DelSk():
     print(date_now)
     print(type(date_now))
     print('定时任务结束')
+
+from django.shortcuts import render, HttpResponse, redirect
+
+# @task
+# def AddSk():
+#     print('定时任务开始')
+#     conn = get_redis_connection('default')
+#     # 把属于今天的秒杀商品添加到redis
+#
+#     # 查找当前时间
+#     now_time = datetime.datetime.now().strftime('%Y-%m-%d')
+#     activeList = Act.objects.filter(data=now_time).all()
+#
+#     # 查询当前时间的场次
+#     for act in activeList:
+#         timelist = Time.objects.filter(act_id=act.id).all()  # 该活动下的所有场次
+#         alist = []
+#         for time in timelist:
+#             print(time.start.strftime('%H:%M:%S'))
+#             info = {}
+#             print(time.start)
+#             sklist = Sk.objects.filter(time=time, act_id=act.id).all()
+#             skList = SkModelSerializer(sklist, many=True).data
+#             mapping = {
+#                 "start_time": time.start.strftime('%H:%M:%S'),
+#                 "end_time": time.end.strftime('%H:%M:%S'),
+#                 "content": skList
+#             }
+#             info ={
+#                 'course_info': mapping
+#             }
+#             alist.append(info)
+#         info = json.dumps(alist)
+#         print(info)
+#         print(act.title)
+#         conn.setex(act.title,info,86400)
+#     print("定时任务结束")
+#     return HttpResponse('ok')

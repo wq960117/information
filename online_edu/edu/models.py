@@ -431,7 +431,6 @@ class Course_Collect(models.Model):
 """秒杀订单表"""
 class ActOrder(models.Model):
     order_sn=models.CharField(max_length=255)
-    start_time=models.DateTimeField(auto_now=True)
     count=models.IntegerField(default=1)
     money=models.DecimalField(max_digits=7,decimal_places=2)
     user=models.ForeignKey(User,on_delete=models.CASCADE)
